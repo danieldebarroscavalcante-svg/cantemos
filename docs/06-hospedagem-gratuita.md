@@ -48,7 +48,8 @@ Decisão D13: começar **sem custo**. Tudo é feito pelo navegador, sem instalar
 ## Passo 3 — Banco de dados (Aiven) (10 min)
 
 1. Crie a conta em **aiven.io** (pode entrar com a conta Google do evento).
-2. **Create service → MySQL** → plano **Free** → região mais próxima disponível → nome `eventmer-db` → Create.
+2. **Create service → MySQL** → plano **Free** (US$ 0 — **não** escolha Developer/Hobbyist, que usam os créditos do trial e são desligados depois de 30 dias) → nome `eventmer-db` → Create.
+   Se já criou com outro plano: serviço → **Service settings → Change plan → Customize → Free** (o status passa por *Rebalancing* e volta para *Running*).
 3. Aguarde o status ficar **Running** (alguns minutos).
 4. Na aba **Overview / Connection information**:
    - Copie 📋 a **Service URI** (começa com `mysql://avnadmin:...`). Pode copiar como está.
@@ -111,7 +112,8 @@ Com o site no ar, o Google aceita publicar o app — e o token deixa de vencer e
 ## Passo 7 — Monitor (UptimeRobot) (5 min)
 
 1. Crie a conta em **uptimerobot.com**.
-2. **New monitor** → tipo **HTTP(s)** → URL: `<endereço do Render>/api/v1/health` → intervalo **5 minutos** → Create.
+2. **New monitor** → tipo **HTTP(s)** → URL: `<endereço do Render>/api/v1/health/db` → intervalo **5 minutos** → Create.
+   Esse endereço consulta o banco: mantém a API acordada **e** evita que o MySQL gratuito do Aiven seja desligado por inatividade.
 3. Em *Alert contacts*, mantenha o e-mail e, se quiser, instale o app no celular para receber alertas.
 
 ## Passo 8 — Conferir tudo pelo celular (5 min)
@@ -143,6 +145,7 @@ Envie apenas: **o endereço do site**, **o endereço da API** e o resultado do e
 | Risco | Impacto | Mitigação |
 |---|---|---|
 | API dormindo | 1º acesso demora ~1 min | UptimeRobot a cada 5 min |
+| Banco gratuito desligado por inatividade | Inscrições param | UptimeRobot em `/api/v1/health/db` (consulta o banco a cada 5 min) |
 | Limite de e-mails do Gmail (~500/dia) | Folgado para 144 inscrições. Envio em massa precisa ser espaçado | Lembretes em lotes; ingresso também fica na tela de confirmação |
 | Instância pequena (pouca CPU/RAM) | Abertura das inscrições com muita gente ao mesmo tempo pode ficar lenta | Teste de carga antes de 09/11. **Opcional:** plano pago do Render (~US$ 7) só em novembro |
 | Backups do banco gratuito são limitados | Perda de dados em incidente | Exportação diária durante as inscrições e na véspera do evento |
