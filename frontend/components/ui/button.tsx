@@ -1,12 +1,13 @@
 import { forwardRef, type ButtonHTMLAttributes } from "react";
 import { cn } from "@/lib/cn";
 
-type Variant = "primary" | "secondary" | "ghost" | "danger";
+type Variant = "primary" | "secondary" | "ghost" | "ghost-danger" | "danger";
 
 const variants: Record<Variant, string> = {
   primary: "bg-primary text-primary-fg hover:bg-primary/90",
   secondary: "border border-border bg-surface text-fg hover:bg-border/40",
   ghost: "text-fg hover:bg-border/40",
+  "ghost-danger": "text-danger hover:bg-danger/10",
   danger: "bg-danger text-white hover:bg-danger/90",
 };
 

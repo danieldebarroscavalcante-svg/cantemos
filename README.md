@@ -4,7 +4,7 @@
 
 O primeiro caso de uso real é o **CANTEMOS**, a cantata de final de ano da nossa igreja: uma história contada em música, com várias apresentações, público familiar e grande procura por lugares. Tudo o que construirmos precisa resolver bem esse cenário antes de crescer para outros eventos.
 
-> 📅 **CANTEMOS 2026 — quinta-feira, 19/11/2026 · entrada gratuita · 120 lugares.** Inscrições previstas para abrir em 09/11. Cronograma no [Plano Express](docs/03-roadmap.md#plano-express--cantemos-2026-0211--1911).
+> 📅 **CANTEMOS 2026 — quinta-feira, 19/11/2026, 18h30 · entrada gratuita · 120 lugares (+ margem configurável).** Inscrições previstas para abrir em 09/11. Cronograma no [Plano Express](docs/03-roadmap.md#plano-express--cantemos-2026-0211--1911).
 
 ---
 
@@ -35,6 +35,7 @@ Detalhes, bibliotecas de apoio e decisões de infraestrutura: [`docs/04-arquitet
 | 03 | [Roadmap](docs/03-roadmap.md) | Fases, entregas, critérios de pronto e marcos |
 | 04 | [Arquitetura](docs/04-arquitetura.md) | Arquitetura, modelo de dados inicial, segurança, responsividade, hospedagem |
 | 05 | [Decisões em aberto](docs/05-decisoes-em-aberto.md) | Perguntas que precisam de resposta da organização antes ou durante o desenvolvimento |
+| 06 | [Hospedagem gratuita](docs/06-hospedagem-gratuita.md) | Vercel + Render + Aiven + Gmail: passo a passo para colocar no ar |
 
 ## Estrutura do repositório
 
@@ -45,6 +46,7 @@ Detalhes, bibliotecas de apoio e decisões de infraestrutura: [`docs/04-arquitet
 ├── docs/                 # Documentação de produto e técnica
 ├── .github/workflows/    # CI (lint, testes, migrations em MySQL 8, build)
 ├── docker-compose.yml    # MySQL 8 para desenvolvimento local
+├── render.yaml           # Blueprint da API no Render (plano gratuito)
 └── README.md
 ```
 
@@ -63,6 +65,9 @@ Depois siga [`backend/README.md`](backend/README.md) (API, migrations, criação
 | Entrega | Situação |
 |---|---|
 | Fase 0: scaffolding, banco, migrations, CI, login da equipe (JWT + refresh rotativo) | ✅ |
+| Configurações do evento no painel (horário, lotação, margem, limite por inscrição, prioridade, cotas reservadas) | ✅ |
+| Envio de e-mail pelo Gmail (API) | ✅ |
+| Deploy gratuito (Vercel + Render + Aiven) | ⏳ aguardando criação das contas |
 | Página pública + inscrição familiar + ingresso com QR por e-mail | ⏳ 04–06/11 |
 | Meus ingressos, cancelamento, lista de espera | ⏳ 09–11/11 |
 | Check-in, painel, exportação | ⏳ 12–15/11 |

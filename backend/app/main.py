@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import get_settings
 from app.modules.auth.router import router as auth_router
+from app.modules.events.router import router as events_router
 
 settings = get_settings()
 
@@ -23,6 +24,7 @@ app.add_middleware(
 
 api = APIRouter(prefix="/api/v1")
 api.include_router(auth_router)
+api.include_router(events_router)
 
 
 @api.get("/health", tags=["infra"])

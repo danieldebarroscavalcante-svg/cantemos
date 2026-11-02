@@ -48,8 +48,19 @@ class EventSession(IdMixin, PublicIdMixin, TimestampMixin, Base):
     name: Mapped[str] = mapped_column(String(100))
     starts_at: Mapped[datetime] = mapped_column(DateTime)
     doors_open_at: Mapped[datetime | None] = mapped_column(DateTime)
-    capacity: Mapped[int] = mapped_column(Integer)
+    capacity: Mapped[int] = mapped_column(Integer)  # lugares físicos
+    # Margem de inscrições acima da lotação para compensar faltas (no-show).
+    overbooking_percent: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
     # Atualizado com UPDATE condicional para impedir overbooking (TKT-06).
     reserved_count: Mapped[int] = mapped_column(Integer, default=0)
 
     event: Mapped[Event] = relationship(back_populates="sessions")
+
+    @property
+    def registration_limit(self) -> int:
+        """Total de inscrições aceitas = lotação + margem."""
+        return registration_limit(self.capacity, self.overbooking_percent)
+
+
+def registration_limit(capacity: int, overbooking_percent: int) -> int:
+    return capacity + (capacity * overbooking_percent) // 100

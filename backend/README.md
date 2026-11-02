@@ -42,13 +42,19 @@ Criar o primeiro usuário da equipe (pede a senha no terminal):
 python -m app.cli create-admin --email voce@igreja.org --name "Seu Nome" --role owner
 ```
 
-Criar o evento CANTEMOS 2026 (rascunho, 120 lugares = 110 gerais + 10 prioridade):
+Criar o evento CANTEMOS 2026 (rascunho, 19/11 às 18h30, 120 lugares + 20% de margem = 144 inscrições, até 5 por inscrição, 10 de prioridade):
 
 ```bash
 python -m app.cli seed-cantemos
 ```
 
-Horário, lotação e cota de prioridade podem ser ajustados por opção (`--help`).
+Depois de criado, tudo é ajustável no painel em *Configurações* (inclusive as cotas reservadas).
+
+Testar o envio de e-mail com o backend configurado em `EMAIL_BACKEND`:
+
+```bash
+python -m app.cli send-test-email --to voce@exemplo.com
+```
 
 ## Qualidade
 
@@ -69,9 +75,10 @@ app/
 └── modules/
     ├── auth/            # login, refresh rotativo, logout, /me
     ├── organizations/   # organização e papéis (owner, admin, manager, checkin)
-    ├── events/          # evento e sessões (lotação com contador)
+    ├── events/          # evento, sessões e configurações (lotação, margem, cotas)
     ├── tickets/         # tipos de ingresso, pedidos, ingressos
-    └── checkin/         # histórico de check-ins
+    ├── checkin/         # histórico de check-ins
+    └── notifications/   # e-mail (console, Gmail API, SMTP)
 alembic/                 # migrations
 tests/
 ```

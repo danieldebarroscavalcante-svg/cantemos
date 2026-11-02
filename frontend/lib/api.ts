@@ -78,3 +78,42 @@ export async function logout(): Promise<void> {
   await api<void>("/auth/logout", { method: "POST" }).catch(() => undefined);
   setAccessToken(null);
 }
+
+export type EventSummary = {
+  slug: string;
+  title: string;
+  status: "draft" | "published" | "open" | "closed" | "finished";
+  starts_at: string | null;
+  capacity: number;
+  registration_limit: number;
+  registered: number;
+};
+
+export type QuotaUsage = { quantity: number; issued: number };
+export type ReservedQuota = { id?: string; name: string; quantity: number; issued?: number };
+
+export type EventSettings = {
+  slug: string;
+  title: string;
+  starts_at: string;
+  doors_open_at: string | null;
+  capacity: number;
+  overbooking_percent: number;
+  max_tickets_per_order: number;
+  priority_quota: number;
+  reserved_quotas: ReservedQuota[];
+  registration_limit: number;
+  general: QuotaUsage;
+  priority: QuotaUsage;
+  registered: number;
+};
+
+export type EventSettingsInput = Pick<
+  EventSettings,
+  | "starts_at"
+  | "doors_open_at"
+  | "capacity"
+  | "overbooking_percent"
+  | "max_tickets_per_order"
+  | "priority_quota"
+> & { reserved_quotas: Array<Pick<ReservedQuota, "id" | "name" | "quantity">> };

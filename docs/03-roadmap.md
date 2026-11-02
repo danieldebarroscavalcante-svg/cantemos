@@ -28,7 +28,7 @@ flowchart LR
 
 | Data | Entrega | Itens do escopo |
 |---|---|---|
-| **Seg 02 – Ter 03/11** | Scaffolding front + back, banco, CI, deploy em produção, login do organizador | F0 enxuta, AUTH-01, AUTH-04 |
+| **Seg 02 – Ter 03/11** | Scaffolding front + back, banco, CI, login do organizador ✅ · configurações do evento no painel (horário, lotação, margem, limite por inscrição, prioridade, cotas reservadas) ✅ · envio de e-mail pelo Gmail ✅ · deploy gratuito ([guia](06-hospedagem-gratuita.md)) ⏳ | F0 enxuta, AUTH-01, AUTH-04 |
 | **Qua 04 – Sex 06/11** | Página pública do CANTEMOS, inscrição familiar com controle de lotação, e-mail com QR Code, aceite LGPD | EVT-04, TKT-01–06, PART-02, COM-01, ADM-01, ADM-05 |
 | **Sáb 07/11** | Teste interno com a equipe (inscrições reais pelo celular, e-mails chegando, lotação travando em 120) | — |
 | **Dom 08/11** | **Go / No-go** para abrir as inscrições | — |
@@ -58,8 +58,10 @@ Abrir as inscrições em **formulário simples** (ex.: Google Forms com limite m
 
 | Risco | Mitigação |
 |---|---|
-| E-mails caindo no spam | Domínio próprio com SPF/DKIM/DMARC configurados no dia 03/11; ingresso também acessível pelo link na tela de confirmação |
-| **No-show** alto (evento gratuito costuma ter 20–40% de faltas) | Lista de espera, e-mail de 16/11 pedindo cancelamento, e decisão sobre margem de inscrições acima de 120 (D15) |
+| E-mails caindo no spam | Envio pela API do Gmail (assinado pelo Google); ingresso também acessível pelo link na tela de confirmação |
+| **No-show** alto (evento gratuito costuma ter 20–40% de faltas) | Margem configurável acima de 120 (padrão 20% = 144), lista de espera e e-mail de 16/11 pedindo cancelamento de quem não vai |
+| **Todos comparecerem** com a margem ativa | Plano para até 24 pessoas a mais (cadeiras extras, anexo, telão); contador de presentes x lugares na portaria |
+| Hospedagem gratuita (API dorme, máquina pequena) | Monitor a cada 5 min, teste de carga antes de 09/11, opção de plano pago só em novembro — ver [hospedagem](06-hospedagem-gratuita.md) |
 | Corrida na abertura esgotar em minutos | Controle de concorrência (TKT-06) e limite por pedido (D8) |
 | Internet ruim na portaria | Busca por nome, lista impressa, 4G de reserva |
 | Prazo apertado | Escopo congelado; qualquer item novo entra só depois de 19/11 |

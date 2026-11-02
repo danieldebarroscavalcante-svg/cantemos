@@ -38,12 +38,28 @@ def client(db: Session) -> Iterator[TestClient]:
     app.dependency_overrides.clear()
 
 
-@pytest.fixture
-def admin(db: Session) -> User:
-    org = Organization(name="Igreja", slug="igreja")
-    user = User(email="admin@igreja.org", name="Admin", password_hash=hash_password(PASSWORD))
-    db.add_all([org, user])
+def make_member(db: Session, org: Organization, email: str, role: Role) -> User:
+    user = User(email=email, name=email.split("@")[0], password_hash=hash_password(PASSWORD))
+    db.add(user)
     db.flush()
-    db.add(OrganizationMember(organization_id=org.id, user_id=user.id, role=Role.OWNER))
+    db.add(OrganizationMember(organization_id=org.id, user_id=user.id, role=role))
     db.commit()
     return user
+
+
+@pytest.fixture
+def org(db: Session) -> Organization:
+    organization = Organization(name="Igreja", slug="igreja")
+    db.add(organization)
+    db.commit()
+    return organization
+
+
+@pytest.fixture
+def admin(db: Session, org: Organization) -> User:
+    return make_member(db, org, "admin@igreja.org", Role.OWNER)
+
+
+def auth_headers(client: TestClient, email: str = "admin@igreja.org") -> dict[str, str]:
+    response = client.post("/api/v1/auth/login", json={"email": email, "password": PASSWORD})
+    return {"Authorization": f"Bearer {response.json()['access_token']}"}

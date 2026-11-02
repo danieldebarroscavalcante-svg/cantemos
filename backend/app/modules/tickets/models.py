@@ -30,11 +30,20 @@ class AgeGroup(StrEnum):
     SENIOR = "idoso"
 
 
+class TicketKind(StrEnum):
+    GENERAL = "general"  # inscrição pública
+    PRIORITY = "priority"  # PCD, idosos, gestantes
+    RESERVED = "reserved"  # cota interna (coral, equipe, convidados) emitida pela secretaria
+
+
 class TicketType(IdMixin, PublicIdMixin, TimestampMixin, Base):
     __tablename__ = "ticket_types"
 
     session_id: Mapped[int] = mapped_column(
         BigIntPK, ForeignKey("event_sessions.id", ondelete="CASCADE"), index=True
+    )
+    kind: Mapped[TicketKind] = mapped_column(
+        str_enum(TicketKind), default=TicketKind.GENERAL, server_default=TicketKind.GENERAL.value
     )
     name: Mapped[str] = mapped_column(String(100))
     description: Mapped[str | None] = mapped_column(String(300))
