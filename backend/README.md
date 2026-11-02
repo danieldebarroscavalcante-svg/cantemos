@@ -36,6 +36,8 @@ uvicorn app.main:app --reload
 
 ## Comandos administrativos
 
+Em produção não é preciso rodar nada: a cada deploy o comando `bootstrap` cria (só se não existirem) a organização, o administrador definido em `BOOTSTRAP_ADMIN_*` e o evento CANTEMOS 2026.
+
 Criar o primeiro usuário da equipe (pede a senha no terminal):
 
 ```bash

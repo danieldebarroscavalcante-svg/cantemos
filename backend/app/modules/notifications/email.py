@@ -150,3 +150,13 @@ def send_email(message: OutgoingEmail, http_client: httpx.Client | None = None) 
     except (OSError, smtplib.SMTPException, httpx.HTTPError) as exc:
         raise EmailError(f"Não foi possível enviar o e-mail: {exc}") from exc
     logger.info("E-mail enviado para %s (%s)", message.to, message.subject)
+
+
+def test_message(to: str) -> OutgoingEmail:
+    return OutgoingEmail(
+        to=to,
+        subject="Teste de envio · EVENTMER",
+        text="Se você recebeu esta mensagem, o envio de e-mails do EVENTMER está funcionando.",
+        html="<p>Se você recebeu esta mensagem, o envio de e-mails do "
+        "<strong>EVENTMER</strong> está funcionando. ✅</p>",
+    )

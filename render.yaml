@@ -18,12 +18,19 @@ services:
         generateValue: true
       - key: QR_SECRET
         generateValue: true
+      - key: ORGANIZATION_NAME
+        sync: false
+      - key: BOOTSTRAP_ADMIN_EMAIL
+        sync: false
+      - key: BOOTSTRAP_ADMIN_NAME
+        sync: false
+      - key: BOOTSTRAP_ADMIN_PASSWORD
+        sync: false
       - key: DATABASE_URL
         sync: false
       - key: DATABASE_SSL_CA
         sync: false
-      - key: CORS_ORIGINS
-        sync: false
+      # Endereço do site na Vercel (preencher depois que o site estiver no ar).
       - key: FRONTEND_URL
         sync: false
       - key: EMAIL_BACKEND

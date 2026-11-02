@@ -31,9 +31,30 @@ class Settings(BaseSettings):
     gmail_client_secret: str = ""
     gmail_refresh_token: str = ""
 
+    # Criados automaticamente no primeiro deploy (comando bootstrap).
+    organization_name: str = "Igreja"
+    bootstrap_admin_email: str = ""
+    bootstrap_admin_name: str = "Administrador"
+    bootstrap_admin_password: str = ""
+
     cors_origins: list[str] = ["http://localhost:3000"]
     frontend_url: str = "http://localhost:3000"
     timezone: str = "America/Sao_Paulo"
+
+    @field_validator("database_url", mode="before")
+    @classmethod
+    def normalize_database_url(cls, value: object) -> object:
+        """Aceita a "Service URI" do Aiven como está (mysql://...?ssl-mode=REQUIRED)."""
+        if not isinstance(value, str):
+            return value
+        url = value.strip()
+        if url.startswith("mysql://"):
+            url = "mysql+pymysql://" + url.removeprefix("mysql://")
+        base, _, query = url.partition("?")
+        params = [p for p in query.split("&") if p and not p.lower().startswith("ssl-mode=")]
+        if not any(p.startswith("charset=") for p in params):
+            params.append("charset=utf8mb4")
+        return f"{base}?{'&'.join(params)}"
 
     @field_validator("cors_origins", mode="before")
     @classmethod

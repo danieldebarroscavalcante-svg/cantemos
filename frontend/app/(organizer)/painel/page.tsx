@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { api, logout, type EventSummary } from "@/lib/api";
+import { api, ApiError, logout, type EventSummary } from "@/lib/api";
 import { useMe } from "@/lib/use-me";
 
 const roleLabel: Record<string, string> = {
@@ -39,6 +39,24 @@ export default function PainelPage() {
   const router = useRouter();
   const me = useMe();
   const [events, setEvents] = useState<EventSummary[] | null>(null);
+  const [emailStatus, setEmailStatus] = useState<{ ok: boolean; text: string } | null>(null);
+  const [sendingEmail, setSendingEmail] = useState(false);
+
+  async function onTestEmail() {
+    setSendingEmail(true);
+    setEmailStatus(null);
+    try {
+      const { sent_to } = await api<{ sent_to: string }>("/org/test-email", { method: "POST" });
+      setEmailStatus({ ok: true, text: `E-mail enviado para ${sent_to}. Confira a caixa de entrada.` });
+    } catch (err) {
+      setEmailStatus({
+        ok: false,
+        text: err instanceof ApiError ? err.message : "Sem conexão. Tente novamente.",
+      });
+    } finally {
+      setSendingEmail(false);
+    }
+  }
 
   useEffect(() => {
     if (me) api<EventSummary[]>("/org/events").then(setEvents).catch(() => setEvents([]));
@@ -108,6 +126,30 @@ export default function PainelPage() {
           ))}
         </div>
       </section>
+
+      {me.memberships.some((m) => m.role === "owner" || m.role === "admin") && (
+        <section className="space-y-3">
+          <h2 className="text-lg font-semibold">E-mail</h2>
+          <Card className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-muted">
+              Confirme que os ingressos vão chegar: envie um e-mail de teste para {me.email}.
+            </p>
+            <Button variant="secondary" loading={sendingEmail} onClick={onTestEmail}>
+              Enviar e-mail de teste
+            </Button>
+          </Card>
+          {emailStatus && (
+            <p
+              role={emailStatus.ok ? "status" : "alert"}
+              className={`rounded-xl px-4 py-3 text-sm ${
+                emailStatus.ok ? "bg-success/10 text-success" : "bg-danger/10 text-danger"
+              }`}
+            >
+              {emailStatus.text}
+            </p>
+          )}
+        </section>
+      )}
     </main>
   );
 }

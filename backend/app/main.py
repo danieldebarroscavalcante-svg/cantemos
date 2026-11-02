@@ -1,11 +1,15 @@
+import logging
+
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import get_settings
 from app.modules.auth.router import router as auth_router
 from app.modules.events.router import router as events_router
+from app.modules.notifications.router import router as notifications_router
 
 settings = get_settings()
+logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
 
 app = FastAPI(
     title="EVENTMER API",
@@ -25,6 +29,7 @@ app.add_middleware(
 api = APIRouter(prefix="/api/v1")
 api.include_router(auth_router)
 api.include_router(events_router)
+api.include_router(notifications_router)
 
 
 @api.get("/health", tags=["infra"])
