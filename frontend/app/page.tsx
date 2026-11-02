@@ -21,10 +21,21 @@ export default function HomePage() {
         <p className="text-sm text-muted">As inscrições serão abertas em breve.</p>
       </Card>
 
-      <footer className="text-sm text-muted">
-        É da equipe?{" "}
-        <Link href="/login" className="font-semibold text-primary underline-offset-4 hover:underline">
-          Entrar no painel
+      <footer className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted">
+        <span>
+          É da equipe?{" "}
+          <Link
+            href="/login"
+            className="font-semibold text-primary underline-offset-4 hover:underline"
+          >
+            Entrar no painel
+          </Link>
+        </span>
+        <Link href="/privacidade" className="hover:underline">
+          Privacidade
+        </Link>
+        <Link href="/termos" className="hover:underline">
+          Termos de uso
         </Link>
       </footer>
     </main>

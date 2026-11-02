@@ -33,8 +33,8 @@ Decisão D13: começar **sem custo**. Tudo é feito pelo navegador, sem instalar
    - Nome do app: `EVENTMER`; e-mail de suporte: a conta do evento.
    - Público: **Externo**.
    - Dados de contato: a conta do evento → concluir.
-5. Em **Público** (*Audience*), clique **Publicar aplicativo** → confirmar, para o status ficar **Em produção**.
-   ⚠️ Não pule: em modo *Teste* a autorização expira em 7 dias e os ingressos param de ser enviados no meio das inscrições.
+5. Em **Público-alvo**, role até **Usuários de teste → + Adicionar usuários** e adicione o **Gmail do evento**. O app fica em modo **Testando** por enquanto: o botão *Publicar app* só libera quando o Branding tiver página inicial e política de privacidade, que existem só depois do site no ar (Passo 6½).
+   ⚠️ Em modo de teste o refresh token **vence em 7 dias** — por isso o Passo 6½ é obrigatório antes de abrir as inscrições.
 6. Em **Clientes** (*Credenciais*) → **Criar cliente** (*ID do cliente OAuth*):
    - Tipo: **Aplicativo da Web**; nome: `eventmer`.
    - Em **URIs de redirecionamento autorizados**, adicione exatamente: `https://developers.google.com/oauthplayground`
@@ -82,13 +82,31 @@ Decisão D13: começar **sem custo**. Tudo é feito pelo navegador, sem instalar
 1. Crie a conta em **vercel.com** com **GitHub** (plano *Hobby*) e autorize o repositório `cantemos`.
 2. **Add New → Project** → importe `cantemos`.
 3. **Root Directory:** clique *Edit* e escolha `frontend`. Framework: Next.js (detectado sozinho).
-4. **Environment Variables:** `BACKEND_URL` = endereço do Render do Passo 4 (sem `/` no final).
+4. **Environment Variables:**
+   - `BACKEND_URL` = endereço do Render do Passo 4 (sem `/` no final)
+   - `NEXT_PUBLIC_ORG_NAME` = nome da igreja (aparece na política de privacidade)
+   - `NEXT_PUBLIC_CONTACT_EMAIL` = Gmail do evento (contato para pedidos sobre dados pessoais)
 5. **Deploy**.
 6. Em **Settings → Domains**, edite o endereço para algo como `cantemos2026.vercel.app` (se estiver livre). Copie 📋 o endereço final.
 
 ## Passo 6 — Ligar o site à API (2 min)
 
 No Render → serviço `eventmer-api` → **Environment** → troque `FRONTEND_URL` pelo endereço da Vercel (ex.: `https://cantemos2026.vercel.app`) → **Save changes** (o serviço reinicia sozinho).
+
+## Passo 6½ — Publicar o app do Google (10 min, obrigatório antes de 09/11)
+
+Com o site no ar, o Google aceita publicar o app — e o token deixa de vencer em 7 dias.
+
+1. console.cloud.google.com → projeto `eventmer` → **Google Auth Platform → Branding**:
+   - **Página inicial do aplicativo:** `https://<seu-site>.vercel.app`
+   - **Link da Política de Privacidade:** `https://<seu-site>.vercel.app/privacidade`
+   - **Link dos Termos de Serviço:** `https://<seu-site>.vercel.app/termos`
+   - **Domínios autorizados → + Adicionar domínio:** `<seu-site>.vercel.app` (sem `https://`)
+   - **Salvar**.
+2. **Público-alvo → Publicar app → Confirmar.** O status deve ficar **Em produção**.
+3. **Gere um novo refresh token** no OAuth Playground (Passo 2.7 — o token antigo, criado em modo de teste, continuaria vencendo).
+4. No Render → **Environment** → troque `GMAIL_REFRESH_TOKEN` pelo novo → **Save changes**.
+5. No painel, clique **Enviar e-mail de teste** de novo para confirmar.
 
 ## Passo 7 — Monitor (UptimeRobot) (5 min)
 
@@ -116,7 +134,8 @@ Envie apenas: **o endereço do site**, **o endereço da API** e o resultado do e
 |---|---|---|
 | Deploy do Render falha com erro de conexão ao banco | `DATABASE_URL` ou `DATABASE_SSL_CA` incompletos | Copie de novo a Service URI e o certificado inteiro (com as linhas BEGIN/END) |
 | Login diz "E-mail ou senha incorretos" | Senha diferente da `BOOTSTRAP_ADMIN_PASSWORD` do primeiro deploy | A senha é definida só no primeiro deploy; peça ao desenvolvimento para redefinir |
-| E-mail de teste: "Falha ao renovar o token do Gmail" | App em modo *Teste*, refresh token errado, ou ID/chave trocados | Confira o Passo 2.5 (Em produção) e gere um novo refresh token (Passo 2.7) |
+| E-mail de teste: "Falha ao renovar o token do Gmail" | Token de modo de teste venceu (7 dias), refresh token errado, ou ID/chave trocados | Faça o Passo 6½ e gere um novo refresh token (Passo 2.7) |
+| Botão *Publicar app* cinza | Branding sem página inicial / política de privacidade | Normal antes do site estar no ar — siga em modo de teste e faça o Passo 6½ depois |
 | Site abre mas o login fica girando ~1 min | API estava dormindo | Normal só no primeiro acesso; com o monitor (Passo 7) deixa de acontecer |
 
 ## Limites e riscos do plano gratuito
