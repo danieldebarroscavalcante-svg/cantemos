@@ -67,7 +67,8 @@ Depois siga [`backend/README.md`](backend/README.md) (API, migrations, criação
 | Fase 0: scaffolding, banco, migrations, CI, login da equipe (JWT + refresh rotativo) | ✅ |
 | Configurações do evento no painel (horário, lotação, margem, limite por inscrição, prioridade, cotas reservadas) | ✅ |
 | Envio de e-mail pelo Gmail (API) | ✅ |
-| Deploy gratuito (Vercel + Render + Aiven) | ⏳ aguardando criação das contas |
+| Deploy gratuito: site em https://cantemos-frontend.vercel.app (Vercel) · API em https://eventmer-api.onrender.com (Render) · MySQL Free (Aiven) | ✅ 02/11 |
+| Publicar o app do Google (token de e-mail definitivo) | ⏳ antes de 09/11 |
 | Página pública + inscrição familiar + ingresso com QR por e-mail | ⏳ 04–06/11 |
 | Meus ingressos, cancelamento, lista de espera | ⏳ 09–11/11 |
 | Check-in, painel, exportação | ⏳ 12–15/11 |
