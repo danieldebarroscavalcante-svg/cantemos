@@ -43,16 +43,26 @@ Detalhes, bibliotecas de apoio e decisões de infraestrutura: [`docs/04-arquitet
 ├── backend/              # API FastAPI (Python)
 ├── frontend/             # App Next.js 14 (Organizador + Participante)
 ├── docs/                 # Documentação de produto e técnica
+├── .github/workflows/    # CI (lint, testes, migrations em MySQL 8, build)
 ├── docker-compose.yml    # MySQL 8 para desenvolvimento local
 └── README.md
 ```
 
-> A aplicação ainda não foi gerada: o scaffolding do Next.js e do FastAPI é a primeira entrega da **Fase 0** do [roadmap](docs/03-roadmap.md).
-
-## Ambiente local (prévia)
+## Ambiente local
 
 Subir o banco de dados de desenvolvimento:
 
 ```bash
 docker compose up -d mysql
 ```
+
+Depois siga [`backend/README.md`](backend/README.md) (API, migrations, criação do admin e do evento) e [`frontend/README.md`](frontend/README.md).
+
+## Status
+
+| Entrega | Situação |
+|---|---|
+| Fase 0: scaffolding, banco, migrations, CI, login da equipe (JWT + refresh rotativo) | ✅ |
+| Página pública + inscrição familiar + ingresso com QR por e-mail | ⏳ 04–06/11 |
+| Meus ingressos, cancelamento, lista de espera | ⏳ 09–11/11 |
+| Check-in, painel, exportação | ⏳ 12–15/11 |

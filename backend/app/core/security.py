@@ -1,0 +1,69 @@
+import hashlib
+import hmac
+import secrets
+from datetime import UTC, datetime, timedelta
+
+import bcrypt
+import jwt
+
+from app.core.config import get_settings
+
+BCRYPT_ROUNDS = 12
+
+
+def hash_password(password: str) -> str:
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt(rounds=BCRYPT_ROUNDS)).decode()
+
+
+def verify_password(password: str, password_hash: str | None) -> bool:
+    if not password_hash:
+        return False
+    return bcrypt.checkpw(password.encode(), password_hash.encode())
+
+
+def create_access_token(user_id: int) -> str:
+    settings = get_settings()
+    now = datetime.now(UTC)
+    payload = {
+        "sub": str(user_id),
+        "type": "access",
+        "iat": now,
+        "exp": now + timedelta(minutes=settings.access_token_minutes),
+    }
+    return jwt.encode(payload, settings.jwt_secret, algorithm=settings.jwt_algorithm)
+
+
+def decode_access_token(token: str) -> int | None:
+    settings = get_settings()
+    try:
+        payload = jwt.decode(token, settings.jwt_secret, algorithms=[settings.jwt_algorithm])
+    except jwt.PyJWTError:
+        return None
+    if payload.get("type") != "access":
+        return None
+    return int(payload["sub"])
+
+
+def new_opaque_token() -> str:
+    """Token aleatório para refresh / link mágico. Guardamos só o hash."""
+    return secrets.token_urlsafe(48)
+
+
+def hash_token(token: str) -> str:
+    return hashlib.sha256(token.encode()).hexdigest()
+
+
+def sign_qr(ticket_public_id: str) -> str:
+    """Conteúdo do QR Code: id público + assinatura HMAC truncada. Sem dados pessoais."""
+    secret = get_settings().qr_secret.encode()
+    signature = hmac.new(secret, ticket_public_id.encode(), hashlib.sha256).hexdigest()[:16]
+    return f"EVM1.{ticket_public_id}.{signature}"
+
+
+def verify_qr(qr_content: str) -> str | None:
+    """Retorna o id público do ingresso se a assinatura for válida."""
+    parts = qr_content.strip().split(".")
+    if len(parts) != 3 or parts[0] != "EVM1":
+        return None
+    expected = sign_qr(parts[1])
+    return parts[1] if hmac.compare_digest(expected, qr_content.strip()) else None

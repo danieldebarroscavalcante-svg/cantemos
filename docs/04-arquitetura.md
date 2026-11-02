@@ -5,7 +5,7 @@
 | Camada | Tecnologia | Bibliotecas de apoio propostas |
 |---|---|---|
 | Frontend | React + **Next.js 14** (App Router, TypeScript) + **Tailwind CSS** | TanStack Query (dados), React Hook Form + Zod (formulários), `@zxing/browser` ou `html5-qrcode` (leitura de QR), `next-pwa`/Service Worker, Dexie (IndexedDB, check-in offline) |
-| Backend | **Python 3.12 + FastAPI** | SQLAlchemy 2 (ORM), Alembic (migrations), Pydantic v2, `python-jose`/PyJWT, `passlib[bcrypt]`, `slowapi` (rate limit), `qrcode`, WeasyPrint (PDF), Celery ou ARQ + Redis (tarefas assíncronas — a partir da F2) |
+| Backend | **Python 3.12 + FastAPI** | SQLAlchemy 2 (ORM), Alembic (migrations), Pydantic v2, PyJWT, `bcrypt` (biblioteca direta; o `passlib` não é mais mantido), `slowapi` (rate limit), `qrcode`, WeasyPrint (PDF), Celery ou ARQ + Redis (tarefas assíncronas — a partir da F2) |
 | Banco | **MySQL 8.0** (InnoDB, `utf8mb4`) | — |
 | Auth | **JWT + bcrypt** | Access token curto (15 min) + refresh token rotativo em cookie `httpOnly` |
 | E-mail | Provedor transacional | Resend, Brevo ou Amazon SES (D5) |
@@ -51,6 +51,7 @@ flowchart LR
     PAY -- webhook --> API
 ```
 
+- O navegador fala só com o domínio do Next.js: `/api/v1/*` é repassado ao FastAPI por *rewrite*. Isso mantém o cookie de refresh no mesmo domínio (`SameSite=Lax`) e dispensa CORS em produção.
 - **Um único app Next.js** serve as três experiências (público, participante, organizador/recepção), separadas por rotas e protegidas por papel.
 - O **backend é a única fonte da verdade**: regras de lotação, validação de ingresso e check-in ficam no FastAPI, nunca só no frontend.
 - O módulo de check-in é uma **PWA** que guarda a lista da sessão em IndexedDB para funcionar offline (F2).
@@ -90,7 +91,7 @@ Cada módulo do backend segue `router.py` (endpoints) → `service.py` (regras) 
 
 ## 4. Modelo de dados inicial
 
-Todas as tabelas de negócio carregam `organization_id` para permitir multi-organizador na F5 sem migração dolorosa. Chaves primárias `BIGINT` internas + `public_id` (ULID/UUID) exposto nas URLs e na API.
+Todas as tabelas de negócio carregam `organization_id` para permitir multi-organizador na F5 sem migração dolorosa. Chaves primárias `BIGINT` internas + `public_id` (UUID hex) exposto nas URLs e na API.
 
 ```mermaid
 erDiagram
@@ -200,7 +201,7 @@ Tabelas complementares (fora do diagrama): `refresh_tokens`, `password_resets`, 
 ### Regras críticas
 
 - **Sem overbooking (TKT-06):** a reserva incrementa `event_session.reserved_count` numa transação com `SELECT … FOR UPDATE` (ou `UPDATE … SET reserved_count = reserved_count + :n WHERE id = :id AND reserved_count + :n <= capacity` e checagem de linhas afetadas). Cancelamentos decrementam o contador e disparam a lista de espera.
-- **Check-in único (CHK-07):** `UNIQUE` em check-in ativo por ingresso; operação idempotente via `client_uuid` para a sincronização offline. Conflito retorna "já utilizado às HH:MM por <operador>".
+- **Check-in único (CHK-07):** `UPDATE tickets SET status='used' WHERE id=:id AND status='valid'` com checagem de linhas afetadas (o MySQL não tem índice parcial); a tabela `checkins` guarda o histórico, inclusive os desfeitos. Operação idempotente via `client_uuid` para a sincronização offline. Conflito retorna "já utilizado às HH:MM por <operador>".
 - **QR Code:** contém apenas um token opaco (ex.: `public_id` do ingresso + assinatura HMAC). Nada de ID sequencial ou dados pessoais no QR.
 
 ## 5. API (rascunho)
