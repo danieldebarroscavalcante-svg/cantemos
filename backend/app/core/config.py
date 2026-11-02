@@ -41,6 +41,22 @@ class Settings(BaseSettings):
     frontend_url: str = "http://localhost:3000"
     timezone: str = "America/Sao_Paulo"
 
+    @field_validator(
+        "gmail_client_id",
+        "gmail_client_secret",
+        "gmail_refresh_token",
+        "email_from_address",
+        "smtp_username",
+        "smtp_password",
+        mode="before",
+    )
+    @classmethod
+    def strip_pasted_value(cls, value: object) -> object:
+        """Remove espaços, quebras de linha e aspas que entram ao colar no painel."""
+        if isinstance(value, str):
+            return value.strip().strip("'\"").strip()
+        return value
+
     @field_validator("database_url", mode="before")
     @classmethod
     def normalize_database_url(cls, value: object) -> object:

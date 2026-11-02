@@ -98,7 +98,18 @@ def _gmail_access_token(settings: Settings, client: httpx.Client) -> str:
         },
     )
     if response.status_code != 200:
-        raise EmailError(f"Falha ao renovar o token do Gmail: {response.text[:300]}")
+        hint = ""
+        if "invalid_client" in response.text:
+            hint = (
+                " Confira GMAIL_CLIENT_ID (completo, terminando em .apps.googleusercontent.com)"
+                " e GMAIL_CLIENT_SECRET (começa com GOCSPX-)."
+            )
+        elif "invalid_grant" in response.text:
+            hint = (
+                " O refresh token venceu ou foi revogado: gere um novo no OAuth Playground"
+                " e atualize GMAIL_REFRESH_TOKEN."
+            )
+        raise EmailError(f"Falha ao renovar o token do Gmail: {response.text[:300]}{hint}")
     body = response.json()
     _token_cache.access_token = body["access_token"]
     _token_cache.expires_at = time.time() + int(body.get("expires_in", 3600))
