@@ -4,6 +4,8 @@
 
 O primeiro caso de uso real é o **CANTEMOS**, a cantata de final de ano da nossa igreja: uma história contada em música, com várias apresentações, público familiar e grande procura por lugares. Tudo o que construirmos precisa resolver bem esse cenário antes de crescer para outros eventos.
 
+> 📅 **CANTEMOS 2026 — quinta-feira, 19/11/2026 · entrada gratuita · 120 lugares.** Inscrições previstas para abrir em 09/11. Cronograma no [Plano Express](docs/03-roadmap.md#plano-express--cantemos-2026-0211--1911).
+
 ---
 
 ## Duas versões, um só produto

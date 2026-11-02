@@ -1,26 +1,88 @@
 # 03 · Roadmap
 
-Roadmap em fases incrementais. Cada fase termina com algo **em produção e utilizável** — nada fica "pronto só no fim". As durações são estimativas para **1 a 2 desenvolvedores** e devem ser recalibradas ao final da Fase 0.
+Roadmap em fases incrementais. Cada fase termina com algo **em produção e utilizável** — nada fica "pronto só no fim".
 
 Os códigos (AUTH-01, CHK-09…) estão definidos no [escopo](02-escopo.md).
 
+> **CANTEMOS 2026 — quinta-feira, 19/11/2026 · gratuito · 120 lugares.**
+> Com 17 dias entre o início do projeto (02/11) e o evento, as Fases 0 e 1 foram comprimidas no **Plano Express** abaixo. As fases seguintes (F1 completa → F5) passam a valer para depois do evento, já mirando o CANTEMOS 2027.
+
+---
+
+## Plano Express — CANTEMOS 2026 (02/11 → 19/11)
+
 ```mermaid
 flowchart LR
-    F0["<b>F0 · Fundação</b><br/>≈ 2 sem<br/>scaffolding, CI, auth"]
-    F1["<b>F1 · MVP CANTEMOS</b><br/>≈ 5 sem<br/>inscrição familiar + check-in"]
-    M1(("Ensaio<br/>geral"))
+    A["<b>02–08/11</b><br/>Base + inscrição<br/>+ ingresso por e-mail"]
+    G{{"<b>08/11</b><br/>Go / No-go"}}
+    B["<b>09/11</b><br/>Abertura das<br/>inscrições"]
+    C["<b>09–15/11</b><br/>Meus ingressos, painel,<br/>check-in"]
+    D["<b>16/11</b><br/>Code freeze"]
+    E["<b>17/11</b><br/>Ensaio geral"]
+    F["<b>18/11</b><br/>Lembrete, backup,<br/>lista impressa"]
+    H(("<b>19/11</b><br/>CANTEMOS"))
+    A --> G --> B --> C --> D --> E --> F --> H
+```
+
+### Cronograma
+
+| Data | Entrega | Itens do escopo |
+|---|---|---|
+| **Seg 02 – Ter 03/11** | Scaffolding front + back, banco, CI, deploy em produção, login do organizador | F0 enxuta, AUTH-01, AUTH-04 |
+| **Qua 04 – Sex 06/11** | Página pública do CANTEMOS, inscrição familiar com controle de lotação, e-mail com QR Code, aceite LGPD | EVT-04, TKT-01–06, PART-02, COM-01, ADM-01, ADM-05 |
+| **Sáb 07/11** | Teste interno com a equipe (inscrições reais pelo celular, e-mails chegando, lotação travando em 120) | — |
+| **Dom 08/11** | **Go / No-go** para abrir as inscrições | — |
+| **Seg 09/11** | **Abertura das inscrições** — divulgação nos cultos e grupos | — |
+| **Seg 09 – Qua 11/11** | "Meus ingressos" via link mágico, cancelamento pelo participante (libera vaga), lista de espera simples | PART-01, PART-03, AUTH-03 (só link mágico), TKT-09 (manual) |
+| **Qui 12 – Sáb 14/11** | Tela de check-in (câmera + busca por nome + prioridade + contador), vários operadores, desfazer | CHK-01–08 |
+| **Dom 15/11** | Painel com números ao vivo, exportação CSV, lista de presença em PDF | RPT-01, RPT-02, CHK-11, ADM-02 |
+| **Seg 16/11** | **Code freeze** — a partir daqui só correção de bug crítico. E-mail "não poderá ir? cancele e libere sua vaga" | — |
+| **Ter 17/11** | **Ensaio geral** com os voluntários de recepção: ingressos de teste, celulares e tablets reais, Wi-Fi do templo e 4G | — |
+| **Qua 18/11** | Lembrete por e-mail aos inscritos, backup do banco testado, **lista de presença impressa** (plano B), limpeza dos dados de teste | COM-02 (envio único) |
+| **Qui 19/11** | **CANTEMOS** — equipe técnica de plantão na portaria | — |
+| **Sex 20/11** | Retrospectiva: comparecimento, tempo de entrada, problemas, pedidos da equipe | — |
+
+### O que fica de fora do Express (vai para depois do evento)
+
+- Cadastro com senha para participantes e recuperação de senha (participante usa **link mágico** do e-mail; organizadores são criados por script).
+- Convite de equipe por e-mail (AUTH-05), criação/edição de eventos pelo painel (o CANTEMOS é configurado por script), agendamento automático de abertura (EVT-05).
+- Edição de nomes pelo participante (PART-04) — a secretaria corrige pelo painel ou por script.
+- Check-in offline (CHK-09): com **120 pessoas**, o plano B é a **busca por nome + lista impressa**.
+- Tudo das Fases 2 a 5.
+
+### Plano B (se o Go / No-go de 08/11 for "não")
+
+Abrir as inscrições em **formulário simples** (ex.: Google Forms com limite manual) e **importar o CSV** no EVENTMER para enviar os ingressos com QR e fazer o check-in. A data do evento não muda; o que muda é só a porta de entrada das inscrições.
+
+### Riscos
+
+| Risco | Mitigação |
+|---|---|
+| E-mails caindo no spam | Domínio próprio com SPF/DKIM/DMARC configurados no dia 03/11; ingresso também acessível pelo link na tela de confirmação |
+| **No-show** alto (evento gratuito costuma ter 20–40% de faltas) | Lista de espera, e-mail de 16/11 pedindo cancelamento, e decisão sobre margem de inscrições acima de 120 (D15) |
+| Corrida na abertura esgotar em minutos | Controle de concorrência (TKT-06) e limite por pedido (D8) |
+| Internet ruim na portaria | Busca por nome, lista impressa, 4G de reserva |
+| Prazo apertado | Escopo congelado; qualquer item novo entra só depois de 19/11 |
+
+---
+
+## Depois do CANTEMOS 2026
+
+As fases abaixo continuam válidas e passam a ser planejadas a partir da retrospectiva de 20/11. As durações são estimativas para **1 a 2 desenvolvedores**.
+
+```mermaid
+flowchart LR
+    F1["<b>F1 · Completar MVP</b><br/>≈ 2 sem<br/>itens cortados do Express"]
     F2["<b>F2 · Operação robusta</b><br/>≈ 4 sem<br/>offline, lista de espera, caravanas"]
     F3["<b>F3 · Pagamentos</b><br/>≈ 4 sem<br/>PIX, lotes, contribuição"]
     F4["<b>F4 · Experiência e escala</b><br/>≈ 6 sem<br/>assentos, wallet, crachás"]
     F5["<b>F5 · Multi-organizador</b><br/>≈ 6 sem<br/>outras igrejas, API"]
-    F0 --> F1 --> M1 --> F2 --> F3 --> F4 --> F5
+    F1 --> F2 --> F3 --> F4 --> F5
 ```
-
-> **Data-alvo:** a Fase 1 precisa estar em produção **pelo menos 4 semanas antes da abertura das inscrições do CANTEMOS**, para dar tempo ao ensaio geral do check-in e aos ajustes. Ver [decisões em aberto](05-decisoes-em-aberto.md) (D1).
 
 ---
 
-## Fase 0 — Fundação (≈ 2 semanas)
+## Fase 0 — Fundação (concluída dentro do Plano Express)
 
 **Objetivo:** projeto rodando de ponta a ponta em produção, ainda sem funcionalidade de negócio.
 
@@ -38,7 +100,7 @@ flowchart LR
 
 ---
 
-## Fase 1 — MVP CANTEMOS: inscrição e check-in (≈ 5 semanas)
+## Fase 1 — MVP: inscrição e check-in (núcleo entregue no Plano Express; restante ≈ 2 semanas)
 
 **Objetivo:** realizar o CANTEMOS com ingressos gratuitos, inteiramente pelo EVENTMER.
 

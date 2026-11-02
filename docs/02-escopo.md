@@ -184,6 +184,8 @@ Decisões explícitas para manter o foco. "Não faremos" significa **fora do esc
 
 O MVP é o conjunto de itens da **Fase 1**: o mínimo para realizar o CANTEMOS **sem usar outra plataforma**, com ingressos gratuitos.
 
+Para o **CANTEMOS 2026 (19/11/2026, gratuito, 120 lugares)** o MVP foi reduzido ao **Plano Express** do [roadmap](03-roadmap.md): inscrição familiar com limite de lotação, ingresso com QR por e-mail, "meus ingressos" por link mágico, cancelamento, lista de espera simples, check-in por câmera e por nome, painel e exportação. O restante da Fase 1 é concluído depois do evento.
+
 **Critério de sucesso do MVP:**
 - 100% das inscrições do CANTEMOS feitas pelo EVENTMER.
 - Nenhuma sessão com mais inscritos do que a lotação.
