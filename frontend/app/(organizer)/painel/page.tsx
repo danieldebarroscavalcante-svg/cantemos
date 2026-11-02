@@ -25,14 +25,15 @@ const statusLabel: Record<EventSummary["status"], string> = {
 
 function formatDate(value: string | null) {
   if (!value) return "Data a definir";
-  const date = new Date(value);
-  return date.toLocaleString("pt-BR", {
+  const text = new Date(value).toLocaleString("pt-BR", {
     weekday: "long",
     day: "2-digit",
     month: "long",
     hour: "2-digit",
     minute: "2-digit",
   });
+  // "quinta-feira, 19 de novembro às 18:30" → só a primeira letra maiúscula
+  return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
 export default function PainelPage() {
@@ -100,7 +101,7 @@ export default function PainelPage() {
               <div>
                 <p className="text-sm font-semibold text-accent">{statusLabel[event.status]}</p>
                 <p className="text-xl font-bold">{event.title}</p>
-                <p className="capitalize text-muted">{formatDate(event.starts_at)}</p>
+                <p className="text-muted">{formatDate(event.starts_at)}</p>
               </div>
               <dl className="grid grid-cols-3 gap-2 text-center">
                 <div className="rounded-xl bg-bg p-3">
