@@ -29,6 +29,7 @@ def recipients(db: Session, event: Event) -> list[int]:
             .where(
                 Order.event_id == event.id,
                 Order.status == OrderStatus.CONFIRMED,
+                Order.is_test.is_(False),  # lembretes não vão para inscrições de teste
                 Ticket.status == TicketStatus.VALID,
             )
             .group_by(Order.id)

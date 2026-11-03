@@ -37,7 +37,7 @@ flowchart LR
 | **Qui 12 – Sáb 14/11** | ✅ *Adiantado para 03/11:* tela de check-in (câmera + busca por nome + prioridade + contador), vários operadores sem entrada duplicada, desfazer, acesso de voluntários por código | CHK-01–08, AUTH-06 |
 | **Dom 15/11** | ✅ *Adiantado para 03/11:* exportação CSV e lista de presença para imprimir. Pendente: lista de espera e painel de números ao vivo para a coordenação | RPT-01, RPT-02, CHK-11, ADM-02 |
 | **Seg 16/11** | **Code freeze** — a partir daqui só correção de bug crítico. E-mail "não poderá ir? cancele e libere sua vaga" | — |
-| ~~Ter 17/11~~ | ~~Ensaio geral~~ — **dispensado pela coordenação** (03/11). Recomendado: cada voluntário abrir a recepção no próprio celular antes do evento e permitir a câmera | — |
+| ~~Ter 17/11~~ | ~~Ensaio geral~~ — **dispensado pela coordenação** (03/11). No lugar: **painel → Teste geral** (inscrição de teste + roteiro de 9 passos, ~10 min) antes de abrir as inscrições e de novo em 18/11; cada voluntário abre a recepção no próprio celular e permite a câmera | — |
 | **Seg 16/11** e **Qua 18/11** | Coordenação aperta os botões dos lembretes no painel (*Números e lembretes*). Em 18/11: exportar a planilha (backup), imprimir a **lista de presença** (plano B), cancelar inscrições de teste | COM-02 |
 | **Qui 19/11** | **CANTEMOS** — equipe técnica de plantão na portaria | — |
 | **Sex 20/11** | Retrospectiva: comparecimento, tempo de entrada, problemas, pedidos da equipe | — |

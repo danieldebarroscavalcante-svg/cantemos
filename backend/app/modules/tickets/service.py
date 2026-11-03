@@ -238,9 +238,16 @@ def _buyer(db: Session, email: str, name: str, phone: str | None) -> User:
     return user
 
 
-def create_order(db: Session, slug: str, data: OrderIn) -> Order:
-    event = get_public_event(db, slug)
-    if event.status != EventStatus.OPEN:
+def create_order(db: Session, slug: str, data: OrderIn, *, is_test: bool = False) -> Order:
+    """Cria a inscrição. Com is_test (Teste geral do painel), funciona com o evento em qualquer
+    situação e não conta para a regra de uma inscrição por e-mail."""
+    if is_test:
+        event = db.scalar(select(Event).where(Event.slug == slug))
+        if event is None:
+            raise _error(status.HTTP_404_NOT_FOUND, "Evento não encontrado.")
+    else:
+        event = get_public_event(db, slug)
+    if event.status != EventStatus.OPEN and not is_test:
         raise _error(status.HTTP_409_CONFLICT, "As inscrições não estão abertas.")
     if not data.consent:
         raise _error(
@@ -259,9 +266,10 @@ def create_order(db: Session, slug: str, data: OrderIn) -> Order:
             Order.event_id == event.id,
             Order.buyer_email == email,
             Order.status == OrderStatus.CONFIRMED,
+            Order.is_test.is_(False),
         )
     )
-    if existing:
+    if existing and not is_test:
         raise _error(
             status.HTTP_409_CONFLICT,
             "Já existe uma inscrição com este e-mail. Use “Reenviar meu ingresso” para "
@@ -275,7 +283,7 @@ def create_order(db: Session, slug: str, data: OrderIn) -> Order:
         raise _error(status.HTTP_409_CONFLICT, "Evento sem ingressos configurados.")
 
     # Vagas guardadas para quem foi chamado da lista de espera não ficam disponíveis ao público.
-    invited = waitlist.entry_from_token(db, event, data.waitlist_token)
+    invited = None if is_test else waitlist.entry_from_token(db, event, data.waitlist_token)
     available = waitlist.available_for_public(db, event, invited.id if invited else None)
     if len(data.attendees) > available:
         if available == 0:
@@ -321,6 +329,7 @@ def create_order(db: Session, slug: str, data: OrderIn) -> Order:
         status=OrderStatus.CONFIRMED,
         source=(data.source or "").strip()[:80] or None,
         consent_at=utcnow(),
+        is_test=is_test,
     )
     db.add(order)
     db.flush()
@@ -337,7 +346,8 @@ def create_order(db: Session, slug: str, data: OrderIn) -> Order:
                 or ("Atendimento prioritário" if attendee.priority else None),
             )
         )
-    waitlist.mark_registered(db, event, email, invited)
+    if not is_test:
+        waitlist.mark_registered(db, event, email, invited)
     db.commit()
     logger.info("Inscrição %s criada (%d pessoas)", order.code, len(data.attendees))
     return order
@@ -380,5 +390,25 @@ def find_active_order(db: Session, slug: str, email: str) -> Order | None:
             Order.event_id == event.id,
             Order.buyer_email == normalize_email(email),
             Order.status == OrderStatus.CONFIRMED,
+            Order.is_test.is_(False),
         )
     )
+
+
+def delete_test_orders(db: Session, event: Event) -> int:
+    """Remove as inscrições do Teste geral, com entradas registradas, devolvendo as vagas."""
+    from app.modules.checkin.models import Checkin
+
+    orders = list(db.scalars(select(Order).where(Order.event_id == event.id, Order.is_test)))
+    for order in orders:
+        for ticket in db.scalars(select(Ticket).where(Ticket.order_id == order.id)):
+            if ticket.status in (TicketStatus.VALID, TicketStatus.USED):
+                _release(db, ticket.ticket_type_id, ticket.session_id, 1)
+            for checkin in db.scalars(select(Checkin).where(Checkin.ticket_id == ticket.id)):
+                db.delete(checkin)
+            db.delete(ticket)
+        db.delete(order)
+    db.commit()
+    if orders:
+        logger.info("Teste geral: %d inscrição(ões) de teste removida(s)", len(orders))
+    return len(orders)

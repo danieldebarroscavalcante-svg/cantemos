@@ -20,6 +20,7 @@ from app.modules.messages.router import router as messages_router
 from app.modules.notifications.router import router as notifications_router
 from app.modules.reports.router import router as reports_router
 from app.modules.tickets.router import router as tickets_router
+from app.modules.tickets.test_router import router as test_router
 
 settings = get_settings()
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
@@ -51,6 +52,7 @@ api.include_router(reports_router)
 api.include_router(assets_router)
 api.include_router(identity_router)
 api.include_router(messages_router)
+api.include_router(test_router)
 
 
 @api.get("/health", tags=["infra"])

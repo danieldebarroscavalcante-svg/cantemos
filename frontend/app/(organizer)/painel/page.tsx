@@ -173,6 +173,7 @@ export default function PainelPage() {
                   ["mensagens", "Mensagens de e-mail"],
                   ["configuracoes", "Configurações"],
                   ["acompanhamento", "Números e lembretes"],
+                  ["teste", "Teste geral"],
                 ].map(([path, label]) => (
                   <Link
                     key={path}

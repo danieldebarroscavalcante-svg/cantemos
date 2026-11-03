@@ -77,3 +77,4 @@ Depois siga [`backend/README.md`](backend/README.md) (API, migrations, criação
 | Identidade visual (tema escuro, laranja) e logos personalizáveis: logo do evento e logo/nome da igreja enviados pelo painel | ✅ 03/11 |
 | Identidade visual do evento (banner, nome, tema, logo), mensagens de e-mail editáveis com prévia em tempo real e novo layout dos e-mails | ✅ 03/11 |
 | Favicon/ícone do app ("e" laranja) e edição de perfil (nome e troca de senha) | ✅ 03/11 |
+| Teste geral no painel: inscrição de teste para o próprio e-mail (3 pessoas), roteiro de verificação de ponta a ponta e remoção com devolução das vagas | ✅ 03/11 |

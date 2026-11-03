@@ -76,6 +76,8 @@ class Order(IdMixin, PublicIdMixin, TimestampMixin, Base):
     consent_at: Mapped[datetime | None] = mapped_column(DateTime)
     cancelled_at: Mapped[datetime | None] = mapped_column(DateTime)
     email_sent_at: Mapped[datetime | None] = mapped_column(DateTime)
+    # Inscrição criada pelo "Teste geral" do painel (removível de uma vez).
+    is_test: Mapped[bool] = mapped_column(Boolean, default=False, server_default="0")
 
     tickets: Mapped[list["Ticket"]] = relationship(back_populates="order")
 
