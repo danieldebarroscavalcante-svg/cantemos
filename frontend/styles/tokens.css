@@ -1,5 +1,5 @@
 /* =========================================================
-   Design tokens — tema escuro "neon mint"
+   Design tokens — tema escuro (base "neon mint", cor de ação LARANJA)
    Extraído por inspeção de estilos computados (cores, tipo,
    raios, sombras, gradientes). Sem logos, imagens ou textos.
    ========================================================= */
@@ -18,14 +18,14 @@
   --bg-glass:       rgba(255, 255, 255, 0.03);
 
   /* brilho radial do topo da página */
-  --bg-glow: radial-gradient(at 75% 0%, rgba(54, 237, 179, 0.035), transparent 34%);
+  --bg-glow: radial-gradient(at 75% 0%, rgba(255, 138, 61, 0.035), transparent 34%);
 
   /* ---------- Marca / ação ---------- */
-  --brand:          #36EDB3;           /* verde-menta neon (cor principal) */
-  --brand-light:    #8AF7D3;
-  --brand-dark:     #29DBA4;
-  --on-brand:       #020706;           /* texto sobre o verde */
-  --brand-gradient: linear-gradient(115deg, #8AF7D3, #36EDB3 48%, #29DBA4);
+  --brand:          #FF8A3D;           /* laranja (cor principal) — trocado do verde-menta #36EDB3 */
+  --brand-light:    #FFB37A;
+  --brand-dark:     #F26B1D;
+  --on-brand:       #1A0B02;           /* texto sobre o laranja */
+  --brand-gradient: linear-gradient(115deg, #FFB37A, #FF8A3D 48%, #F26B1D);
 
   /* ---------- Texto ---------- */
   --text-strong:    #FFFFFF;           /* títulos de destaque */
@@ -48,7 +48,7 @@
   /* ---------- Bordas ---------- */
   --border-subtle:  rgba(217, 229, 224, 0.07);
   --border-default: rgba(217, 229, 224, 0.12);
-  --border-brand:   rgba(54, 237, 179, 0.35);
+  --border-brand:   rgba(255, 138, 61, 0.35);
   --inset-highlight: inset 0 1px 0 rgba(217, 229, 224, 0.07); /* fio de luz no topo dos cards */
 
   /* ---------- Tipografia ---------- */
@@ -79,7 +79,7 @@
   --shadow-sm: 0 10px 22px -8px rgba(0, 0, 0, 0.73);
   --shadow-md: 0 18px 26px -18px rgba(0, 0, 0, 0.6), 0 5px 12px 0 rgba(0, 0, 0, 0.2);
   --shadow-lg: 0 25px 34px -20px rgba(0, 0, 0, 0.8);
-  --glow-brand: 0 0 24px -5px rgba(54, 237, 179, 0.45); /* aplicar no hover do CTA */
+  --glow-brand: 0 0 24px -5px rgba(255, 138, 61, 0.45); /* aplicar no hover do CTA */
 
   /* ---------- Gradientes de faixa (divisores/barras) ---------- */
   --stripe-bronze: linear-gradient(90deg, #241B14, #BF956E 30%, #413125 58%, #171412);

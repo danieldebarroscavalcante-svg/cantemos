@@ -1,4 +1,4 @@
-# Design System — tema escuro "neon mint"
+# Design System — tema escuro "neon mint" (cor de ação: laranja, ver §7)
 
 > Instrução para o Claude Code: use **sempre** os tokens de `tokens.css`. Nunca escreva cores, fontes, raios ou sombras "soltos" no código — referencie as variáveis CSS.
 
@@ -49,3 +49,19 @@ Logotipos, nome de marca, imagens, ícones e textos do site de referência **nã
   - *QR Codes* sempre em fundo branco (leitura pela câmera).
   - *E-mails* repetem os valores dos tokens em estilo inline (clientes de e-mail não aceitam variáveis CSS) — `backend/app/modules/tickets/emails.py` e `backend/app/modules/waitlist/service.py`.
   - *Impressão* (lista de presença): `@media print` troca os canais para papel branco e texto preto.
+
+## 7. Alteração: cor de ação laranja (03/11/2026)
+A coordenação trocou o verde-menta por **laranja** em botões e destaques. Tudo o que o documento acima chama de "verde-menta" / `--brand` passa a ser:
+
+| Token | Antes | Agora |
+|---|---|---|
+| `--brand` | `#36EDB3` | `#FF8A3D` |
+| `--brand-light` | `#8AF7D3` | `#FFB37A` |
+| `--brand-dark` | `#29DBA4` | `#F26B1D` |
+| `--on-brand` | `#020706` | `#1A0B02` |
+| `--brand-gradient` | menta | `linear-gradient(115deg, #FFB37A, #FF8A3D 48%, #F26B1D)` |
+| `--glow-brand`, `--bg-glow`, `--border-brand` | menta | mesmo laranja com a mesma opacidade |
+
+- O estado de **sucesso** deixou de usar a cor da marca e passou a verde (`#22C55E`), para "entrada liberada" não se confundir com o âmbar de "já entrou".
+- O divisor da página do evento usa `--stripe-bronze`, que combina com o laranja.
+- Superfícies, textos e bordas continuam os da referência.

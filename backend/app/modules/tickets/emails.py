@@ -17,13 +17,13 @@ MONTHS = [
 ]  # fmt: skip
 AGE_LABEL = {"adulto": "Adulto", "crianca": "Criança", "idoso": "Idoso"}
 
-# Tema "neon mint" (espelho de frontend/styles/tokens.css — e-mail não aceita variáveis CSS).
+# Tema escuro com cor de ação laranja (espelho de frontend/styles/tokens.css — e-mail não aceita variáveis CSS).
 C = {
     "bg": "#000000",  # --bg-base
     "card": "#0B0D0E",  # --bg-surface-2
     "line": "#1E2523",  # --border-default sobre o fundo escuro
-    "brand": "#36EDB3",  # --brand
-    "on_brand": "#020706",  # --on-brand
+    "brand": "#FF8A3D",  # --brand (laranja)
+    "on_brand": "#1A0B02",  # --on-brand
     "strong": "#FFFFFF",  # --text-strong
     "text": "#F3F8F6",  # --text-primary
     "muted": "#9EB4A9",  # --text-muted
@@ -115,13 +115,13 @@ def build_ticket_email(
      Na entrada, mostre o QR Code de cada pessoa (pode ser na tela do celular).</p>
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0">{rows}</table>
   <p style="text-align:center;margin:28px 0">
-    <a href="{link}" style="display:inline-block;background:{C["brand"]};background-image:linear-gradient(115deg,#8AF7D3,#36EDB3 48%,#29DBA4);
+    <a href="{link}" style="display:inline-block;background:{C["brand"]};background-image:linear-gradient(115deg,#FFB37A,#FF8A3D 48%,#F26B1D);
        color:{C["on_brand"]};text-decoration:none;padding:16px 26px;border-radius:9px;font-weight:700;
        text-transform:uppercase;letter-spacing:0.5px">Ver meus ingressos</a>
   </p>
   <p style="font-size:14px;line-height:1.85;color:{C["muted"]}">Não poderá ir? Cancele pelo botão acima para liberar
      a vaga para outra família. A entrada é gratuita e os lugares são limitados — chegue cedo.</p>
-  <div style="height:1px;margin:24px 0;background:{C["line"]};background-image:linear-gradient(90deg,#071B13,#375C4E 26%,#11271E 46%,#06120C 82%)"></div>
+  <div style="height:1px;margin:24px 0;background:{C["line"]};background-image:linear-gradient(90deg,#241B14,#BF956E 30%,#413125 58%,#171412)"></div>
   <p style="font-size:12px;color:{C["subtle"]}">Enviado pelo EVENTMER para {escape(order.buyer_email)}.
      Este e-mail contém seus ingressos: não compartilhe com quem não vai com você.</p>
 </div></body></html>"""

@@ -2,10 +2,10 @@
   <!-- Cores de styles/tokens.css: --bg-surface-2 e --brand-gradient -->
   <defs>
     <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#8AF7D3"/><stop offset=".48" stop-color="#36EDB3"/><stop offset="1" stop-color="#29DBA4"/>
+      <stop offset="0" stop-color="#FFB37A"/><stop offset=".48" stop-color="#FF8A3D"/><stop offset="1" stop-color="#F26B1D"/>
     </linearGradient>
   </defs>
   <rect width="64" height="64" rx="12" fill="#0B0D0E"/>
-  <rect x=".5" y=".5" width="63" height="63" rx="11.5" fill="none" stroke="#36EDB3" stroke-opacity=".35"/>
+  <rect x=".5" y=".5" width="63" height="63" rx="11.5" fill="none" stroke="#FF8A3D" stroke-opacity=".35"/>
   <path d="M20 18h24v6H27v5h15v6H27v5h17v6H20z" fill="url(#g)"/>
 </svg>

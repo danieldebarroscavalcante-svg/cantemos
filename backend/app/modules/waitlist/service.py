@@ -137,7 +137,7 @@ def _joined_email(event: Event, entry: WaitlistEntry, position: int) -> Outgoing
     html = (
         '<div style="background:#000000;color:#F3F8F6;font-family:Arial,Helvetica,sans-serif;'
         'max-width:520px;margin:0 auto;padding:28px 16px;line-height:1.85">'
-        '<p style="margin:0;color:#36EDB3;font-weight:700;letter-spacing:1.5px;font-size:11px;'
+        '<p style="margin:0;color:#FF8A3D;font-weight:700;letter-spacing:1.5px;font-size:11px;'
         'text-transform:uppercase">Lista de espera</p>'
         f'<h1 style="margin:10px 0 14px;font-size:28px;font-weight:400;color:#FFFFFF">{event.title}</h1>'
         f'<p style="color:#9EB4A9">Olá, {first}! Você está na posição '
@@ -163,12 +163,12 @@ def _invite_email(event: Event, entry: WaitlistEntry) -> OutgoingEmail:
     )
     # Cores do tema (espelho de frontend/styles/tokens.css).
     html = f"""<div style="background:#000000;color:#F3F8F6;font-family:'Sora',Arial,Helvetica,sans-serif;max-width:520px;margin:0 auto;padding:28px 16px">
-<p style="margin:0;color:#36EDB3;font-weight:700;letter-spacing:1.5px;font-size:11px;text-transform:uppercase">Abriu vaga</p>
+<p style="margin:0;color:#FF8A3D;font-weight:700;letter-spacing:1.5px;font-size:11px;text-transform:uppercase">Abriu vaga</p>
 <h1 style="margin:10px 0 14px;font-size:30px;font-weight:400;color:#FFFFFF">{event.title}</h1>
 <p style="line-height:1.85;color:#9EB4A9">Olá, {first}! Guardamos <strong style="color:#F3F8F6">{entry.quantity} lugar(es)</strong>
 para você até <strong style="color:#F3F8F6">{deadline}</strong>.</p>
-<p style="text-align:center;margin:28px 0"><a href="{link}" style="display:inline-block;background:#36EDB3;
-background-image:linear-gradient(115deg,#8AF7D3,#36EDB3 48%,#29DBA4);color:#020706;text-decoration:none;
+<p style="text-align:center;margin:28px 0"><a href="{link}" style="display:inline-block;background:#FF8A3D;
+background-image:linear-gradient(115deg,#FFB37A,#FF8A3D 48%,#F26B1D);color:#1A0B02;text-decoration:none;
 padding:16px 26px;border-radius:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px">Fazer minha inscrição</a></p>
 <p style="color:#9EB4A9;font-size:14px;line-height:1.85">Depois desse prazo, a vaga passa para a próxima pessoa
 da lista.</p></div>"""

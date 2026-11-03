@@ -47,7 +47,7 @@ export default async function EventPage({ params, searchParams }: Props) {
   return (
     <main className="mx-auto w-full max-w-2xl space-y-6 px-4 py-6 md:py-10">
       <EventHeader event={event} />
-      <div className="divider-forest" aria-hidden />
+      <div className="divider-bronze" aria-hidden />
 
       {event.description && (
         <p className="whitespace-pre-line text-body">{event.description}</p>
