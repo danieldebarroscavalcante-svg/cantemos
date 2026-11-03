@@ -100,8 +100,9 @@ export default function OrganizationPage() {
 
       <Card>
         <LogoField
+          ideal={{ width: 600, height: 600 }}
           label="Logo da igreja"
-          hint="PNG com fundo transparente (ou SVG), pensado para fundo escuro, até 1 MB."
+          hint="Aparece pequeno no rodapé “Realização”. Prefira versão quadrada, PNG com fundo transparente (ou SVG) e cores para fundo escuro, até 1 MB."
           url={org.logo_url}
           disabled={!org.can_edit}
           onUpload={async (file) =>

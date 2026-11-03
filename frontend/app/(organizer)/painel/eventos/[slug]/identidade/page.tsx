@@ -121,8 +121,9 @@ export default function IdentityPage({ params }: { params: { slug: string } }) {
           <Card>
             <LogoField
               wide
+              ideal={{ width: 1500, height: 500 }}
               label="Banner do evento"
-              hint="Imagem larga no topo da página do evento e no destaque da página inicial. Use 1500 × 500 px (proporção 3:1), JPG ou PNG, até 2 MB. Evite texto nas bordas: no celular as laterais podem ser cortadas."
+              hint="Fica no topo da página do evento e no destaque da página inicial. JPG ou PNG, até 2 MB. No celular as laterais podem ser cortadas: evite texto perto das bordas."
               url={identity.banner_url}
               disabled={!canEdit}
               onUpload={async (file) =>
@@ -138,8 +139,9 @@ export default function IdentityPage({ params }: { params: { slug: string } }) {
 
           <Card>
             <LogoField
+              ideal={{ width: 1200, height: 400 }}
               label="Logo do evento"
-              hint="Aparece no lugar do nome na página do evento, nos ingressos, na recepção e no topo dos e-mails. PNG com fundo transparente (ou SVG) para fundo escuro, até 1 MB. Para aparecer no e-mail, use PNG ou JPG."
+              hint="Aparece no lugar do nome na página do evento, nos ingressos, na recepção e no topo dos e-mails. Prefira logo horizontal, PNG com fundo transparente e cores para fundo escuro, até 1 MB. Logos quadrados também funcionam (mínimo 600 × 600 px), mas aparecem menores. Para sair no e-mail, use PNG ou JPG (SVG não aparece no e-mail)."
               url={identity.logo_url}
               disabled={!canEdit}
               onUpload={async (file) => {

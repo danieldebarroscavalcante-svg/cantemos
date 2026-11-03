@@ -5,8 +5,11 @@ import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ApiError } from "@/lib/api";
 
+type Size = { width: number; height: number };
+
 type Props = {
   wide?: boolean; // banner (proporção 3:1)
+  ideal: Size; // tamanho recomendado em px
   label: string;
   hint: string;
   url: string | null;
@@ -16,8 +19,34 @@ type Props = {
 };
 
 /** Envio de logo com prévia sobre o fundo escuro do site. */
+const gcd = (a: number, b: number): number => (b ? gcd(b, a % b) : a);
+const ratioLabel = ({ width, height }: Size) => {
+  const d = gcd(width, height);
+  return `${width / d}:${height / d}`;
+};
+
+/** Avisos (não bloqueiam o envio) quando a imagem foge do tamanho/proporção ideais. */
+function sizeWarnings(actual: Size, ideal: Size, wide?: boolean): string[] {
+  const warnings: string[] = [];
+  if (actual.width < ideal.width / 2 || actual.height < ideal.height / 2) {
+    warnings.push(
+      "Imagem pequena: pode aparecer sem nitidez em telas grandes.",
+    );
+  }
+  const diff = actual.width / actual.height / (ideal.width / ideal.height);
+  if (diff < 0.7 || diff > 1.4) {
+    warnings.push(
+      wide
+        ? "Proporção diferente da ideal: partes da imagem serão cortadas."
+        : "Proporção diferente da ideal: o logo vai aparecer menor, com espaço sobrando.",
+    );
+  }
+  return warnings;
+}
+
 export function LogoField({
   wide,
+  ideal,
   label,
   hint,
   url,
@@ -28,6 +57,7 @@ export function LogoField({
   const input = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [actual, setActual] = useState<Size | null>(null);
 
   async function run(fn: () => Promise<void>) {
     setBusy(true);
@@ -60,6 +90,12 @@ export function LogoField({
           <img
             src={url}
             alt={`Prévia: ${label}`}
+            onLoad={(e) =>
+              setActual({
+                width: e.currentTarget.naturalWidth,
+                height: e.currentTarget.naturalHeight,
+              })
+            }
             className={
               wide
                 ? "h-full w-full object-cover"
@@ -72,6 +108,22 @@ export function LogoField({
           </p>
         )}
       </div>
+      <p className="text-sm font-semibold text-soft">
+        Tamanho ideal: {ideal.width} × {ideal.height} px · proporção{" "}
+        {ratioLabel(ideal)}
+      </p>
+      {url && actual && actual.width > 0 && (
+        <div className="space-y-1 text-sm">
+          <p className="text-muted">
+            Imagem atual: {actual.width} × {actual.height} px
+          </p>
+          {sizeWarnings(actual, ideal, wide).map((w) => (
+            <p key={w} className="text-warning">
+              {w}
+            </p>
+          ))}
+        </div>
+      )}
       <p className="text-sm text-muted">{hint}</p>
       <input
         ref={input}

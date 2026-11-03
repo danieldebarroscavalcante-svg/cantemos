@@ -81,3 +81,12 @@ A coordenação trocou o verde-menta por **laranja** em botões e destaques. Tud
 
 ## 10. Ícone do sistema (favicon)
 O "e" laranja fornecido pela coordenação (PNG 512 × 512, fundo transparente) gera: `app/favicon.ico` (48 px, aba do navegador), `app/icon.png` (512 px), `app/apple-icon.png` (180 px com fundo preto — o iPhone não aceita transparência) e `public/icon-192.png` / `public/icon-512.png` (app instalável).
+
+## 11. Tamanhos ideais das imagens
+| Imagem | Tamanho ideal | Proporção | Onde aparece |
+|---|---|---|---|
+| Logo do evento | 1200 × 400 px | 3:1 (horizontal) | Página do evento (até 128 px de altura), início, ingressos, recepção, topo dos e-mails (até 56 px) |
+| Banner do evento | 1500 × 500 px | 3:1 | Topo da página do evento e cartão da página inicial (recortado para preencher) |
+| Logo da igreja | 600 × 600 px | 1:1 (quadrado) | Rodapé "Realização" (até 48 px de altura) |
+
+O painel mostra o tamanho ideal em cada campo, o tamanho da imagem enviada e avisa (sem bloquear) quando ela é pequena demais (menos da metade do ideal) ou tem proporção muito diferente.
