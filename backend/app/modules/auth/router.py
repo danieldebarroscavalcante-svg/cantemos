@@ -3,11 +3,19 @@ from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
 from app.core.deps import get_current_user
-from app.core.security import create_access_token
+from app.core.ratelimit import RateLimiter
+from app.core.security import create_access_token, hash_password, verify_password
 from app.db.session import get_db
 from app.modules.auth import service
 from app.modules.auth.models import User
-from app.modules.auth.schemas import LoginRequest, MembershipOut, TokenResponse, UserOut
+from app.modules.auth.schemas import (
+    LoginRequest,
+    MembershipOut,
+    PasswordIn,
+    ProfileIn,
+    TokenResponse,
+    UserOut,
+)
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -70,8 +78,10 @@ def logout(
     response.delete_cookie(REFRESH_COOKIE, path=REFRESH_COOKIE_PATH)
 
 
-@router.get("/me", response_model=UserOut)
-def me(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+password_limiter = RateLimiter(max_calls=10, per_seconds=600)
+
+
+def _user_out(db: Session, user: User) -> UserOut:
     return UserOut(
         id=user.public_id,
         name=user.name,
@@ -83,3 +93,38 @@ def me(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
             for org, member in service.memberships_of(db, user)
         ],
     )
+
+
+@router.get("/me", response_model=UserOut)
+def me(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return _user_out(db, user)
+
+
+@router.put("/me", response_model=UserOut)
+def update_profile(
+    payload: ProfileIn, user: User = Depends(get_current_user), db: Session = Depends(get_db)
+):
+    user.name = " ".join(payload.name.split())
+    db.commit()
+    return _user_out(db, user)
+
+
+@router.post("/password", status_code=status.HTTP_204_NO_CONTENT)
+def change_password(
+    payload: PasswordIn,
+    response: Response,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Troca a senha e encerra as sessões dos outros aparelhos (este continua logado)."""
+    password_limiter.hit(f"user:{user.id}")
+    if not verify_password(payload.current_password, user.password_hash):
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Senha atual incorreta.")
+    if payload.new_password == payload.current_password:
+        raise HTTPException(
+            status.HTTP_422_UNPROCESSABLE_ENTITY, "A nova senha precisa ser diferente da atual."
+        )
+    user.password_hash = hash_password(payload.new_password)
+    db.commit()
+    service.revoke_all_refresh_tokens(db, user)
+    _set_refresh_cookie(response, service.issue_refresh_token(db, user))

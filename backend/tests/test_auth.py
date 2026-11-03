@@ -55,3 +55,46 @@ def test_logout_revokes_refresh_token(client, admin):
 
     client.cookies.set(REFRESH_COOKIE, token, path="/api/v1/auth")
     assert client.post("/api/v1/auth/refresh").status_code == 401
+
+
+def test_update_profile_name(client, admin):
+    headers = {"Authorization": f"Bearer {login(client).json()['access_token']}"}
+    body = client.put("/api/v1/auth/me", json={"name": "  Daniel   Cavalcante "}, headers=headers)
+    assert body.status_code == 200
+    assert body.json()["name"] == "Daniel Cavalcante"
+    assert client.put("/api/v1/auth/me", json={"name": "D"}, headers=headers).status_code == 422
+
+
+def test_change_password_requires_current_and_logs_out_other_devices(client, admin):
+    other_device = login(client).cookies[REFRESH_COOKIE]
+    current = login(client)
+    headers = {"Authorization": f"Bearer {current.json()['access_token']}"}
+    wrong = client.post(
+        "/api/v1/auth/password",
+        json={"current_password": "errada", "new_password": "nova-senha-123"},
+        headers=headers,
+    )
+    assert wrong.status_code == 400
+    changed = client.post(
+        "/api/v1/auth/password",
+        json={"current_password": PASSWORD, "new_password": "nova-senha-123"},
+        headers=headers,
+    )
+    assert changed.status_code == 204
+    assert REFRESH_COOKIE in changed.cookies  # este aparelho continua logado
+
+    client.cookies.clear()
+    client.cookies.set(REFRESH_COOKIE, other_device, path="/api/v1/auth")
+    assert client.post("/api/v1/auth/refresh").status_code == 401  # outro aparelho saiu
+    assert login(client).status_code == 401  # senha antiga não vale mais
+    assert login(client, password="nova-senha-123").status_code == 200
+
+
+def test_new_password_must_have_8_chars(client, admin):
+    headers = {"Authorization": f"Bearer {login(client).json()['access_token']}"}
+    short = client.post(
+        "/api/v1/auth/password",
+        json={"current_password": PASSWORD, "new_password": "curta"},
+        headers=headers,
+    )
+    assert short.status_code == 422

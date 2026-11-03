@@ -78,3 +78,6 @@ A coordenação trocou o verde-menta por **laranja** em botões e destaques. Tud
 - **Sem fundos amarelados:** avisos e selos informativos usam cinza escuro (`bg-line/[0.08]`). O amarelo forte fica só nos alertas funcionais da recepção ("já entrou" e barra de lotação quase cheia).
 - **Botões sempre em uma linha** (`whitespace-nowrap`); quando falta espaço, os botões é que vão para a linha de baixo. Primário com 14px, maiúsculo e peso 700.
 - **E-mails** seguem um layout de cartão: faixa laranja no topo, cabeçalho com logo e divisória, título, texto, cartão com os dados do evento, bloco em cinza escuro, botão e rodapé em faixa (`backend/app/modules/notifications/layout.py`). Os textos são editáveis no painel → *Mensagens de e-mail*, com prévia em tempo real e campos automáticos (`{nome}`, `{evento}`, `{data}`…).
+
+## 10. Ícone do sistema (favicon)
+O "e" laranja fornecido pela coordenação (PNG 512 × 512, fundo transparente) gera: `app/favicon.ico` (48 px, aba do navegador), `app/icon.png` (512 px), `app/apple-icon.png` (180 px com fundo preto — o iPhone não aceita transparência) e `public/icon-192.png` / `public/icon-512.png` (app instalável).

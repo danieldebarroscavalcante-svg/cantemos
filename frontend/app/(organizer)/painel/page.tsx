@@ -108,7 +108,13 @@ export default function PainelPage() {
           </h1>
           <p className="text-sm text-muted">{roles.join(" · ")}</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href="/painel/perfil"
+            className="inline-flex min-h-touch shrink-0 items-center justify-center whitespace-nowrap rounded-xl border border-border bg-line/[0.03] px-5 text-sm font-semibold hover:bg-line/[0.07]"
+          >
+            Meu perfil
+          </Link>
           <Link
             href="/painel/igreja"
             className="inline-flex min-h-touch shrink-0 whitespace-nowrap items-center justify-center rounded-xl border border-border bg-line/[0.03] px-5 text-sm font-semibold hover:bg-line/[0.07]"

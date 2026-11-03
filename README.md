@@ -76,3 +76,4 @@ Depois siga [`backend/README.md`](backend/README.md) (API, migrations, criação
 | Check-in: câmera (QR) e busca por nome, entrada da família, contador ao vivo, acesso de voluntários por código da recepção, lista de presença para imprimir, planilha CSV | ✅ 03/11 |
 | Identidade visual (tema escuro, laranja) e logos personalizáveis: logo do evento e logo/nome da igreja enviados pelo painel | ✅ 03/11 |
 | Identidade visual do evento (banner, nome, tema, logo), mensagens de e-mail editáveis com prévia em tempo real e novo layout dos e-mails | ✅ 03/11 |
+| Favicon/ícone do app ("e" laranja) e edição de perfil (nome e troca de senha) | ✅ 03/11 |

@@ -67,3 +67,14 @@ def memberships_of(db: Session, user: User) -> list[tuple[Organization, Organiza
         .where(OrganizationMember.user_id == user.id)
     )
     return [(org, member) for org, member in rows]
+
+
+def revoke_all_refresh_tokens(db: Session, user: User) -> None:
+    """Encerra as sessões de todos os aparelhos (usado ao trocar a senha)."""
+    for token in db.scalars(
+        select(RefreshToken).where(
+            RefreshToken.user_id == user.id, RefreshToken.revoked_at.is_(None)
+        )
+    ):
+        token.revoked_at = utcnow()
+    db.commit()
