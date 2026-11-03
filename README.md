@@ -72,4 +72,5 @@ Depois siga [`backend/README.md`](backend/README.md) (API, migrations, criação
 | Página pública + inscrição familiar + ingresso com QR por e-mail | ✅ 03/11 |
 | Meus ingressos (link do e-mail), cancelamento total ou por pessoa, reenvio do ingresso | ✅ 03/11 |
 | Lista de espera | ⏳ 09–11/11 |
-| Check-in, painel, exportação | ⏳ 12–15/11 |
+| Check-in: câmera (QR) e busca por nome, entrada da família, contador ao vivo, acesso de voluntários por código da recepção, lista de presença para imprimir, planilha CSV | ✅ 03/11 |
+| Ensaio geral com os voluntários | ⏳ 17/11 |

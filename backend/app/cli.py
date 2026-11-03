@@ -18,6 +18,7 @@ from app.core.timezone import local_to_utc
 from app.db.session import SessionLocal
 from app.modules.auth.models import User
 from app.modules.auth.service import normalize_email
+from app.modules.checkin.service import new_checkin_code
 from app.modules.events.models import Event, EventSession, EventStatus
 from app.modules.events.schemas import EventSettingsIn
 from app.modules.events.service import update_settings
@@ -95,6 +96,7 @@ def seed_cantemos_event(
         description="Cantata de final de ano. Entrada gratuita mediante inscrição.",
         status=EventStatus.DRAFT,
         max_tickets_per_order=max_per_order,
+        checkin_code=new_checkin_code(),
     )
     db.add(event)
     db.flush()

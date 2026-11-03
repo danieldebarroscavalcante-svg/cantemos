@@ -22,7 +22,9 @@ class Checkin(IdMixin, Base):
         BigIntPK, ForeignKey("tickets.id", ondelete="CASCADE"), index=True
     )
     session_id: Mapped[int] = mapped_column(BigIntPK, ForeignKey("event_sessions.id"), index=True)
-    operator_user_id: Mapped[int] = mapped_column(BigIntPK, ForeignKey("users.id"))
+    # Equipe com login usa operator_user_id; voluntário com código da recepção só tem nome.
+    operator_user_id: Mapped[int | None] = mapped_column(BigIntPK, ForeignKey("users.id"))
+    operator_name: Mapped[str | None] = mapped_column(String(100))
     method: Mapped[CheckinMethod] = mapped_column(str_enum(CheckinMethod))
     gate: Mapped[str | None] = mapped_column(String(50))
     device_id: Mapped[str | None] = mapped_column(String(64))
@@ -31,3 +33,4 @@ class Checkin(IdMixin, Base):
     checked_in_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
     undone_at: Mapped[datetime | None] = mapped_column(DateTime)
     undone_by_user_id: Mapped[int | None] = mapped_column(BigIntPK, ForeignKey("users.id"))
+    undone_by_name: Mapped[str | None] = mapped_column(String(100))

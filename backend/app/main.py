@@ -9,6 +9,8 @@ from sqlalchemy.orm import Session
 from app.core.config import get_settings
 from app.db.session import get_db
 from app.modules.auth.router import router as auth_router
+from app.modules.checkin.router import org_router as reception_router
+from app.modules.checkin.router import router as checkin_router
 from app.modules.events.router import router as events_router
 from app.modules.notifications.router import router as notifications_router
 from app.modules.tickets.router import router as tickets_router
@@ -36,6 +38,8 @@ api.include_router(auth_router)
 api.include_router(events_router)
 api.include_router(notifications_router)
 api.include_router(tickets_router)
+api.include_router(checkin_router)
+api.include_router(reception_router)
 
 
 @api.get("/health", tags=["infra"])

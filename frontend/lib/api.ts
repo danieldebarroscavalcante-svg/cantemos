@@ -32,7 +32,10 @@ async function parseError(response: Response): Promise<ApiError> {
 }
 
 export async function refreshSession(): Promise<boolean> {
-  refreshing ??= fetch("/api/v1/auth/refresh", { method: "POST", credentials: "include" })
+  refreshing ??= fetch("/api/v1/auth/refresh", {
+    method: "POST",
+    credentials: "include",
+  })
     .then(async (response) => {
       if (!response.ok) {
         setAccessToken(null);
@@ -48,12 +51,21 @@ export async function refreshSession(): Promise<boolean> {
   return refreshing;
 }
 
-export async function api<T>(path: string, init: RequestInit = {}, retry = true): Promise<T> {
+export async function api<T>(
+  path: string,
+  init: RequestInit = {},
+  retry = true,
+): Promise<T> {
   const headers = new Headers(init.headers);
-  if (init.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
+  if (init.body && !headers.has("Content-Type"))
+    headers.set("Content-Type", "application/json");
   if (accessToken) headers.set("Authorization", `Bearer ${accessToken}`);
 
-  const response = await fetch(`/api/v1${path}`, { ...init, headers, credentials: "include" });
+  const response = await fetch(`/api/v1${path}`, {
+    ...init,
+    headers,
+    credentials: "include",
+  });
 
   if (response.status === 401 && retry && !path.startsWith("/auth/")) {
     if (await refreshSession()) return api<T>(path, init, false);
@@ -63,8 +75,39 @@ export async function api<T>(path: string, init: RequestInit = {}, retry = true)
   return response.json() as Promise<T>;
 }
 
-export type Membership = { organization_id: string; organization_name: string; role: string };
-export type Me = { id: string; name: string; email: string; memberships: Membership[] };
+/** Download autenticado (ex.: planilha CSV). */
+export async function apiDownload(
+  path: string,
+  filename: string,
+): Promise<void> {
+  const doFetch = () =>
+    fetch(`/api/v1${path}`, {
+      credentials: "include",
+      headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
+    });
+  let response = await doFetch();
+  if (response.status === 401 && (await refreshSession()))
+    response = await doFetch();
+  if (!response.ok) throw await parseError(response);
+  const url = URL.createObjectURL(await response.blob());
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+export type Membership = {
+  organization_id: string;
+  organization_name: string;
+  role: string;
+};
+export type Me = {
+  id: string;
+  name: string;
+  email: string;
+  memberships: Membership[];
+};
 
 export async function login(email: string, password: string): Promise<void> {
   const { access_token } = await api<{ access_token: string }>("/auth/login", {
@@ -90,7 +133,12 @@ export type EventSummary = {
 };
 
 export type QuotaUsage = { quantity: number; issued: number };
-export type ReservedQuota = { id?: string; name: string; quantity: number; issued?: number };
+export type ReservedQuota = {
+  id?: string;
+  name: string;
+  quantity: number;
+  issued?: number;
+};
 
 export type EventSettings = {
   slug: string;

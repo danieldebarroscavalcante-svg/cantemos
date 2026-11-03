@@ -34,8 +34,8 @@ flowchart LR
 | **Dom 08/11** | **Go / No-go** para abrir as inscrições | — |
 | **Seg 09/11** | **Abertura das inscrições** — divulgação nos cultos e grupos | — |
 | **Seg 09 – Qua 11/11** | "Meus ingressos" via link mágico, cancelamento pelo participante (libera vaga), lista de espera simples | PART-01, PART-03, AUTH-03 (só link mágico), TKT-09 (manual) |
-| **Qui 12 – Sáb 14/11** | Tela de check-in (câmera + busca por nome + prioridade + contador), vários operadores, desfazer | CHK-01–08 |
-| **Dom 15/11** | Painel com números ao vivo, exportação CSV, lista de presença em PDF | RPT-01, RPT-02, CHK-11, ADM-02 |
+| **Qui 12 – Sáb 14/11** | ✅ *Adiantado para 03/11:* tela de check-in (câmera + busca por nome + prioridade + contador), vários operadores sem entrada duplicada, desfazer, acesso de voluntários por código | CHK-01–08, AUTH-06 |
+| **Dom 15/11** | ✅ *Adiantado para 03/11:* exportação CSV e lista de presença para imprimir. Pendente: lista de espera e painel de números ao vivo para a coordenação | RPT-01, RPT-02, CHK-11, ADM-02 |
 | **Seg 16/11** | **Code freeze** — a partir daqui só correção de bug crítico. E-mail "não poderá ir? cancele e libere sua vaga" | — |
 | **Ter 17/11** | **Ensaio geral** com os voluntários de recepção: ingressos de teste, celulares e tablets reais, Wi-Fi do templo e 4G | — |
 | **Qua 18/11** | Lembrete por e-mail aos inscritos, backup do banco testado, **lista de presença impressa** (plano B), limpeza dos dados de teste | COM-02 (envio único) |

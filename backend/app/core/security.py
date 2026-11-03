@@ -33,6 +33,34 @@ def create_access_token(user_id: int) -> str:
     return jwt.encode(payload, settings.jwt_secret, algorithm=settings.jwt_algorithm)
 
 
+def decode_token(token: str) -> dict | None:
+    settings = get_settings()
+    try:
+        return jwt.decode(token, settings.jwt_secret, algorithms=[settings.jwt_algorithm])
+    except jwt.PyJWTError:
+        return None
+
+
+def checkin_code_fingerprint(code: str) -> str:
+    return hashlib.sha256(f"checkin:{code}".encode()).hexdigest()[:12]
+
+
+def create_checkin_token(event_id: int, name: str, code: str, hours: int = 14) -> str:
+    """Token do voluntário da recepção: vale só para o check-in de um evento e deixa de
+    valer quando o código da recepção é trocado."""
+    settings = get_settings()
+    now = datetime.now(UTC)
+    payload = {
+        "type": "checkin",
+        "event": event_id,
+        "name": name,
+        "cv": checkin_code_fingerprint(code),
+        "iat": now,
+        "exp": now + timedelta(hours=hours),
+    }
+    return jwt.encode(payload, settings.jwt_secret, algorithm=settings.jwt_algorithm)
+
+
 def decode_access_token(token: str) -> int | None:
     settings = get_settings()
     try:

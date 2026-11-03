@@ -33,6 +33,8 @@ class Event(IdMixin, PublicIdMixin, TimestampMixin, Base):
     registration_opens_at: Mapped[datetime | None] = mapped_column(DateTime)
     registration_closes_at: Mapped[datetime | None] = mapped_column(DateTime)
     max_tickets_per_order: Mapped[int] = mapped_column(Integer, default=5)
+    # Código compartilhado com os voluntários da recepção (pode ser trocado a qualquer momento).
+    checkin_code: Mapped[str | None] = mapped_column(String(12))
 
     sessions: Mapped[list["EventSession"]] = relationship(
         back_populates="event", order_by="EventSession.starts_at"

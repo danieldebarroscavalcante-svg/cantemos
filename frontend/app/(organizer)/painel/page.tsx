@@ -124,6 +124,12 @@ export default function PainelPage() {
                 >
                   Configurações
                 </Link>
+                <Link
+                  href={`/painel/eventos/${event.slug}/recepcao`}
+                  className="inline-flex min-h-touch items-center justify-center rounded-xl bg-primary px-5 font-semibold text-primary-fg hover:bg-primary/90"
+                >
+                  Recepção / check-in
+                </Link>
                 {event.status !== "draft" && (
                   <a
                     href={`/e/${event.slug}`}
