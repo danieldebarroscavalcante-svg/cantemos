@@ -95,6 +95,10 @@ export type ReservedQuota = { id?: string; name: string; quantity: number; issue
 export type EventSettings = {
   slug: string;
   title: string;
+  status: EventSummary["status"];
+  venue_name: string | null;
+  venue_address: string | null;
+  description: string | null;
   starts_at: string;
   doors_open_at: string | null;
   capacity: number;
@@ -116,4 +120,50 @@ export type EventSettingsInput = Pick<
   | "overbooking_percent"
   | "max_tickets_per_order"
   | "priority_quota"
-> & { reserved_quotas: Array<Pick<ReservedQuota, "id" | "name" | "quantity">> };
+  | "status"
+> & {
+  reserved_quotas: Array<Pick<ReservedQuota, "id" | "name" | "quantity">>;
+  venue_name: string;
+  venue_address: string;
+  description: string;
+};
+
+export type PublicEvent = {
+  slug: string;
+  title: string;
+  subtitle: string | null;
+  description: string | null;
+  venue_name: string | null;
+  venue_address: string | null;
+  status: EventSummary["status"];
+  starts_at: string;
+  doors_open_at: string | null;
+  max_tickets_per_order: number;
+  available: number;
+  priority_available: number;
+};
+
+export type AgeGroup = "adulto" | "crianca" | "idoso";
+
+export type Ticket = {
+  id: string;
+  attendee_name: string;
+  age_group: AgeGroup;
+  type_name: string;
+  priority: boolean;
+  accessibility_need: string | null;
+  status: "valid" | "used" | "cancelled" | "transferred";
+  qr: string | null;
+};
+
+export type Order = {
+  code: string;
+  token: string;
+  status: "pending" | "confirmed" | "cancelled" | "expired" | "refunded";
+  buyer_name: string;
+  buyer_email: string;
+  created_at: string;
+  email_sent: boolean;
+  event: PublicEvent;
+  tickets: Ticket[];
+};

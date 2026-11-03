@@ -11,6 +11,7 @@ from app.db.session import get_db
 from app.modules.auth.router import router as auth_router
 from app.modules.events.router import router as events_router
 from app.modules.notifications.router import router as notifications_router
+from app.modules.tickets.router import router as tickets_router
 
 settings = get_settings()
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
@@ -34,6 +35,7 @@ api = APIRouter(prefix="/api/v1")
 api.include_router(auth_router)
 api.include_router(events_router)
 api.include_router(notifications_router)
+api.include_router(tickets_router)
 
 
 @api.get("/health", tags=["infra"])

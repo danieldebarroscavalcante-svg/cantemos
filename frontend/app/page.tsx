@@ -1,7 +1,23 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
+import type { PublicEvent } from "@/lib/api";
+import { formatEventDateTime } from "@/lib/format";
+import { fetchPublicEvent } from "@/lib/server-api";
 
-export default function HomePage() {
+const FEATURED_SLUG = "cantemos-2026";
+
+async function featuredEvent(): Promise<PublicEvent | null> {
+  try {
+    return await fetchPublicEvent(FEATURED_SLUG);
+  } catch {
+    return null; // a página inicial nunca deve quebrar por instabilidade da API
+  }
+}
+
+export default async function HomePage() {
+  const event = await featuredEvent();
+  const open = event?.status === "open" && event.available > 0;
+
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-3xl flex-col justify-center gap-8 px-4 py-12">
       <header className="space-y-3">
@@ -14,11 +30,24 @@ export default function HomePage() {
         </p>
       </header>
 
-      <Card className="space-y-2 border-accent/40">
+      <Card className="space-y-3 border-accent/40">
         <p className="text-sm font-semibold text-accent">Próximo evento</p>
-        <h2 className="text-2xl font-bold">CANTEMOS 2026</h2>
-        <p className="text-muted">Quinta-feira, 19 de novembro · Entrada gratuita · 120 lugares</p>
-        <p className="text-sm text-muted">As inscrições serão abertas em breve.</p>
+        <h2 className="text-2xl font-bold">{event?.title ?? "CANTEMOS 2026"}</h2>
+        <p className="text-muted">
+          {event
+            ? `${formatEventDateTime(event.starts_at)} · Entrada gratuita`
+            : "Quinta-feira, 19 de novembro · Entrada gratuita"}
+        </p>
+        {event ? (
+          <Link
+            href={`/e/${event.slug}`}
+            className="inline-flex min-h-touch w-full items-center justify-center rounded-xl bg-primary px-5 font-semibold text-primary-fg hover:bg-primary/90 sm:w-auto"
+          >
+            {open ? "Fazer minha inscrição" : "Ver detalhes do evento"}
+          </Link>
+        ) : (
+          <p className="text-sm text-muted">As inscrições serão abertas em breve.</p>
+        )}
       </Card>
 
       <footer className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted">

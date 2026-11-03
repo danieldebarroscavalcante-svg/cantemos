@@ -36,6 +36,11 @@ class EventSettingsIn(BaseModel):
     max_tickets_per_order: int = Field(ge=1, le=50)
     priority_quota: int = Field(ge=0, le=100_000)
     reserved_quotas: list[ReservedQuotaIn] = Field(default_factory=list, max_length=20)
+    # Opcionais: None mantém o valor atual.
+    status: EventStatus | None = None
+    venue_name: str | None = Field(default=None, max_length=150)
+    venue_address: str | None = Field(default=None, max_length=300)
+    description: str | None = Field(default=None, max_length=3000)
 
     @model_validator(mode="after")
     def doors_before_start(self) -> "EventSettingsIn":
@@ -52,6 +57,10 @@ class QuotaUsage(BaseModel):
 class EventSettingsOut(BaseModel):
     slug: str
     title: str
+    status: EventStatus
+    venue_name: str | None
+    venue_address: str | None
+    description: str | None
     starts_at: datetime
     doors_open_at: datetime | None
     capacity: int

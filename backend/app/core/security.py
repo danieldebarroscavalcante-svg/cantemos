@@ -67,3 +67,17 @@ def verify_qr(qr_content: str) -> str | None:
         return None
     expected = sign_qr(parts[1])
     return parts[1] if hmac.compare_digest(expected, qr_content.strip()) else None
+
+
+def sign_order_token(order_public_id: str) -> str:
+    """Token do link "meus ingressos" enviado por e-mail (acesso sem senha)."""
+    secret = get_settings().qr_secret.encode()
+    signature = hmac.new(secret, f"order:{order_public_id}".encode(), hashlib.sha256)
+    return f"{order_public_id}.{signature.hexdigest()[:24]}"
+
+
+def verify_order_token(token: str) -> str | None:
+    public_id, _, _ = token.partition(".")
+    if not public_id:
+        return None
+    return public_id if hmac.compare_digest(sign_order_token(public_id), token) else None

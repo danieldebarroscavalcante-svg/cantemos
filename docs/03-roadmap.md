@@ -29,7 +29,7 @@ flowchart LR
 | Data | Entrega | Itens do escopo |
 |---|---|---|
 | **Seg 02 – Ter 03/11** | Scaffolding front + back, banco, CI, login do organizador ✅ · configurações do evento no painel (horário, lotação, margem, limite por inscrição, prioridade, cotas reservadas) ✅ · envio de e-mail pelo Gmail ✅ · deploy gratuito ([guia](06-hospedagem-gratuita.md)) ⏳ | F0 enxuta, AUTH-01, AUTH-04 |
-| **Qua 04 – Sex 06/11** | Página pública do CANTEMOS, inscrição familiar com controle de lotação, e-mail com QR Code, aceite LGPD | EVT-04, TKT-01–06, PART-02, COM-01, ADM-01, ADM-05 |
+| **Qua 04 – Sex 06/11** | ✅ *Adiantado para 03/11:* página pública do CANTEMOS, inscrição familiar com controle de lotação (testado com 150 inscrições simultâneas), e-mail com QR Code, aceite LGPD, “meus ingressos”, cancelamento e reenvio | EVT-04, TKT-01–06, PART-01–03, COM-01, ADM-01, ADM-05 |
 | **Sáb 07/11** | Teste interno com a equipe (inscrições reais pelo celular, e-mails chegando, lotação travando em 120) | — |
 | **Dom 08/11** | **Go / No-go** para abrir as inscrições | — |
 | **Seg 09/11** | **Abertura das inscrições** — divulgação nos cultos e grupos | — |

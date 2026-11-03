@@ -69,6 +69,10 @@ def get_settings_out(db: Session, event: Event) -> EventSettingsOut:
     return EventSettingsOut(
         slug=event.slug,
         title=event.title,
+        status=event.status,
+        venue_name=event.venue_name,
+        venue_address=event.venue_address,
+        description=event.description,
         starts_at=utc_to_local(session.starts_at),
         doors_open_at=utc_to_local(session.doors_open_at) if session.doors_open_at else None,
         capacity=session.capacity,
@@ -183,5 +187,11 @@ def update_settings(db: Session, event: Event, data: EventSettingsIn) -> EventSe
     session.starts_at = local_to_utc(data.starts_at)
     session.doors_open_at = local_to_utc(data.doors_open_at) if data.doors_open_at else None
     event.max_tickets_per_order = data.max_tickets_per_order
+    if data.status is not None:
+        event.status = data.status
+    for field in ("venue_name", "venue_address", "description"):
+        value = getattr(data, field)
+        if value is not None:
+            setattr(event, field, value.strip() or None)
     db.commit()
     return get_settings_out(db, event)

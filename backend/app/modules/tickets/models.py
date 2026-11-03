@@ -75,6 +75,7 @@ class Order(IdMixin, PublicIdMixin, TimestampMixin, Base):
     source: Mapped[str | None] = mapped_column(String(80))
     consent_at: Mapped[datetime | None] = mapped_column(DateTime)
     cancelled_at: Mapped[datetime | None] = mapped_column(DateTime)
+    email_sent_at: Mapped[datetime | None] = mapped_column(DateTime)
 
     tickets: Mapped[list["Ticket"]] = relationship(back_populates="order")
 
@@ -93,5 +94,6 @@ class Ticket(IdMixin, PublicIdMixin, TimestampMixin, Base):
     status: Mapped[TicketStatus] = mapped_column(str_enum(TicketStatus), default=TicketStatus.VALID)
     # Preenchido com UPDATE condicional (status valid -> used) para impedir check-in duplo.
     checked_in_at: Mapped[datetime | None] = mapped_column(DateTime)
+    cancelled_at: Mapped[datetime | None] = mapped_column(DateTime)
 
     order: Mapped[Order] = relationship(back_populates="tickets")

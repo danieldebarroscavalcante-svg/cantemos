@@ -17,6 +17,13 @@ import { useMe } from "@/lib/use-me";
 
 const toInput = (value: string | null) => (value ? value.slice(0, 16) : "");
 
+const STATUS_OPTIONS: Array<{ value: EventSettings["status"]; label: string; hint: string }> = [
+  { value: "draft", label: "Rascunho", hint: "Página fora do ar." },
+  { value: "published", label: "Página no ar", hint: "Inscrições ainda fechadas." },
+  { value: "open", label: "Inscrições abertas", hint: "Qualquer pessoa pode se inscrever." },
+  { value: "closed", label: "Inscrições encerradas", hint: "Página no ar, sem novas inscrições." },
+];
+
 function Row({ label, value, strong }: { label: string; value: number; strong?: boolean }) {
   return (
     <div className={`flex justify-between gap-4 ${strong ? "font-semibold" : ""}`}>
@@ -53,6 +60,10 @@ export default function EventSettingsPage({ params }: { params: { slug: string }
             name,
             quantity,
           })),
+          status: data.status,
+          venue_name: data.venue_name ?? "",
+          venue_address: data.venue_address ?? "",
+          description: data.description ?? "",
         });
       })
       .catch((err) => setError(err instanceof ApiError ? err.message : "Falha ao carregar."));
@@ -133,6 +144,79 @@ export default function EventSettingsPage({ params }: { params: { slug: string }
 
       <form onSubmit={onSubmit} className="grid gap-6 lg:grid-cols-[1fr_320px]">
         <fieldset disabled={!canEdit || saving} className="space-y-6">
+          <Card className="space-y-4">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <h2 className="text-lg font-semibold">Publicação</h2>
+              {form.status !== "draft" && (
+                <a
+                  href={`/e/${saved.slug}`}
+                  target="_blank"
+                  className="text-sm font-semibold text-primary underline"
+                >
+                  Ver página pública ↗
+                </a>
+              )}
+            </div>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {STATUS_OPTIONS.map((option) => (
+                <label
+                  key={option.value}
+                  className={`flex min-h-touch cursor-pointer gap-3 rounded-xl border p-3 ${
+                    form.status === option.value
+                      ? "border-primary bg-primary/10"
+                      : "border-border bg-surface"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="status"
+                    value={option.value}
+                    checked={form.status === option.value}
+                    onChange={() => update("status", option.value)}
+                    className="mt-1 size-4 accent-[rgb(var(--color-primary))]"
+                  />
+                  <span>
+                    <span className="block font-semibold">{option.label}</span>
+                    <span className="block text-sm text-muted">{option.hint}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="space-y-4">
+            <h2 className="text-lg font-semibold">Local e descrição</h2>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Input
+                label="Nome do local"
+                placeholder="Ex.: Templo principal"
+                maxLength={150}
+                value={form.venue_name}
+                onChange={(e) => update("venue_name", e.target.value)}
+              />
+              <Input
+                label="Endereço"
+                placeholder="Rua, número, bairro, cidade"
+                maxLength={300}
+                value={form.venue_address}
+                onChange={(e) => update("venue_address", e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="description" className="text-sm font-medium">
+                Descrição na página do evento
+              </label>
+              <textarea
+                id="description"
+                rows={4}
+                maxLength={3000}
+                value={form.description}
+                onChange={(e) => update("description", e.target.value)}
+                className="rounded-xl border border-border bg-surface px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary/60"
+              />
+            </div>
+          </Card>
+
           <Card className="space-y-4">
             <h2 className="text-lg font-semibold">Data e horário</h2>
             <div className="grid gap-4 sm:grid-cols-2">

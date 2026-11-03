@@ -117,12 +117,23 @@ export default function PainelPage() {
                   <dd className="text-xl font-bold tabular-nums">{event.registered}</dd>
                 </div>
               </dl>
-              <Link
-                href={`/painel/eventos/${event.slug}/configuracoes`}
-                className="inline-flex min-h-touch items-center justify-center rounded-xl border border-border px-5 font-semibold hover:bg-border/40"
-              >
-                Configurações
-              </Link>
+              <div className="grid gap-2 sm:grid-cols-2">
+                <Link
+                  href={`/painel/eventos/${event.slug}/configuracoes`}
+                  className="inline-flex min-h-touch items-center justify-center rounded-xl border border-border px-5 font-semibold hover:bg-border/40"
+                >
+                  Configurações
+                </Link>
+                {event.status !== "draft" && (
+                  <a
+                    href={`/e/${event.slug}`}
+                    target="_blank"
+                    className="inline-flex min-h-touch items-center justify-center rounded-xl border border-border px-5 font-semibold hover:bg-border/40"
+                  >
+                    Página pública ↗
+                  </a>
+                )}
+              </div>
             </Card>
           ))}
         </div>

@@ -12,3 +12,4 @@ pyjwt==2.10.1
 python-multipart==0.0.19
 typer==0.15.1
 httpx==0.28.1
+segno==1.6.6
