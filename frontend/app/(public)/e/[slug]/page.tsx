@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { EventHeader } from "@/components/public/event-header";
+import { OrganizerFooter } from "@/components/public/organizer-footer";
 import { RegistrationForm } from "@/components/public/registration-form";
 import { ResendForm } from "@/components/public/resend-form";
 import { WaitlistForm } from "@/components/public/waitlist-form";
@@ -120,6 +121,11 @@ export default async function EventPage({ params, searchParams }: Props) {
 
         <ResendForm slug={event.slug} />
       </section>
+
+      <OrganizerFooter
+        name={event.organization_name}
+        logoUrl={event.organization_logo_url}
+      />
     </main>
   );
 }

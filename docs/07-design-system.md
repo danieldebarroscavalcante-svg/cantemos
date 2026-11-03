@@ -65,3 +65,9 @@ A coordenação trocou o verde-menta por **laranja** em botões e destaques. Tud
 - O estado de **sucesso** deixou de usar a cor da marca e passou a verde (`#22C55E`), para "entrada liberada" não se confundir com o âmbar de "já entrou".
 - O divisor da página do evento usa `--stripe-bronze`, que combina com o laranja.
 - Superfícies, textos e bordas continuam os da referência.
+
+## 8. Logos (enviados pelo painel)
+- **Logo do evento:** painel → evento → *Configurações* → "Logo do evento". Aparece no lugar do título na página do evento, na página inicial, nos ingressos, na recepção e no topo do e-mail.
+- **Logo e nome da igreja:** painel → *Igreja*. Aparecem no rodapé "Realização" das páginas públicas, no e-mail e nas páginas de Privacidade/Termos.
+- **Formatos:** PNG, JPG, WEBP ou SVG, até 1 MB, de preferência com fundo transparente e cores pensadas para fundo escuro. O e-mail só exibe PNG/JPG (SVG fica de fora do e-mail).
+- As imagens ficam no banco de dados (tabela `assets`), porque a hospedagem gratuita apaga arquivos do disco a cada atualização.

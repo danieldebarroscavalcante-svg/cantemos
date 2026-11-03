@@ -49,6 +49,7 @@ export type Operator = {
   event_slug: string;
   event_title: string;
   can_undo: boolean;
+  event_logo_url?: string | null;
 };
 
 const key = (slug: string) => `eventmer:recepcao:${slug}`;

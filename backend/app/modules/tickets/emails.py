@@ -60,6 +60,7 @@ def build_ticket_email(
     heading: str = "INGRESSO CONFIRMADO",
     intro: str | None = None,
     subject: str | None = None,
+    logo: Attachment | None = None,
 ) -> OutgoingEmail:
     event = order.event
     link = ticket_link(order.token)
@@ -103,6 +104,7 @@ def build_ticket_email(
 <html lang="pt-BR"><head><meta name="color-scheme" content="dark"><meta name="supported-color-schemes" content="dark"></head>
 <body style="margin:0;background:{C["bg"]};font-family:{FONT};color:{C["text"]}">
 <div style="max-width:560px;margin:0 auto;padding:28px 16px;background:{C["bg"]}">
+  {f'<img src="cid:{logo.inline_cid}" alt="{escape(event.title)}" style="display:block;max-width:240px;max-height:120px;margin:0 0 20px">' if logo else ""}
   <p style="margin:0;color:{C["brand"]};font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase">{escape(heading)}</p>
   <h1 style="margin:10px 0 4px;font-size:32px;line-height:1.15;font-weight:400;color:{C["strong"]}">{escape(event.title)}</h1>
   <p style="margin:0;color:{C["muted"]}">{escape(event.subtitle or "")}</p>
@@ -122,6 +124,7 @@ def build_ticket_email(
   <p style="font-size:14px;line-height:1.85;color:{C["muted"]}">Não poderá ir? Cancele pelo botão acima para liberar
      a vaga para outra família. A entrada é gratuita e os lugares são limitados — chegue cedo.</p>
   <div style="height:1px;margin:24px 0;background:{C["line"]};background-image:linear-gradient(90deg,#241B14,#BF956E 30%,#413125 58%,#171412)"></div>
+  {f'<p style="font-size:13px;color:{C["muted"]};margin:0 0 8px">Realização: <strong style="color:{C["text"]}">{escape(event.organization_name)}</strong></p>' if event.organization_name else ""}
   <p style="font-size:12px;color:{C["subtle"]}">Enviado pelo EVENTMER para {escape(order.buyer_email)}.
      Este e-mail contém seus ingressos: não compartilhe com quem não vai com você.</p>
 </div></body></html>"""
@@ -137,6 +140,8 @@ def build_ticket_email(
         + f"\n\nSeus ingressos com QR Code: {link}\n"
         "Não poderá ir? Cancele pelo link acima para liberar a vaga.\n"
     )
+    if logo:
+        attachments.insert(0, logo)
     return OutgoingEmail(
         to=order.buyer_email,
         subject=subject or f"Seu ingresso · {event.title} · {order.code}",

@@ -26,6 +26,9 @@ class PublicEvent(BaseModel):
     available: int  # vagas na inscrição pública (gerais + prioridade), já sem as guardadas
     priority_available: int
     waitlist_waiting: int = 0  # pessoas/grupos aguardando na lista de espera
+    logo_url: str | None = None
+    organization_name: str | None = None
+    organization_logo_url: str | None = None
     invite: WaitlistInvite | None = None  # quando acessado pelo link da lista de espera
 
 

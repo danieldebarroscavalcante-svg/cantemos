@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element -- logo vem da API (em cache) */
 import { formatEventDate, formatTime, mapsUrl } from "@/lib/format";
 import type { PublicEvent } from "@/lib/api";
 
@@ -15,15 +16,29 @@ export function EventHeader({
     <header className="space-y-4">
       <div>
         <p className="eyebrow">EVENTMER</p>
-        <h1
-          className={
-            compact
-              ? "text-3xl font-normal leading-tight text-strong"
-              : "title-display"
-          }
-        >
-          {event.title}
-        </h1>
+        {event.logo_url ? (
+          <h1 className="mt-2">
+            <img
+              src={event.logo_url}
+              alt={event.title}
+              className={
+                compact
+                  ? "h-16 w-auto max-w-full object-contain sm:h-20"
+                  : "h-24 w-auto max-w-full object-contain sm:h-32"
+              }
+            />
+          </h1>
+        ) : (
+          <h1
+            className={
+              compact
+                ? "text-3xl font-normal leading-tight text-strong"
+                : "title-display"
+            }
+          >
+            {event.title}
+          </h1>
+        )}
         {event.subtitle && (
           <p className="mt-1 text-lg text-muted">{event.subtitle}</p>
         )}

@@ -6,8 +6,11 @@ from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
+import app.db.models  # noqa: F401 — registra todos os modelos antes do primeiro uso
 from app.core.config import get_settings
 from app.db.session import get_db
+from app.modules.assets.router import org_router as identity_router
+from app.modules.assets.router import public_router as assets_router
 from app.modules.auth.router import router as auth_router
 from app.modules.broadcasts.router import router as broadcasts_router
 from app.modules.checkin.router import org_router as reception_router
@@ -44,6 +47,8 @@ api.include_router(checkin_router)
 api.include_router(reception_router)
 api.include_router(broadcasts_router)
 api.include_router(reports_router)
+api.include_router(assets_router)
+api.include_router(identity_router)
 
 
 @api.get("/health", tags=["infra"])

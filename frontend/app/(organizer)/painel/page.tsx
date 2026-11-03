@@ -104,9 +104,17 @@ export default function PainelPage() {
           </h1>
           <p className="text-sm text-muted">{roles.join(" · ")}</p>
         </div>
-        <Button variant="secondary" onClick={onLogout}>
-          Sair
-        </Button>
+        <div className="flex gap-2">
+          <Link
+            href="/painel/igreja"
+            className="inline-flex min-h-touch items-center justify-center rounded-xl border border-border bg-line/[0.03] px-5 text-sm font-semibold hover:bg-line/[0.07]"
+          >
+            Igreja
+          </Link>
+          <Button variant="secondary" onClick={onLogout}>
+            Sair
+          </Button>
+        </div>
       </header>
 
       <section className="space-y-3">
@@ -119,9 +127,7 @@ export default function PainelPage() {
           {events?.map((event) => (
             <Card key={event.slug} className="flex flex-col gap-4">
               <div>
-                <p className="eyebrow">
-                  {statusLabel[event.status]}
-                </p>
+                <p className="eyebrow">{statusLabel[event.status]}</p>
                 <p className="text-xl font-bold">{event.title}</p>
                 <p className="text-muted">{formatDate(event.starts_at)}</p>
               </div>

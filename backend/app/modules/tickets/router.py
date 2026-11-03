@@ -27,7 +27,8 @@ def _send_ticket_email(db: Session, order: Order) -> None:
     """Envia o ingresso. Uma falha no e-mail não desfaz a inscrição: o ingresso
     também aparece na tela de confirmação e pode ser reenviado."""
     try:
-        send_email(build_ticket_email(service.order_out(db, order)))
+        logo = service.email_logo(db, db.get(Event, order.event_id))
+        send_email(build_ticket_email(service.order_out(db, order), logo=logo))
     except EmailError:
         logger.exception("Falha ao enviar o ingresso da inscrição %s", order.code)
         return

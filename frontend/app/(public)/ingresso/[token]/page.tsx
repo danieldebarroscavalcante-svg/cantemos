@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { EventHeader } from "@/components/public/event-header";
+import { OrganizerFooter } from "@/components/public/organizer-footer";
 import { QrCode } from "@/components/qr-code";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -229,6 +230,11 @@ function OrderView({ token }: { token: string }) {
           )}
         </>
       )}
+
+      <OrganizerFooter
+        name={order.event.organization_name}
+        logoUrl={order.event.organization_logo_url}
+      />
     </main>
   );
 }

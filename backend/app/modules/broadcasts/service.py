@@ -15,7 +15,7 @@ from app.modules.events.service import main_session
 from app.modules.notifications import email as email_module
 from app.modules.tickets.emails import build_ticket_email, format_when
 from app.modules.tickets.models import Order, OrderStatus, Ticket, TicketStatus
-from app.modules.tickets.service import order_out
+from app.modules.tickets.service import email_logo, order_out
 
 logger = logging.getLogger("eventmer.broadcasts")
 PAUSE_SECONDS = 0.5  # gentil com o limite do Gmail
@@ -85,6 +85,7 @@ def run(broadcast_id: int, session_factory: sessionmaker) -> None:
         heading, intro, subject = _texts(
             broadcast.kind, event, utc_to_local(main_session(db, event).starts_at)
         )
+        logo = email_logo(db, event)
         for order_id in recipients(db, event):
             try:
                 message = build_ticket_email(
@@ -92,6 +93,7 @@ def run(broadcast_id: int, session_factory: sessionmaker) -> None:
                     heading=heading,
                     intro=intro,
                     subject=subject,
+                    logo=logo,
                 )
                 email_module.send_email(message)
                 broadcast.sent += 1

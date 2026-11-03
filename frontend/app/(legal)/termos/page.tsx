@@ -1,17 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage } from "@/components/legal/legal-page";
+import { fetchOrganization } from "@/lib/server-api";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = { title: "Termos de Uso" };
 
-export default function TermosPage() {
+export const revalidate = 60;
+
+export default async function TermosPage() {
+  const orgName = (await fetchOrganization())?.name ?? site.orgName;
   return (
     <LegalPage title="Termos de Uso">
       <p className="text-sm text-muted">Última atualização: {site.updatedAt}</p>
       <p>
         Ao se inscrever em um evento pelo EVENTMER, plataforma usada pela{" "}
-        <strong>{site.orgName}</strong>, você concorda com estes termos.
+        <strong>{orgName}</strong>, você concorda com estes termos.
       </p>
 
       <h2>Inscrição e ingressos</h2>

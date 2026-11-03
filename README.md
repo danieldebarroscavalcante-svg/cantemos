@@ -74,3 +74,4 @@ Depois siga [`backend/README.md`](backend/README.md) (API, migrations, criação
 | Meus ingressos (link do e-mail), cancelamento total ou por pessoa, reenvio do ingresso | ✅ 03/11 |
 | Lista de espera com vaga guardada por 24 h, lembretes por e-mail (16/11 e 18/11) e números para a coordenação | ✅ 03/11 |
 | Check-in: câmera (QR) e busca por nome, entrada da família, contador ao vivo, acesso de voluntários por código da recepção, lista de presença para imprimir, planilha CSV | ✅ 03/11 |
+| Identidade visual (tema escuro, laranja) e logos personalizáveis: logo do evento e logo/nome da igreja enviados pelo painel | ✅ 03/11 |

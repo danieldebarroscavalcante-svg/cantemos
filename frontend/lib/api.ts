@@ -75,6 +75,24 @@ export async function api<T>(
   return response.json() as Promise<T>;
 }
 
+/** Envio de arquivo autenticado (ex.: logo). */
+export async function apiUpload<T>(path: string, file: File): Promise<T> {
+  const doFetch = () => {
+    const body = new FormData();
+    body.append("file", file);
+    return fetch(`/api/v1${path}`, {
+      method: "POST",
+      body,
+      credentials: "include",
+      headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
+    });
+  };
+  let response = await doFetch();
+  if (response.status === 401 && (await refreshSession())) response = await doFetch();
+  if (!response.ok) throw await parseError(response);
+  return response.json() as Promise<T>;
+}
+
 /** Download autenticado (ex.: planilha CSV). */
 export async function apiDownload(
   path: string,
@@ -147,6 +165,7 @@ export type EventSettings = {
   venue_name: string | null;
   venue_address: string | null;
   description: string | null;
+  logo_url: string | null;
   starts_at: string;
   doors_open_at: string | null;
   capacity: number;
@@ -191,6 +210,9 @@ export type PublicEvent = {
   priority_available: number;
   waitlist_waiting: number;
   invite: { name: string; quantity: number; hold_until: string } | null;
+  logo_url: string | null;
+  organization_name: string | null;
+  organization_logo_url: string | null;
 };
 
 export type AgeGroup = "adulto" | "crianca" | "idoso";

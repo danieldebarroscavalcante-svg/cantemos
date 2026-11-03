@@ -35,6 +35,9 @@ class Event(IdMixin, PublicIdMixin, TimestampMixin, Base):
     max_tickets_per_order: Mapped[int] = mapped_column(Integer, default=5)
     # Código compartilhado com os voluntários da recepção (pode ser trocado a qualquer momento).
     checkin_code: Mapped[str | None] = mapped_column(String(12))
+    logo_asset_id: Mapped[int | None] = mapped_column(
+        BigIntPK, ForeignKey("assets.id", ondelete="SET NULL")
+    )
 
     sessions: Mapped[list["EventSession"]] = relationship(
         back_populates="event", order_by="EventSession.starts_at"

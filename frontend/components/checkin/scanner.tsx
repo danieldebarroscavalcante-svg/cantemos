@@ -28,7 +28,9 @@ export function Scanner({ onScan, paused }: Props) {
           returnDetailedScanResult: true,
           // Analisa 90% do centro da imagem (o padrão é 2/3): lê mesmo com o QR bem perto da câmera.
           calculateScanRegion: (video) => {
-            const size = Math.round(0.9 * Math.min(video.videoWidth, video.videoHeight));
+            const size = Math.round(
+              0.9 * Math.min(video.videoWidth, video.videoHeight),
+            );
             return {
               x: Math.round((video.videoWidth - size) / 2),
               y: Math.round((video.videoHeight - size) / 2),

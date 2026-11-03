@@ -65,9 +65,15 @@ def reception_login(
 
 
 @router.get("/me", response_model=OperatorOut)
-def whoami(op: service.Operator = Depends(operator)):
+def whoami(op: service.Operator = Depends(operator), db: Session = Depends(get_db)):
+    from app.modules.tickets.service import branding
+
     return OperatorOut(
-        name=op.name, event_slug=op.event.slug, event_title=op.event.title, can_undo=op.is_staff
+        name=op.name,
+        event_slug=op.event.slug,
+        event_title=op.event.title,
+        can_undo=op.is_staff,
+        event_logo_url=branding(db, op.event)["logo_url"],
     )
 
 

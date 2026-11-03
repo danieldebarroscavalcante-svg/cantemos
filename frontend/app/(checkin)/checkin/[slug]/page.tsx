@@ -603,6 +603,14 @@ export default function CheckinPage({ params }: { params: { slug: string } }) {
     <main className="mx-auto w-full max-w-6xl space-y-4 px-4 py-4">
       <header className="flex items-center justify-between gap-3">
         <div>
+          {operator.event_logo_url && (
+            // eslint-disable-next-line @next/next/no-img-element -- logo vem da API (em cache)
+            <img
+              src={operator.event_logo_url}
+              alt=""
+              className="mb-2 h-10 w-auto max-w-[160px] object-contain"
+            />
+          )}
           <p className="eyebrow">Recepção</p>
           <h1 className="text-xl font-semibold leading-tight text-strong">
             {operator.event_title}

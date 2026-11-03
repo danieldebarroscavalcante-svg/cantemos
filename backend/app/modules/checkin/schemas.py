@@ -62,6 +62,7 @@ class OperatorOut(BaseModel):
     event_slug: str
     event_title: str
     can_undo: bool
+    event_logo_url: str | None = None
 
 
 class ReceptionInfo(BaseModel):

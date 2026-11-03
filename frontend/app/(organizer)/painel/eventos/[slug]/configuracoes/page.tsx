@@ -5,10 +5,12 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { LogoField } from "@/components/ui/logo-field";
 import { NumberField } from "@/components/ui/number-field";
 import {
   api,
   ApiError,
+  apiUpload,
   type EventSettings,
   type EventSettingsInput,
   type ReservedQuota,
@@ -248,6 +250,28 @@ export default function EventSettingsPage({
                 </label>
               ))}
             </div>
+          </Card>
+
+          <Card>
+            <LogoField
+              label="Logo do evento"
+              hint="Aparece na página do evento, nos ingressos, na recepção e no e-mail. Use PNG com fundo transparente (ou SVG), pensado para fundo escuro, até 1 MB. Para aparecer no e-mail, prefira PNG ou JPG."
+              url={saved.logo_url}
+              disabled={!canEdit}
+              onUpload={async (file) => {
+                const { logo_url } = await apiUpload<{ logo_url: string }>(
+                  `/org/events/${params.slug}/logo`,
+                  file,
+                );
+                setSaved((s) => (s ? { ...s, logo_url } : s));
+              }}
+              onRemove={async () => {
+                await api(`/org/events/${params.slug}/logo`, {
+                  method: "DELETE",
+                });
+                setSaved((s) => (s ? { ...s, logo_url: null } : s));
+              }}
+            />
           </Card>
 
           <Card className="space-y-4">

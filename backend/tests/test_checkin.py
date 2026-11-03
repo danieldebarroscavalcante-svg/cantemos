@@ -48,6 +48,7 @@ def test_volunteer_login_requires_correct_code(client, event):
         "event_slug": SLUG,
         "event_title": "CANTEMOS 2026",
         "can_undo": False,
+        "event_logo_url": None,
     }
 
 

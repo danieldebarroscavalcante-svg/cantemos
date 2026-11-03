@@ -19,6 +19,9 @@ class Organization(IdMixin, PublicIdMixin, TimestampMixin, Base):
 
     name: Mapped[str] = mapped_column(String(150))
     slug: Mapped[str] = mapped_column(String(80), unique=True)
+    logo_asset_id: Mapped[int | None] = mapped_column(
+        BigIntPK, ForeignKey("assets.id", ondelete="SET NULL", use_alter=True)
+    )
 
 
 class OrganizationMember(IdMixin, TimestampMixin, Base):

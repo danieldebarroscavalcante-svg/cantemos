@@ -61,6 +61,7 @@ class EventSettingsOut(BaseModel):
     venue_name: str | None
     venue_address: str | None
     description: str | None
+    logo_url: str | None = None
     starts_at: datetime
     doors_open_at: datetime | None
     capacity: int

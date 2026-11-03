@@ -2,7 +2,8 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import type { PublicEvent } from "@/lib/api";
 import { formatEventDateTime } from "@/lib/format";
-import { fetchPublicEvent } from "@/lib/server-api";
+import { OrganizerFooter } from "@/components/public/organizer-footer";
+import { fetchOrganization, fetchPublicEvent } from "@/lib/server-api";
 
 const FEATURED_SLUG = "cantemos-2026";
 
@@ -15,7 +16,10 @@ async function featuredEvent(): Promise<PublicEvent | null> {
 }
 
 export default async function HomePage() {
-  const event = await featuredEvent();
+  const [event, organization] = await Promise.all([
+    featuredEvent(),
+    fetchOrganization(),
+  ]);
   const open = event?.status === "open" && event.available > 0;
 
   return (
@@ -33,9 +37,20 @@ export default async function HomePage() {
 
       <Card className="space-y-3 border-primary/35">
         <p className="eyebrow">Próximo evento</p>
-        <h2 className="text-[1.75rem] font-normal leading-tight text-strong">
-          {event?.title ?? "CANTEMOS 2026"}
-        </h2>
+        {event?.logo_url ? (
+          <h2>
+            {/* eslint-disable-next-line @next/next/no-img-element -- logo vem da API (em cache) */}
+            <img
+              src={event.logo_url}
+              alt={event.title}
+              className="h-20 w-auto max-w-full object-contain sm:h-24"
+            />
+          </h2>
+        ) : (
+          <h2 className="text-[1.75rem] font-normal leading-tight text-strong">
+            {event?.title ?? "CANTEMOS 2026"}
+          </h2>
+        )}
         <p className="text-muted">
           {event
             ? `${formatEventDateTime(event.starts_at)} · Entrada gratuita`
@@ -55,23 +70,20 @@ export default async function HomePage() {
         )}
       </Card>
 
-      <footer className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted">
-        <span>
-          É da equipe?{" "}
-          <Link
-            href="/login"
-            className="font-semibold text-primary underline-offset-4 hover:underline"
-          >
-            Entrar no painel
-          </Link>
-        </span>
-        <Link href="/privacidade" className="hover:underline">
-          Privacidade
+      <p className="text-sm text-muted">
+        É da equipe?{" "}
+        <Link
+          href="/login"
+          className="font-semibold text-primary underline-offset-4 hover:underline"
+        >
+          Entrar no painel
         </Link>
-        <Link href="/termos" className="hover:underline">
-          Termos de uso
-        </Link>
-      </footer>
+      </p>
+
+      <OrganizerFooter
+        name={organization?.name ?? event?.organization_name}
+        logoUrl={organization?.logo_url ?? event?.organization_logo_url}
+      />
     </main>
   );
 }

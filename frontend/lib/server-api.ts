@@ -20,3 +20,17 @@ export async function fetchPublicEvent(
     throw new Error(`Falha ao carregar o evento (HTTP ${response.status})`);
   return (await response.json()) as PublicEvent;
 }
+
+export type PublicOrganization = { name: string; logo_url: string | null };
+
+/** Nome e logo da igreja (definidos no painel). null se a API estiver fora do ar. */
+export async function fetchOrganization(): Promise<PublicOrganization | null> {
+  try {
+    const response = await fetch(`${backend}/api/v1/public/organization`, {
+      next: { revalidate: 60 },
+    });
+    return response.ok ? ((await response.json()) as PublicOrganization) : null;
+  } catch {
+    return null;
+  }
+}

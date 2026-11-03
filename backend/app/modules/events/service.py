@@ -17,6 +17,15 @@ GENERAL_NAME = "Entrada gratuita"
 PRIORITY_NAME = "Prioridade (PCD, idosos, gestantes)"
 
 
+def _logo_url(db: Session, event: Event) -> str | None:
+    from app.modules.assets.models import Asset
+    from app.modules.assets.service import url
+
+    if not event.logo_asset_id:
+        return None
+    return url(db.scalar(select(Asset.public_id).where(Asset.id == event.logo_asset_id)))
+
+
 def _invalid(message: str) -> HTTPException:
     return HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, message)
 
@@ -73,6 +82,7 @@ def get_settings_out(db: Session, event: Event) -> EventSettingsOut:
         venue_name=event.venue_name,
         venue_address=event.venue_address,
         description=event.description,
+        logo_url=_logo_url(db, event),
         starts_at=utc_to_local(session.starts_at),
         doors_open_at=utc_to_local(session.doors_open_at) if session.doors_open_at else None,
         capacity=session.capacity,

@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/legal/legal-page";
+import { fetchOrganization } from "@/lib/server-api";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = { title: "Política de Privacidade" };
 
-export default function PrivacidadePage() {
+export const revalidate = 60;
+
+export default async function PrivacidadePage() {
+  const orgName = (await fetchOrganization())?.name ?? site.orgName;
   const contact = site.contactEmail ? (
     <a
       className="font-semibold text-primary underline"
@@ -21,7 +25,7 @@ export default function PrivacidadePage() {
       <p className="text-sm text-muted">Última atualização: {site.updatedAt}</p>
       <p>
         O EVENTMER é a plataforma de inscrições e credenciamento usada pela{" "}
-        <strong>{site.orgName}</strong> (controladora dos dados) para os seus
+        <strong>{orgName}</strong> (controladora dos dados) para os seus
         eventos, como o CANTEMOS. Esta política explica, conforme a Lei Geral de
         Proteção de Dados (Lei nº 13.709/2018 — LGPD), quais dados coletamos,
         por que e quais são os seus direitos.

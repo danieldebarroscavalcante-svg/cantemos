@@ -5,15 +5,20 @@ import secrets
 
 from fastapi import HTTPException, status
 from sqlalchemy import func, select, update
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, undefer
 
 from app.core.security import sign_order_token, sign_qr, verify_order_token
 from app.core.timezone import utc_to_local
 from app.db.base import utcnow
+from app.modules.assets.models import Asset
+from app.modules.assets.service import EMAIL_SAFE
+from app.modules.assets.service import url as asset_url
 from app.modules.auth.models import User
 from app.modules.auth.service import normalize_email
 from app.modules.events.models import Event, EventSession, EventStatus
 from app.modules.events.service import main_session
+from app.modules.notifications.email import Attachment
+from app.modules.organizations.models import Organization
 from app.modules.tickets.models import (
     Order,
     OrderStatus,
@@ -33,6 +38,35 @@ from app.modules.waitlist import service as waitlist
 from app.modules.waitlist.models import WaitlistEntry, WaitlistStatus
 
 logger = logging.getLogger("eventmer.tickets")
+
+
+def branding(db: Session, event: Event) -> dict:
+    """Logo do evento e nome/logo da organização (para páginas e e-mails)."""
+    org = db.get(Organization, event.organization_id)
+    ids = {event.logo_asset_id, org.logo_asset_id if org else None} - {None}
+    assets = {a.id: a for a in db.scalars(select(Asset).where(Asset.id.in_(ids)))} if ids else {}
+    event_logo = assets.get(event.logo_asset_id)
+    org_logo = assets.get(org.logo_asset_id) if org else None
+    return {
+        "logo_url": asset_url(event_logo.public_id) if event_logo else None,
+        "organization_name": org.name if org else None,
+        "organization_logo_url": asset_url(org_logo.public_id) if org_logo else None,
+        "event_logo": event_logo,
+    }
+
+
+def email_logo(db: Session, event: Event) -> Attachment | None:
+    """Logo do evento embutido no e-mail (só PNG/JPG, que os programas de e-mail exibem)."""
+    if not event.logo_asset_id:
+        return None
+    asset = db.scalar(
+        select(Asset).where(Asset.id == event.logo_asset_id).options(undefer(Asset.data))
+    )
+    if asset is None or asset.content_type not in EMAIL_SAFE:
+        return None
+    ext = "png" if asset.content_type == "image/png" else "jpg"
+    return Attachment(f"logo.{ext}", asset.data, asset.content_type, inline_cid="logo@eventmer")
+
 
 CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"  # sem 0/O, 1/I
 
@@ -72,6 +106,7 @@ def public_event_out(
         return max(0, t.quantity - t.reserved_count) if t else 0
 
     available = waitlist.available_for_public(db, event, invited.id if invited else None)
+    brand = branding(db, event)
     waiting = db.scalar(
         select(func.count()).where(
             WaitlistEntry.event_id == event.id, WaitlistEntry.status == WaitlistStatus.WAITING
@@ -92,6 +127,9 @@ def public_event_out(
         available=available,
         priority_available=min(available, remaining(TicketKind.PRIORITY)),
         waitlist_waiting=int(waiting or 0),
+        logo_url=brand["logo_url"],
+        organization_name=brand["organization_name"],
+        organization_logo_url=brand["organization_logo_url"],
         invite=WaitlistInvite(
             name=invited.name,
             quantity=invited.quantity,

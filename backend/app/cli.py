@@ -12,6 +12,7 @@ import typer
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+import app.db.models  # noqa: F401 — registra todos os modelos (chaves entre tabelas)
 from app.core.config import get_settings
 from app.core.security import hash_password
 from app.core.timezone import local_to_utc
