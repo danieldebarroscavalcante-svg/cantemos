@@ -20,7 +20,7 @@ from app.modules.checkin.schemas import (
 )
 from app.modules.events.models import Event
 from app.modules.events.service import main_session
-from app.modules.organizations.models import OrganizationMember, Role
+from app.modules.organizations.models import Role
 from app.modules.tickets.models import Order, Ticket, TicketKind, TicketStatus, TicketType
 
 CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
@@ -56,16 +56,19 @@ def resolve_operator(db: Session, slug: str, token: str | None) -> Operator:
     event = event_by_slug(db, slug)
 
     if payload.get("type") == "access":
+        from app.modules.team.service import effective_role, permissions
+
         user = db.get(User, int(payload["sub"]))
-        role = db.scalar(
-            select(OrganizationMember.role).where(
-                OrganizationMember.user_id == user.id if user else False,
-                OrganizationMember.organization_id == event.organization_id,
-            )
-        )
-        if user is None or not user.is_active or role not in OPERATOR_ROLES:
+        role = effective_role(db, user, event) if user and user.is_active else None
+        if role not in OPERATOR_ROLES:
             raise HTTPException(status.HTTP_403_FORBIDDEN, "Sem acesso à recepção deste evento.")
-        return Operator(event=event, name=user.name, user_id=user.id, is_staff=True)
+        # Recepção com login desfaz só as próprias leituras; produção para cima, qualquer uma.
+        return Operator(
+            event=event,
+            name=user.name,
+            user_id=user.id,
+            is_staff=permissions(role)["undo_any_checkin"],
+        )
 
     if payload.get("type") == "checkin":
         if (

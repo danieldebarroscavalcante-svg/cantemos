@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { LogoField } from "@/components/ui/logo-field";
 import { api, ApiError, apiUpload } from "@/lib/api";
+import { useEventAccess } from "@/lib/use-event-access";
 import { useMe } from "@/lib/use-me";
 
 type Identity = {
@@ -26,9 +27,8 @@ export default function IdentityPage({ params }: { params: { slug: string } }) {
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const canEdit =
-    me?.memberships.some((m) => m.role === "owner" || m.role === "admin") ??
-    false;
+  const access = useEventAccess(params.slug, !!me);
+  const canEdit = access?.permissions.edit_event ?? false;
 
   useEffect(() => {
     if (!me) return;

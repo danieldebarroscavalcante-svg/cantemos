@@ -142,6 +142,7 @@ export async function logout(): Promise<void> {
 }
 
 export type EventSummary = {
+  my_role: "owner" | "admin" | "manager" | "checkin" | null;
   slug: string;
   title: string;
   status: "draft" | "published" | "open" | "closed" | "finished";

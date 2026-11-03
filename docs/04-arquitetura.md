@@ -256,3 +256,19 @@ O contrato fica documentado automaticamente pelo OpenAPI do FastAPI (`/docs`), e
 | Monitoramento | Sentry + uptime monitor (Better Stack / UptimeRobot) | Alertas no WhatsApp/Telegram da equipe |
 
 Domínio sugerido: `eventmer.com.br` (verificar disponibilidade — D2).
+
+## 9. Níveis de acesso (atualizado em 03/11/2026)
+
+O nível de uma pessoa em um evento é o **maior** entre o papel dela na igreja (`organization_members`) e na equipe do evento (`event_members`).
+
+| Permissão | Responsável / Admin da igreja | Administrador do evento | Produção | Recepção (login) |
+|---|:-:|:-:|:-:|:-:|
+| Nome e logo da igreja | ✅ | — | — | — |
+| Configurações, identidade visual, mensagens | ✅ | ✅ | ver | — |
+| Lembretes, lista de espera, teste geral, código da recepção | ✅ | ✅ | ver | — |
+| Equipe do evento (adicionar, trocar nível, remover) | ✅ | ✅ | ver | — |
+| Números, inscritos, planilha, lista impressa | ✅ | ✅ | ✅ | — |
+| Check-in | ✅ | ✅ | ✅ | ✅ |
+| Desfazer entrada de outra pessoa | ✅ | ✅ | ✅ | só as próprias |
+
+Voluntários sem conta continuam entrando pelo **código da recepção** (só check-in, sem desfazer leituras de terceiros). Quem é adicionado sem conta recebe um **convite** (token assinado, 7 dias, uso único: deixa de valer quando a senha é criada).

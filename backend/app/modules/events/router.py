@@ -8,7 +8,7 @@ from app.modules.auth.models import User
 from app.modules.events import service
 from app.modules.events.models import Event
 from app.modules.events.schemas import EventSettingsIn, EventSettingsOut, EventSummary
-from app.modules.organizations.models import OrganizationMember, Role
+from app.modules.organizations.models import Role
 
 router = APIRouter(prefix="/org/events", tags=["organizador · eventos"])
 
@@ -17,14 +17,13 @@ EDIT_ROLES = (Role.OWNER, Role.ADMIN)
 
 
 def _event_for(db: Session, user: User, slug: str, roles: tuple[Role, ...]) -> Event:
-    row = db.execute(
-        select(Event, OrganizationMember.role)
-        .join(OrganizationMember, OrganizationMember.organization_id == Event.organization_id)
-        .where(Event.slug == slug, OrganizationMember.user_id == user.id)
-    ).first()
-    if row is None:
+    """Evento pelo slug, se o nível efetivo da pessoa (igreja + equipe do evento) permitir."""
+    from app.modules.team.service import effective_role
+
+    event = db.scalar(select(Event).where(Event.slug == slug))
+    role = effective_role(db, user, event) if event else None
+    if event is None or role is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Evento não encontrado.")
-    event, role = row
     if role not in roles:
         raise HTTPException(status.HTTP_403_FORBIDDEN, "Sem permissão para esta ação.")
     return event
@@ -32,13 +31,9 @@ def _event_for(db: Session, user: User, slug: str, roles: tuple[Role, ...]) -> E
 
 @router.get("", response_model=list[EventSummary])
 def list_events(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    events = db.scalars(
-        select(Event)
-        .join(OrganizationMember, OrganizationMember.organization_id == Event.organization_id)
-        .where(OrganizationMember.user_id == user.id, OrganizationMember.role.in_(VIEW_ROLES))
-        .order_by(Event.created_at.desc())
-    )
-    return [service.summarize(db, event) for event in events]
+    from app.modules.team.service import events_for
+
+    return [service.summarize(db, event, role) for event, role in events_for(db, user)]
 
 
 @router.get("/{slug}/settings", response_model=EventSettingsOut)

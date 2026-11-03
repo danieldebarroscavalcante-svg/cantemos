@@ -6,6 +6,7 @@ import { QrCode } from "@/components/qr-code";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { api, apiDownload, ApiError } from "@/lib/api";
+import { useEventAccess } from "@/lib/use-event-access";
 import { useMe } from "@/lib/use-me";
 
 type Reception = { code: string | null; checkin_path: string };
@@ -21,9 +22,8 @@ export default function ReceptionPage({
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const canEdit =
-    me?.memberships.some((m) => m.role === "owner" || m.role === "admin") ??
-    false;
+  const access = useEventAccess(params.slug, !!me);
+  const canEdit = access?.permissions.edit_event ?? false;
 
   useEffect(() => setOrigin(window.location.origin), []);
   useEffect(() => {

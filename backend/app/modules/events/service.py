@@ -57,9 +57,10 @@ def _single(types: list[TicketType], kind: TicketKind) -> TicketType | None:
     return next((t for t in types if t.kind == kind), None)
 
 
-def summarize(db: Session, event: Event) -> EventSummary:
+def summarize(db: Session, event: Event, role=None) -> EventSummary:
     session = main_session(db, event)
     return EventSummary(
+        my_role=role.value if role else None,
         slug=event.slug,
         title=event.title,
         status=event.status,

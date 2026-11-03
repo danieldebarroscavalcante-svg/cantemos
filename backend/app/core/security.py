@@ -123,3 +123,32 @@ def verify_waitlist_token(token: str) -> str | None:
     if not public_id:
         return None
     return public_id if hmac.compare_digest(sign_waitlist_token(public_id), token) else None
+
+
+def _password_fingerprint(password_hash: str | None) -> str:
+    return hashlib.sha256(f"pw:{password_hash or ''}".encode()).hexdigest()[:12]
+
+
+def create_invite_token(user_id: int, password_hash: str | None, days: int = 7) -> str:
+    """Convite para criar a senha. Deixa de valer quando a senha muda (uso único)."""
+    settings = get_settings()
+    now = datetime.now(UTC)
+    payload = {
+        "type": "invite",
+        "sub": str(user_id),
+        "pv": _password_fingerprint(password_hash),
+        "iat": now,
+        "exp": now + timedelta(days=days),
+    }
+    return jwt.encode(payload, settings.jwt_secret, algorithm=settings.jwt_algorithm)
+
+
+def read_invite_token(token: str) -> tuple[int, str] | None:
+    payload = decode_token(token)
+    if not payload or payload.get("type") != "invite":
+        return None
+    return int(payload["sub"]), str(payload.get("pv", ""))
+
+
+def invite_matches(fingerprint: str, password_hash: str | None) -> bool:
+    return hmac.compare_digest(fingerprint, _password_fingerprint(password_hash))

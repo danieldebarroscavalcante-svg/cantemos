@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { api, ApiError } from "@/lib/api";
+import { useEventAccess } from "@/lib/use-event-access";
 import { useMe } from "@/lib/use-me";
 
 type Count = { label: string; people: number };
@@ -126,9 +127,8 @@ export default function FollowUpPage({ params }: { params: { slug: string } }) {
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const canEdit =
-    me?.memberships.some((m) => m.role === "owner" || m.role === "admin") ??
-    false;
+  const access = useEventAccess(params.slug, !!me);
+  const canEdit = access?.permissions.send_messages ?? false;
 
   const load = useCallback(async () => {
     try {

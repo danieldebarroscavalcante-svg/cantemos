@@ -97,6 +97,9 @@ export default function PainelPage() {
   const roles = me.memberships.map(
     (m) => `${roleLabel[m.role] ?? m.role} · ${m.organization_name}`,
   );
+  const churchAdmin = me.memberships.some(
+    (m) => m.role === "owner" || m.role === "admin",
+  );
 
   return (
     <main className="mx-auto w-full max-w-5xl space-y-6 px-4 py-6 md:py-10">
@@ -106,7 +109,9 @@ export default function PainelPage() {
           <h1 className="text-3xl font-normal leading-tight text-strong">
             Olá, {me.name.split(" ")[0]}
           </h1>
-          <p className="text-sm text-muted">{roles.join(" · ")}</p>
+          <p className="text-sm text-muted">
+            {roles.length ? roles.join(" · ") : "Equipe de evento"}
+          </p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Link
@@ -115,12 +120,14 @@ export default function PainelPage() {
           >
             Meu perfil
           </Link>
-          <Link
-            href="/painel/igreja"
-            className="inline-flex min-h-touch shrink-0 whitespace-nowrap items-center justify-center rounded-xl border border-border bg-line/[0.03] px-5 text-sm font-semibold hover:bg-line/[0.07]"
-          >
-            Igreja
-          </Link>
+          {churchAdmin && (
+            <Link
+              href="/painel/igreja"
+              className="inline-flex min-h-touch shrink-0 whitespace-nowrap items-center justify-center rounded-xl border border-border bg-line/[0.03] px-5 text-sm font-semibold hover:bg-line/[0.07]"
+            >
+              Igreja
+            </Link>
+          )}
           <Button variant="secondary" onClick={onLogout}>
             Sair
           </Button>
@@ -137,7 +144,14 @@ export default function PainelPage() {
           {events?.map((event) => (
             <Card key={event.slug} className="flex flex-col gap-4">
               <div>
-                <p className="eyebrow">{statusLabel[event.status]}</p>
+                <p className="eyebrow">
+                  {statusLabel[event.status]}
+                  {event.my_role && (
+                    <span className="ml-2 text-subtle">
+                      · {roleLabel[event.my_role]}
+                    </span>
+                  )}
+                </p>
                 <p className="text-xl font-bold">{event.title}</p>
                 <p className="text-muted">{formatDate(event.starts_at)}</p>
               </div>
@@ -163,18 +177,26 @@ export default function PainelPage() {
               </dl>
               <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 <Link
-                  href={`/painel/eventos/${event.slug}/recepcao`}
+                  href={
+                    event.my_role === "checkin"
+                      ? `/checkin/${event.slug}`
+                      : `/painel/eventos/${event.slug}/recepcao`
+                  }
                   className={`${linkButton} bg-brand font-bold uppercase tracking-wide text-primary-fg shadow-sm transition hover:-translate-y-px hover:shadow-cta`}
                 >
                   Recepção / check-in
                 </Link>
-                {[
-                  ["identidade", "Identidade visual"],
-                  ["mensagens", "Mensagens de e-mail"],
-                  ["configuracoes", "Configurações"],
-                  ["acompanhamento", "Números e lembretes"],
-                  ["teste", "Teste geral"],
-                ].map(([path, label]) => (
+                {(event.my_role === "checkin"
+                  ? []
+                  : [
+                      ["equipe", "Equipe"],
+                      ["identidade", "Identidade visual"],
+                      ["mensagens", "Mensagens de e-mail"],
+                      ["configuracoes", "Configurações"],
+                      ["acompanhamento", "Números e lembretes"],
+                      ["teste", "Teste geral"],
+                    ]
+                ).map(([path, label]) => (
                   <Link
                     key={path}
                     href={`/painel/eventos/${event.slug}/${path}`}

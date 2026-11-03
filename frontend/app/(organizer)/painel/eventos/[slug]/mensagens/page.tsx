@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { api, ApiError } from "@/lib/api";
 import { cn } from "@/lib/cn";
+import { useEventAccess } from "@/lib/use-event-access";
 import { useMe } from "@/lib/use-me";
 
 type Texts = {
@@ -51,9 +52,8 @@ export default function MessagesPage({ params }: { params: { slug: string } }) {
     name: FieldName;
     el: HTMLInputElement | HTMLTextAreaElement;
   } | null>(null);
-  const canEdit =
-    me?.memberships.some((m) => m.role === "owner" || m.role === "admin") ??
-    false;
+  const access = useEventAccess(params.slug, !!me);
+  const canEdit = access?.permissions.edit_event ?? false;
 
   const current = messages?.find((m) => m.kind === kind) ?? null;
   const dirty =

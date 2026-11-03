@@ -8,6 +8,7 @@ from app.modules.checkin.models import Checkin
 from app.modules.events.models import Event, EventSession
 from app.modules.messages.models import MessageTemplate
 from app.modules.organizations.models import Organization, OrganizationMember
+from app.modules.team.models import EventMember
 from app.modules.tickets.models import Order, Ticket, TicketType
 from app.modules.waitlist.models import WaitlistEntry
 
@@ -17,6 +18,7 @@ __all__ = [
     "Broadcast",
     "Checkin",
     "Event",
+    "EventMember",
     "MessageTemplate",
     "EventSession",
     "Order",

@@ -140,6 +140,7 @@ def test_list_events(client, admin, event):
     events = client.get("/api/v1/org/events", headers=auth_headers(client)).json()
     assert events == [
         {
+            "my_role": "owner",
             "slug": "cantemos-2026",
             "title": "CANTEMOS 2026",
             "status": "draft",

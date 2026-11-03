@@ -6,6 +6,7 @@ from app.modules.events.models import EventStatus
 
 
 class EventSummary(BaseModel):
+    my_role: str | None = None  # nível efetivo de quem consulta
     slug: str
     title: str
     status: EventStatus

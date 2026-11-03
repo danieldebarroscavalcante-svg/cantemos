@@ -13,6 +13,7 @@ import {
   type EventSettingsInput,
   type ReservedQuota,
 } from "@/lib/api";
+import { useEventAccess } from "@/lib/use-event-access";
 import { useMe } from "@/lib/use-me";
 
 const toInput = (value: string | null) => (value ? value.slice(0, 16) : "");
@@ -71,9 +72,8 @@ export default function EventSettingsPage({
   const [notice, setNotice] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
-  const canEdit =
-    me?.memberships.some((m) => m.role === "owner" || m.role === "admin") ??
-    false;
+  const access = useEventAccess(params.slug, !!me);
+  const canEdit = access?.permissions.edit_event ?? false;
 
   useEffect(() => {
     if (!me) return;
