@@ -248,7 +248,15 @@ export default function FollowUpPage({ params }: { params: { slug: string } }) {
       )}
 
       <section className="space-y-3">
-        <h2 className="text-title font-semibold text-strong">Números</h2>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-title font-semibold text-strong">Números</h2>
+          <Link
+            href={`/painel/eventos/${params.slug}/inscritos`}
+            className="text-sm font-semibold text-primary"
+          >
+            Ver quem se inscreveu →
+          </Link>
+        </div>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           <Tile
             label="Pessoas inscritas"

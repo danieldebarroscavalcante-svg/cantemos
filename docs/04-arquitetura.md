@@ -267,7 +267,8 @@ O nível de uma pessoa em um evento é o **maior** entre o papel dela na igreja 
 | Configurações, identidade visual, mensagens | ✅ | ✅ | ver | — |
 | Lembretes, lista de espera, teste geral, código da recepção | ✅ | ✅ | ver | — |
 | Equipe do evento (adicionar, trocar nível, remover) | ✅ | ✅ | ver | — |
-| Números, inscritos, planilha, lista impressa | ✅ | ✅ | ✅ | — |
+| Números, inscritos, planilha, lista impressa, reenviar ingresso | ✅ | ✅ | ✅ | — |
+| Corrigir dados e cancelar inscrições pelo painel | ✅ | ✅ | — | — |
 | Check-in | ✅ | ✅ | ✅ | ✅ |
 | Desfazer entrada de outra pessoa | ✅ | ✅ | ✅ | só as próprias |
 

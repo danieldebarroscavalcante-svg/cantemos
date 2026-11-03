@@ -189,6 +189,7 @@ export default function PainelPage() {
                 {(event.my_role === "checkin"
                   ? []
                   : [
+                      ["inscritos", "Inscritos"],
                       ["equipe", "Equipe"],
                       ["identidade", "Identidade visual"],
                       ["mensagens", "Mensagens de e-mail"],

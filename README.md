@@ -79,3 +79,4 @@ Depois siga [`backend/README.md`](backend/README.md) (API, migrations, criação
 | Favicon/ícone do app ("e" laranja) e edição de perfil (nome e troca de senha) | ✅ 03/11 |
 | Teste geral no painel: inscrição de teste para o próprio e-mail (3 pessoas), roteiro de verificação de ponta a ponta e remoção com devolução das vagas | ✅ 03/11 |
 | Equipe do evento: níveis Responsável (igreja) › Administrador do evento › Produção › Recepção, convite por e-mail para criar senha, troca de nível e remoção | ✅ 03/11 |
+| Inscritos no painel: lista por família com busca (sem acento, por telefone ou código), filtros, contatos com WhatsApp, reenvio do ingresso, correção de dados e cancelamento por pessoa | ✅ 03/11 |

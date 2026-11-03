@@ -21,6 +21,7 @@ from app.modules.notifications.router import router as notifications_router
 from app.modules.reports.router import router as reports_router
 from app.modules.team.router import invite_router
 from app.modules.team.router import router as team_router
+from app.modules.tickets.org_router import router as registrations_router
 from app.modules.tickets.router import router as tickets_router
 from app.modules.tickets.test_router import router as test_router
 
@@ -57,6 +58,7 @@ api.include_router(messages_router)
 api.include_router(test_router)
 api.include_router(team_router)
 api.include_router(invite_router)
+api.include_router(registrations_router)
 
 
 @api.get("/health", tags=["infra"])
