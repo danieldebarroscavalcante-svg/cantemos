@@ -21,18 +21,21 @@ export default async function HomePage() {
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-3xl flex-col justify-center gap-8 px-4 py-12">
       <header className="space-y-3">
-        <p className="text-sm font-semibold uppercase tracking-widest text-primary">EVENTMER</p>
-        <h1 className="text-3xl font-bold leading-tight sm:text-4xl">
+        <p className="eyebrow">EVENTMER</p>
+        <h1 className="title-display">
           Inscrições, ingressos e credenciamento sem fila.
         </h1>
         <p className="text-lg text-muted">
-          Plataforma de eventos da nossa igreja — pensada para o celular e o tablet.
+          Plataforma de eventos da nossa igreja — pensada para o celular e o
+          tablet.
         </p>
       </header>
 
-      <Card className="space-y-3 border-accent/40">
-        <p className="text-sm font-semibold text-accent">Próximo evento</p>
-        <h2 className="text-2xl font-bold">{event?.title ?? "CANTEMOS 2026"}</h2>
+      <Card className="space-y-3 border-primary/35">
+        <p className="eyebrow">Próximo evento</p>
+        <h2 className="text-[1.75rem] font-normal leading-tight text-strong">
+          {event?.title ?? "CANTEMOS 2026"}
+        </h2>
         <p className="text-muted">
           {event
             ? `${formatEventDateTime(event.starts_at)} · Entrada gratuita`
@@ -41,12 +44,14 @@ export default async function HomePage() {
         {event ? (
           <Link
             href={`/e/${event.slug}`}
-            className="inline-flex min-h-touch w-full items-center justify-center rounded-xl bg-primary px-5 font-semibold text-primary-fg hover:bg-primary/90 sm:w-auto"
+            className="inline-flex min-h-touch w-full items-center justify-center rounded-xl bg-brand px-5 font-bold uppercase tracking-wide text-primary-fg shadow-sm transition hover:-translate-y-px hover:shadow-cta sm:w-auto"
           >
             {open ? "Fazer minha inscrição" : "Ver detalhes do evento"}
           </Link>
         ) : (
-          <p className="text-sm text-muted">As inscrições serão abertas em breve.</p>
+          <p className="text-sm text-muted">
+            As inscrições serão abertas em breve.
+          </p>
         )}
       </Card>
 

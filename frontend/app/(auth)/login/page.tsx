@@ -21,15 +21,19 @@ export default function LoginPage() {
       await login(String(form.get("email")), String(form.get("password")));
       router.replace("/painel");
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Sem conexão. Tente novamente.");
+      setError(
+        err instanceof ApiError ? err.message : "Sem conexão. Tente novamente.",
+      );
       setLoading(false);
     }
   }
 
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center px-4 py-12">
-      <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-primary">EVENTMER</p>
-      <h1 className="mb-6 text-2xl font-bold">Entrar no painel</h1>
+      <p className="mb-2 eyebrow">EVENTMER</p>
+      <h1 className="mb-6 text-3xl font-normal leading-tight text-strong">
+        Entrar no painel
+      </h1>
       <Card>
         <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
           <Input
@@ -48,7 +52,10 @@ export default function LoginPage() {
             required
           />
           {error && (
-            <p role="alert" className="rounded-xl bg-danger/10 px-4 py-3 text-sm text-danger">
+            <p
+              role="alert"
+              className="rounded-xl bg-danger/10 px-4 py-3 text-sm text-danger"
+            >
               {error}
             </p>
           )}

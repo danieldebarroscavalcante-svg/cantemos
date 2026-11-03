@@ -14,12 +14,12 @@ export function EventHeader({
   return (
     <header className="space-y-4">
       <div>
-        <p className="text-sm font-semibold uppercase tracking-widest text-primary">
-          EVENTMER
-        </p>
+        <p className="eyebrow">EVENTMER</p>
         <h1
           className={
-            compact ? "text-2xl font-bold" : "text-3xl font-bold sm:text-4xl"
+            compact
+              ? "text-3xl font-normal leading-tight text-strong"
+              : "title-display"
           }
         >
           {event.title}

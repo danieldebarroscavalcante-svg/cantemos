@@ -16,38 +16,46 @@ export default function TermosPage() {
 
       <h2>Inscrição e ingressos</h2>
       <ul>
-        <li>As inscrições são gratuitas e limitadas à lotação definida pela organização.</li>
         <li>
-          Cada inscrição tem um número máximo de participantes; os nomes informados devem ser
-          verdadeiros.
+          As inscrições são gratuitas e limitadas à lotação definida pela
+          organização.
         </li>
         <li>
-          O ingresso é pessoal. O QR Code será lido na entrada e vale para uma única entrada.
+          Cada inscrição tem um número máximo de participantes; os nomes
+          informados devem ser verdadeiros.
         </li>
         <li>
-          Se não puder comparecer, cancele sua inscrição pelo link recebido por e-mail para
-          liberar a vaga a outra pessoa.
+          O ingresso é pessoal. O QR Code será lido na entrada e vale para uma
+          única entrada.
+        </li>
+        <li>
+          Se não puder comparecer, cancele sua inscrição pelo link recebido por
+          e-mail para liberar a vaga a outra pessoa.
         </li>
       </ul>
 
       <h2>Lotação e entrada</h2>
       <p>
-        Para compensar ausências, a organização pode aceitar inscrições acima do número de
-        lugares. A inscrição não garante lugar sentado; recomendamos chegar no horário de
-        abertura das portas. A organização pode recusar a entrada em caso de lotação esgotada
-        por motivo de segurança.
+        Para compensar ausências, a organização pode aceitar inscrições acima do
+        número de lugares. A inscrição não garante lugar sentado; recomendamos
+        chegar no horário de abertura das portas. A organização pode recusar a
+        entrada em caso de lotação esgotada por motivo de segurança.
       </p>
 
       <h2>Conduta</h2>
       <p>
-        É proibido fazer inscrições em massa, revender ingressos ou tentar burlar os limites da
-        plataforma. Inscrições nessas condições podem ser canceladas.
+        É proibido fazer inscrições em massa, revender ingressos ou tentar
+        burlar os limites da plataforma. Inscrições nessas condições podem ser
+        canceladas.
       </p>
 
       <h2>Dados pessoais</h2>
       <p>
         O uso dos seus dados está descrito na{" "}
-        <Link href="/privacidade" className="font-semibold text-primary underline">
+        <Link
+          href="/privacidade"
+          className="font-semibold text-primary underline"
+        >
           Política de Privacidade
         </Link>
         .
@@ -55,8 +63,8 @@ export default function TermosPage() {
 
       <h2>Alterações</h2>
       <p>
-        A organização pode alterar data, horário ou condições do evento por motivo de força
-        maior, avisando os inscritos por e-mail.
+        A organização pode alterar data, horário ou condições do evento por
+        motivo de força maior, avisando os inscritos por e-mail.
       </p>
     </LegalPage>
   );

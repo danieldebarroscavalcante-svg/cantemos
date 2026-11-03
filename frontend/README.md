@@ -34,4 +34,4 @@ npm run lint && npm run typecheck && npm run build
 
 ## Design system
 
-Cores definidas como tokens CSS em `app/globals.css` (tema claro e escuro) e expostas no Tailwind (`bg-primary`, `text-muted`, `border-border`…). As cores são provisórias até a definição da identidade visual (decisão D14). Componentes base ficam em `components/ui/`.
+Tema escuro "neon mint" — regras em [`docs/07-design-system.md`](../docs/07-design-system.md), valores em `styles/tokens.css`. Nunca escreva cores, fontes, raios ou sombras soltos: use os tokens (classes do Tailwind como `bg-surface`, `text-muted`, `bg-brand`, `shadow-card`, `.eyebrow`). Componentes base em `components/ui/`.

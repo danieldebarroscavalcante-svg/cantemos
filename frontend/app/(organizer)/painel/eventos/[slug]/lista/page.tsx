@@ -71,7 +71,9 @@ export default function PrintListPage({
         </Link>
         <Button onClick={() => window.print()}>Imprimir</Button>
       </div>
-      <h1 className="text-2xl font-bold">Lista de presença · CANTEMOS 2026</h1>
+      <h1 className="text-3xl font-normal leading-tight text-strong">
+        Lista de presença · CANTEMOS 2026
+      </h1>
       <p className="mb-4 text-sm text-muted">
         {list.length} pessoas inscritas · gerada em {generatedAt} · em ordem
         alfabética
@@ -111,7 +113,9 @@ export default function PrintListPage({
               </td>
               <td className="py-2">{AGE[r.age_group]}</td>
               <td className="py-2">{r.buyer_name}</td>
-              <td className="whitespace-nowrap py-2 tracking-wider">{r.code}</td>
+              <td className="whitespace-nowrap py-2 tracking-wider">
+                {r.code}
+              </td>
             </tr>
           ))}
         </tbody>

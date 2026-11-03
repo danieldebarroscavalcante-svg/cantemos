@@ -98,10 +98,10 @@ export default function PainelPage() {
     <main className="mx-auto w-full max-w-5xl space-y-6 px-4 py-6 md:py-10">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-widest text-primary">
-            Painel
-          </p>
-          <h1 className="text-2xl font-bold">Olá, {me.name.split(" ")[0]}</h1>
+          <p className="eyebrow">Painel</p>
+          <h1 className="text-3xl font-normal leading-tight text-strong">
+            Olá, {me.name.split(" ")[0]}
+          </h1>
           <p className="text-sm text-muted">{roles.join(" · ")}</p>
         </div>
         <Button variant="secondary" onClick={onLogout}>
@@ -110,7 +110,7 @@ export default function PainelPage() {
       </header>
 
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold">Eventos</h2>
+        <h2 className="text-title font-semibold text-strong">Eventos</h2>
         {events === null && <p className="text-muted">Carregando eventos…</p>}
         {events?.length === 0 && (
           <p className="text-muted">Nenhum evento disponível para você.</p>
@@ -119,26 +119,26 @@ export default function PainelPage() {
           {events?.map((event) => (
             <Card key={event.slug} className="flex flex-col gap-4">
               <div>
-                <p className="text-sm font-semibold text-accent">
+                <p className="eyebrow">
                   {statusLabel[event.status]}
                 </p>
                 <p className="text-xl font-bold">{event.title}</p>
                 <p className="text-muted">{formatDate(event.starts_at)}</p>
               </div>
               <dl className="grid grid-cols-3 gap-2 text-center">
-                <div className="rounded-xl bg-bg p-3">
+                <div className="rounded-xl bg-surface-1 p-3">
                   <dt className="text-xs text-muted">Lugares</dt>
                   <dd className="text-xl font-bold tabular-nums">
                     {event.capacity}
                   </dd>
                 </div>
-                <div className="rounded-xl bg-bg p-3">
+                <div className="rounded-xl bg-surface-1 p-3">
                   <dt className="text-xs text-muted">Aceita até</dt>
                   <dd className="text-xl font-bold tabular-nums">
                     {event.registration_limit}
                   </dd>
                 </div>
-                <div className="rounded-xl bg-bg p-3">
+                <div className="rounded-xl bg-surface-1 p-3">
                   <dt className="text-xs text-muted">Inscritos</dt>
                   <dd className="text-xl font-bold tabular-nums">
                     {event.registered}
@@ -148,19 +148,19 @@ export default function PainelPage() {
               <div className="grid gap-2 sm:grid-cols-2">
                 <Link
                   href={`/painel/eventos/${event.slug}/configuracoes`}
-                  className="inline-flex min-h-touch items-center justify-center rounded-xl border border-border px-5 font-semibold hover:bg-border/40"
+                  className="inline-flex min-h-touch items-center justify-center rounded-xl border border-border bg-line/[0.03] px-5 text-sm font-semibold hover:bg-line/[0.07]"
                 >
                   Configurações
                 </Link>
                 <Link
                   href={`/painel/eventos/${event.slug}/acompanhamento`}
-                  className="inline-flex min-h-touch items-center justify-center rounded-xl border border-border px-5 font-semibold hover:bg-border/40"
+                  className="inline-flex min-h-touch items-center justify-center rounded-xl border border-border bg-line/[0.03] px-5 text-sm font-semibold hover:bg-line/[0.07]"
                 >
                   Números e lembretes
                 </Link>
                 <Link
                   href={`/painel/eventos/${event.slug}/recepcao`}
-                  className="inline-flex min-h-touch items-center justify-center rounded-xl bg-primary px-5 font-semibold text-primary-fg hover:bg-primary/90"
+                  className="inline-flex min-h-touch items-center justify-center rounded-xl bg-brand px-5 font-bold uppercase tracking-wide text-primary-fg shadow-sm transition hover:-translate-y-px hover:shadow-cta"
                 >
                   Recepção / check-in
                 </Link>
@@ -168,7 +168,7 @@ export default function PainelPage() {
                   <a
                     href={`/e/${event.slug}`}
                     target="_blank"
-                    className="inline-flex min-h-touch items-center justify-center rounded-xl border border-border px-5 font-semibold hover:bg-border/40"
+                    className="inline-flex min-h-touch items-center justify-center rounded-xl border border-border bg-line/[0.03] px-5 text-sm font-semibold hover:bg-line/[0.07]"
                   >
                     Página pública ↗
                   </a>
@@ -181,7 +181,7 @@ export default function PainelPage() {
 
       {me.memberships.some((m) => m.role === "owner" || m.role === "admin") && (
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">E-mail</h2>
+          <h2 className="text-title font-semibold text-strong">E-mail</h2>
           <Card className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-muted">
               Confirme que os ingressos vão chegar: envie um e-mail de teste

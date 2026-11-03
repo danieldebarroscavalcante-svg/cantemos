@@ -36,6 +36,7 @@ Detalhes, bibliotecas de apoio e decisões de infraestrutura: [`docs/04-arquitet
 | 04 | [Arquitetura](docs/04-arquitetura.md) | Arquitetura, modelo de dados inicial, segurança, responsividade, hospedagem |
 | 05 | [Decisões em aberto](docs/05-decisoes-em-aberto.md) | Perguntas que precisam de resposta da organização antes ou durante o desenvolvimento |
 | 06 | [Hospedagem gratuita](docs/06-hospedagem-gratuita.md) | Vercel + Render + Aiven + Gmail: passo a passo para colocar no ar |
+| 07 | [Design system](docs/07-design-system.md) | Tema escuro "neon mint": regras de uso; valores em `frontend/styles/tokens.css` |
 
 ## Estrutura do repositório
 

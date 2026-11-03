@@ -1,4 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#4338ca"/>
-  <path d="M20 18h24v6H27v5h15v6H27v5h17v6H20z" fill="#fff"/>
+  <!-- Cores de styles/tokens.css: --bg-surface-2 e --brand-gradient -->
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8AF7D3"/><stop offset=".48" stop-color="#36EDB3"/><stop offset="1" stop-color="#29DBA4"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="12" fill="#0B0D0E"/>
+  <rect x=".5" y=".5" width="63" height="63" rx="11.5" fill="none" stroke="#36EDB3" stroke-opacity=".35"/>
+  <path d="M20 18h24v6H27v5h15v6H27v5h17v6H20z" fill="url(#g)"/>
 </svg>

@@ -28,17 +28,18 @@ export function NumberField({
   className,
 }: NumberFieldProps) {
   const id = useId();
-  const clamp = (n: number) => Math.min(max, Math.max(min, Number.isFinite(n) ? n : min));
+  const clamp = (n: number) =>
+    Math.min(max, Math.max(min, Number.isFinite(n) ? n : min));
   const stepButton =
     "grid min-h-touch min-w-[44px] place-items-center text-xl font-semibold text-primary " +
-    "hover:bg-border/40 disabled:opacity-40";
+    "hover:bg-line/[0.07] disabled:opacity-40";
 
   return (
     <div className={cn("flex flex-col gap-1.5", className)}>
-      <label htmlFor={id} className="text-sm font-medium">
+      <label htmlFor={id} className="text-sm font-medium text-soft">
         {label}
       </label>
-      <div className="flex items-stretch overflow-hidden rounded-xl border border-border bg-surface focus-within:ring-2 focus-within:ring-primary/60">
+      <div className="flex items-stretch overflow-hidden rounded-xl border border-border bg-line/[0.03] focus-within:ring-2 focus-within:ring-primary/30">
         <button
           type="button"
           aria-label={`Diminuir ${label}`}

@@ -61,7 +61,7 @@ export function Scanner({ onScan, paused }: Props) {
         playsInline
       />
       {error && (
-        <p className="absolute inset-0 grid place-items-center bg-black/80 p-6 text-center text-white">
+        <p className="absolute inset-0 grid place-items-center bg-bg/80 p-6 text-center text-strong">
           {error}
         </p>
       )}

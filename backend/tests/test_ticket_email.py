@@ -33,4 +33,4 @@ def test_ticket_email_has_one_inline_qr_per_valid_ticket():
     assert message.attachments[0].content.startswith(b"\x89PNG")
     assert "Maria &lt;b&gt;" in message.html  # nomes escapados
     assert "/ingresso/tok.123" in message.html
-    assert "Quinta-feira, 19 de novembro às 18:30 (portas abrem às 18:00)" in message.text
+    assert "Quinta-feira, 19 de novembro às 18:30 · portas abrem às 18:00" in message.text

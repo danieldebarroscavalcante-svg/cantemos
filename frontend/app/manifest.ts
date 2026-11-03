@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Inscrições, ingressos e credenciamento de eventos.",
     start_url: "/",
     display: "standalone",
-    background_color: "#fafaf9",
-    theme_color: "#4338ca",
+    background_color: "#000000", // --bg-base
+    theme_color: "#000000", // --bg-base
     lang: "pt-BR",
     icons: [{ src: "/icon.svg", sizes: "any", type: "image/svg+xml" }],
   };

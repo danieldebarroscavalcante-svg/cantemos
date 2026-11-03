@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@fontsource-variable/sora": "^5.2.5",
     "next": "14.2.35",
     "qr-scanner": "^1.4.2",
     "qrcode": "^1.5.4",

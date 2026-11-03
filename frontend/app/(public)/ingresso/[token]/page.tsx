@@ -9,7 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { api, ApiError, type Order, type Ticket } from "@/lib/api";
 
-const AGE_LABEL = { adulto: "Adulto", crianca: "Criança", idoso: "Idoso" } as const;
+const AGE_LABEL = {
+  adulto: "Adulto",
+  crianca: "Criança",
+  idoso: "Idoso",
+} as const;
 const STATUS_LABEL: Record<Ticket["status"], string> = {
   valid: "Válido",
   used: "Entrada registrada",
@@ -32,27 +36,42 @@ function TicketCard({
 }) {
   const valid = ticket.status === "valid" && ticket.qr;
   return (
-    <Card className={valid ? "space-y-3 text-center" : "space-y-1 text-center opacity-70"}>
+    <Card
+      className={
+        valid ? "space-y-3 text-center" : "space-y-1 text-center opacity-70"
+      }
+    >
       <p className="text-sm text-muted">
         Ingresso {index + 1} de {total}
       </p>
       {valid ? (
-        <QrCode value={ticket.qr!} label={`QR Code do ingresso de ${ticket.attendee_name}`} />
+        <QrCode
+          value={ticket.qr!}
+          label={`QR Code do ingresso de ${ticket.attendee_name}`}
+        />
       ) : (
-        <p className="py-6 font-semibold text-muted">{STATUS_LABEL[ticket.status]}</p>
+        <p className="py-6 font-semibold text-muted">
+          {STATUS_LABEL[ticket.status]}
+        </p>
       )}
       <p className="text-xl font-bold">{ticket.attendee_name}</p>
       <p className="text-muted">{AGE_LABEL[ticket.age_group]}</p>
       {ticket.priority && (
         <p className="mx-auto w-fit rounded-full bg-warning/20 px-3 py-1 text-sm font-semibold">
           Atendimento prioritário
-          {ticket.accessibility_need && ticket.accessibility_need !== "Atendimento prioritário"
+          {ticket.accessibility_need &&
+          ticket.accessibility_need !== "Atendimento prioritário"
             ? ` · ${ticket.accessibility_need}`
             : ""}
         </p>
       )}
       {valid && total > 1 && (
-        <Button variant="ghost-danger" onClick={onCancel} disabled={busy} className="text-sm">
+        <Button
+          variant="ghost-danger"
+          onClick={onCancel}
+          disabled={busy}
+          className="text-sm"
+        >
           Esta pessoa não vai
         </Button>
       )}
@@ -70,7 +89,11 @@ function OrderView({ token }: { token: string }) {
     api<Order>(`/public/orders/${token}`)
       .then(setOrder)
       .catch((err) =>
-        setError(err instanceof ApiError ? err.message : "Sem conexão. Tente novamente."),
+        setError(
+          err instanceof ApiError
+            ? err.message
+            : "Sem conexão. Tente novamente.",
+        ),
       );
   }, [token]);
 
@@ -87,7 +110,9 @@ function OrderView({ token }: { token: string }) {
         }),
       );
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Sem conexão. Tente novamente.");
+      setError(
+        err instanceof ApiError ? err.message : "Sem conexão. Tente novamente.",
+      );
     } finally {
       setBusy(false);
     }
@@ -95,7 +120,10 @@ function OrderView({ token }: { token: string }) {
 
   if (!order) {
     return (
-      <main className="grid min-h-dvh place-items-center px-4 text-center text-muted" aria-busy>
+      <main
+        className="grid min-h-dvh place-items-center px-4 text-center text-muted"
+        aria-busy
+      >
         {error ?? "Carregando seus ingressos…"}
       </main>
     );
@@ -107,7 +135,10 @@ function OrderView({ token }: { token: string }) {
   return (
     <main className="mx-auto w-full max-w-2xl space-y-6 px-4 py-6 md:py-10">
       {isNew && !cancelled && (
-        <div role="status" className="rounded-2xl bg-success/10 p-4 text-success">
+        <div
+          role="status"
+          className="rounded-2xl bg-success/10 p-4 text-success"
+        >
           <p className="text-lg font-bold">Inscrição confirmada! 🎉</p>
           <p>
             {order.email_sent
@@ -132,17 +163,24 @@ function OrderView({ token }: { token: string }) {
 
       {cancelled ? (
         <Card className="space-y-2 text-center">
-          <p className="text-lg font-semibold">Inscrição cancelada</p>
-          <p className="text-muted">Obrigado por liberar as vagas para outras famílias.</p>
-          <Link href={`/e/${order.event.slug}`} className="font-semibold text-primary underline">
+          <p className="text-title font-semibold text-strong">
+            Inscrição cancelada
+          </p>
+          <p className="text-muted">
+            Obrigado por liberar as vagas para outras famílias.
+          </p>
+          <Link
+            href={`/e/${order.event.slug}`}
+            className="font-semibold text-primary underline"
+          >
             Fazer nova inscrição
           </Link>
         </Card>
       ) : (
         <>
           <p className="text-center text-muted">
-            Na entrada, mostre o QR Code de cada pessoa. Aumente o brilho da tela para facilitar a
-            leitura.
+            Na entrada, mostre o QR Code de cada pessoa. Aumente o brilho da
+            tela para facilitar a leitura.
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             {order.tickets.map((ticket, index) => (
@@ -153,26 +191,36 @@ function OrderView({ token }: { token: string }) {
                 total={order.tickets.length}
                 busy={busy}
                 onCancel={() =>
-                  cancel([ticket.id], `Cancelar o ingresso de ${ticket.attendee_name}?`)
+                  cancel(
+                    [ticket.id],
+                    `Cancelar o ingresso de ${ticket.attendee_name}?`,
+                  )
                 }
               />
             ))}
           </div>
           {error && (
-            <p role="alert" className="rounded-xl bg-danger/10 px-4 py-3 text-sm text-danger">
+            <p
+              role="alert"
+              className="rounded-xl bg-danger/10 px-4 py-3 text-sm text-danger"
+            >
               {error}
             </p>
           )}
           {valid.length > 0 && (
             <Card className="space-y-3 text-center">
               <p className="text-muted">
-                Não vai poder ir? Cancele para liberar a vaga para outra família.
+                Não vai poder ir? Cancele para liberar a vaga para outra
+                família.
               </p>
               <Button
                 variant="ghost-danger"
                 loading={busy}
                 onClick={() =>
-                  cancel([], "Cancelar a inscrição inteira? Todos os ingressos deixarão de valer.")
+                  cancel(
+                    [],
+                    "Cancelar a inscrição inteira? Todos os ingressos deixarão de valer.",
+                  )
                 }
               >
                 Cancelar minha inscrição

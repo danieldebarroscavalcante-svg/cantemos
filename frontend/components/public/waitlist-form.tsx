@@ -72,7 +72,9 @@ export function WaitlistForm({ event }: { event: PublicEvent }) {
   return (
     <Card className="space-y-4">
       <div>
-        <h3 className="text-lg font-semibold">Entrar na lista de espera</h3>
+        <h3 className="text-title font-semibold text-strong">
+          Entrar na lista de espera
+        </h3>
         <p className="text-sm text-muted">
           {event.waitlist_waiting > 0
             ? `${event.waitlist_waiting} ${event.waitlist_waiting === 1 ? "inscrição aguarda" : "inscrições aguardam"} na fila. `
@@ -121,7 +123,7 @@ export function WaitlistForm({ event }: { event: PublicEvent }) {
             type="checkbox"
             checked={consent}
             onChange={(e) => setConsent(e.target.checked)}
-            className="mt-1 size-5 shrink-0 accent-[rgb(var(--color-primary))]"
+            className="mt-1 size-5 shrink-0 accent-[rgb(var(--rgb-brand))]"
           />
           <span className="text-sm">
             Li e aceito os{" "}

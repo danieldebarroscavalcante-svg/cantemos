@@ -171,7 +171,7 @@ export function RegistrationForm({
       </div>
 
       <Card className="space-y-4">
-        <h2 className="text-lg font-semibold">Seus dados</h2>
+        <h2 className="text-title font-semibold text-strong">Seus dados</h2>
         <Input
           label="Nome completo"
           autoComplete="name"
@@ -203,19 +203,19 @@ export function RegistrationForm({
 
       <Card className="space-y-4">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="text-lg font-semibold">Quem vai?</h2>
+          <h2 className="text-title font-semibold text-strong">Quem vai?</h2>
           <p className="text-sm text-muted">
             {attendees.length} de até {maxPeople}{" "}
             {maxPeople === 1 ? "pessoa" : "pessoas"}
           </p>
         </div>
 
-        <label className="flex min-h-touch cursor-pointer items-center gap-3 rounded-xl bg-bg px-4">
+        <label className="flex min-h-touch cursor-pointer items-center gap-3 rounded-xl bg-surface-1 px-4">
           <input
             type="checkbox"
             checked={includesSelf}
             onChange={(e) => toggleSelf(e.target.checked)}
-            className="size-5 accent-[rgb(var(--color-primary))]"
+            className="size-5 accent-[rgb(var(--rgb-brand))]"
           />
           <span className="font-medium">Eu também vou</span>
         </label>
@@ -245,7 +245,7 @@ export function RegistrationForm({
                 )}
               </div>
               {attendee.self ? (
-                <p className="rounded-xl bg-bg px-4 py-3 font-medium">
+                <p className="rounded-xl bg-surface-1 px-4 py-3 font-medium">
                   {buyer.name.trim() || "Você"}{" "}
                   <span className="text-muted">(você)</span>
                 </p>
@@ -274,7 +274,7 @@ export function RegistrationForm({
                   onChange={(e) =>
                     updateAttendee(attendee.key, { priority: e.target.checked })
                   }
-                  className="mt-1 size-5 shrink-0 accent-[rgb(var(--color-primary))]"
+                  className="mt-1 size-5 shrink-0 accent-[rgb(var(--rgb-brand))]"
                 />
                 <span>
                   <span className="font-medium">
@@ -326,7 +326,7 @@ export function RegistrationForm({
             type="checkbox"
             checked={consent}
             onChange={(e) => setConsent(e.target.checked)}
-            className="mt-1 size-5 shrink-0 accent-[rgb(var(--color-primary))]"
+            className="mt-1 size-5 shrink-0 accent-[rgb(var(--rgb-brand))]"
           />
           <span className="text-sm">
             Li e aceito os{" "}

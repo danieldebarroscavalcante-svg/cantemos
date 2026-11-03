@@ -45,7 +45,7 @@ function PriorityBadge({
   return (
     <span
       className={cn(
-        "inline-block rounded-full bg-warning font-bold text-black",
+        "inline-block rounded-full bg-primary-fg font-bold text-warning ring-1 ring-warning/70",
         large ? "px-4 py-2 text-lg" : "px-2 py-0.5 text-xs",
       )}
     >
@@ -89,10 +89,10 @@ function LoginCard({
 
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center px-4 py-10">
-      <p className="text-sm font-semibold uppercase tracking-widest text-primary">
-        EVENTMER
-      </p>
-      <h1 className="mb-1 text-2xl font-bold">Recepção</h1>
+      <p className="eyebrow">EVENTMER</p>
+      <h1 className="mb-1 text-3xl font-normal leading-tight text-strong">
+        Recepção
+      </h1>
       <p className="mb-6 text-muted">
         Digite o código que a coordenação passou para a equipe.
       </p>
@@ -146,7 +146,7 @@ function Counter({ summary }: { summary: Summary | null }) {
       <div className="flex items-baseline justify-between gap-3">
         <p className="text-3xl font-bold tabular-nums">
           {summary.present}
-          <span className="text-lg font-semibold text-muted">
+          <span className="text-title font-semibold text-strong text-muted">
             {" "}
             / {summary.capacity} lugares
           </span>
@@ -157,7 +157,7 @@ function Counter({ summary }: { summary: Summary | null }) {
           {summary.priority_present} prioritários presentes
         </p>
       </div>
-      <div className="h-3 overflow-hidden rounded-full bg-border">
+      <div className="h-3 overflow-hidden rounded-full bg-line/10">
         <div
           className={cn(
             "h-full transition-all",
@@ -169,7 +169,7 @@ function Counter({ summary }: { summary: Summary | null }) {
       {full && (
         <p
           role="alert"
-          className="rounded-xl bg-danger px-3 py-2 text-center font-bold text-white"
+          className="rounded-xl bg-danger px-3 py-2 text-center font-bold text-strong"
         >
           Lotação atingida — avise a coordenação
         </p>
@@ -181,11 +181,11 @@ function Counter({ summary }: { summary: Summary | null }) {
 // ------------------------------------------------------------------ resultado da leitura
 
 const RESULT_STYLE: Record<CheckinResult["result"], string> = {
-  ok: "bg-success text-white",
-  already: "bg-warning text-black",
-  cancelled: "bg-danger text-white",
-  invalid: "bg-danger text-white",
-  other_event: "bg-danger text-white",
+  ok: "bg-success text-primary-fg",
+  already: "bg-warning text-primary-fg",
+  cancelled: "bg-danger text-strong",
+  invalid: "bg-danger text-strong",
+  other_event: "bg-danger text-strong",
 };
 
 function ResultOverlay({
@@ -228,7 +228,7 @@ function ResultOverlay({
           </div>
         )}
         {others.length > 0 && (
-          <div className="rounded-2xl bg-black/15 p-4 text-left">
+          <div className="rounded-2xl bg-bg/20 p-4 text-left">
             <p className="mb-2 font-semibold">
               Mesma inscrição ({result.order?.code}) ·{" "}
               {result.order?.buyer_name}
@@ -259,7 +259,7 @@ function ResultOverlay({
                 type="button"
                 onClick={onFamily}
                 disabled={busy}
-                className="mt-3 min-h-touch w-full rounded-xl bg-white/90 px-4 font-bold text-black disabled:opacity-60"
+                className="mt-3 min-h-touch w-full rounded-xl bg-strong/90 px-4 font-bold text-primary-fg disabled:opacity-60"
               >
                 Registrar entrada de mais {pending.length}
               </button>
@@ -270,7 +270,7 @@ function ResultOverlay({
       <button
         type="button"
         onClick={onClose}
-        className="mx-auto mt-4 min-h-[56px] w-full max-w-lg rounded-2xl bg-black/25 text-xl font-bold"
+        className="mx-auto mt-4 min-h-[56px] w-full max-w-lg rounded-2xl bg-bg/25 text-xl font-bold"
       >
         Próximo
       </button>
@@ -603,10 +603,8 @@ export default function CheckinPage({ params }: { params: { slug: string } }) {
     <main className="mx-auto w-full max-w-6xl space-y-4 px-4 py-4">
       <header className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-widest text-primary">
-            Recepção
-          </p>
-          <h1 className="text-xl font-bold leading-tight">
+          <p className="eyebrow">Recepção</p>
+          <h1 className="text-xl font-semibold leading-tight text-strong">
             {operator.event_title}
           </h1>
           <p className="text-sm text-muted">Operando: {operator.name}</p>
@@ -621,7 +619,7 @@ export default function CheckinPage({ params }: { params: { slug: string } }) {
       {offline && (
         <p
           role="alert"
-          className="rounded-xl bg-danger px-4 py-2 text-center font-semibold text-white"
+          className="rounded-xl bg-danger px-4 py-2 text-center font-semibold text-strong"
         >
           Sem conexão com o servidor — use a busca quando voltar, ou a lista
           impressa.
@@ -634,7 +632,7 @@ export default function CheckinPage({ params }: { params: { slug: string } }) {
 
       {/* Celular: abas. Tablet deitado / desktop: câmera e busca lado a lado. */}
       <div
-        className="grid grid-cols-2 gap-2 rounded-2xl bg-border/50 p-1 md:hidden"
+        className="grid grid-cols-2 gap-2 rounded-2xl bg-line/[0.05] p-1 md:hidden"
         role="tablist"
       >
         {(["camera", "busca"] as const).map((t) => (

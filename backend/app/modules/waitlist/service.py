@@ -135,11 +135,15 @@ def _joined_email(event: Event, entry: WaitlistEntry, position: int) -> Outgoing
         f"A vaga fica guardada por {HOLD_HOURS} horas a partir do aviso.\n"
     )
     html = (
-        f"<p>Olá, {first}!</p><p>Você está na <strong>lista de espera</strong> do "
-        f"<strong>{event.title}</strong> — posição <strong>{position}</strong>, "
-        f"{entry.quantity} pessoa(s).</p><p>Se abrir vaga, enviaremos um e-mail com um link "
-        f"para você se inscrever. A vaga fica guardada por {HOLD_HOURS} horas a partir do "
-        "aviso.</p>"
+        '<div style="background:#000000;color:#F3F8F6;font-family:Arial,Helvetica,sans-serif;'
+        'max-width:520px;margin:0 auto;padding:28px 16px;line-height:1.85">'
+        '<p style="margin:0;color:#36EDB3;font-weight:700;letter-spacing:1.5px;font-size:11px;'
+        'text-transform:uppercase">Lista de espera</p>'
+        f'<h1 style="margin:10px 0 14px;font-size:28px;font-weight:400;color:#FFFFFF">{event.title}</h1>'
+        f'<p style="color:#9EB4A9">Olá, {first}! Você está na posição '
+        f'<strong style="color:#F3F8F6">{position}</strong> ({entry.quantity} pessoa(s)).</p>'
+        '<p style="color:#9EB4A9">Se abrir vaga, enviaremos um e-mail com um link para você se '
+        f"inscrever. A vaga fica guardada por {HOLD_HOURS} horas a partir do aviso.</p></div>"
     )
     return OutgoingEmail(
         to=entry.email, subject=f"Lista de espera · {event.title}", html=html, text=text
@@ -157,14 +161,16 @@ def _invite_email(event: Event, entry: WaitlistEntry) -> OutgoingEmail:
         f"Faça a inscrição por este link: {link}\n\n"
         "Depois desse prazo, a vaga passa para a próxima pessoa da lista.\n"
     )
-    html = f"""<div style="font-family:Arial,Helvetica,sans-serif;max-width:520px;margin:0 auto;padding:16px">
-<p style="color:#4338ca;font-weight:700;letter-spacing:2px;font-size:12px">ABRIU VAGA</p>
-<h1 style="margin:4px 0 12px">{event.title}</h1>
-<p>Olá, {first}! Guardamos <strong>{entry.quantity} lugar(es)</strong> para você até
-<strong>{deadline}</strong>.</p>
-<p style="text-align:center;margin:24px 0"><a href="{link}" style="background:#4338ca;color:#fff;
-text-decoration:none;padding:14px 24px;border-radius:12px;font-weight:700">Fazer minha inscrição</a></p>
-<p style="color:#6b7280;font-size:14px">Depois desse prazo, a vaga passa para a próxima pessoa
+    # Cores do tema (espelho de frontend/styles/tokens.css).
+    html = f"""<div style="background:#000000;color:#F3F8F6;font-family:'Sora',Arial,Helvetica,sans-serif;max-width:520px;margin:0 auto;padding:28px 16px">
+<p style="margin:0;color:#36EDB3;font-weight:700;letter-spacing:1.5px;font-size:11px;text-transform:uppercase">Abriu vaga</p>
+<h1 style="margin:10px 0 14px;font-size:30px;font-weight:400;color:#FFFFFF">{event.title}</h1>
+<p style="line-height:1.85;color:#9EB4A9">Olá, {first}! Guardamos <strong style="color:#F3F8F6">{entry.quantity} lugar(es)</strong>
+para você até <strong style="color:#F3F8F6">{deadline}</strong>.</p>
+<p style="text-align:center;margin:28px 0"><a href="{link}" style="display:inline-block;background:#36EDB3;
+background-image:linear-gradient(115deg,#8AF7D3,#36EDB3 48%,#29DBA4);color:#020706;text-decoration:none;
+padding:16px 26px;border-radius:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px">Fazer minha inscrição</a></p>
+<p style="color:#9EB4A9;font-size:14px;line-height:1.85">Depois desse prazo, a vaga passa para a próxima pessoa
 da lista.</p></div>"""
     return OutgoingEmail(
         to=entry.email,

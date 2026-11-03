@@ -30,8 +30,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 function StatusCard({ title, text }: { title: string; text: string }) {
   return (
-    <Card className="space-y-1 border-accent/40 text-center">
-      <p className="text-lg font-semibold">{title}</p>
+    <Card className="space-y-1 border-primary/35 text-center">
+      <p className="text-title font-semibold text-strong">{title}</p>
       <p className="text-muted">{text}</p>
     </Card>
   );
@@ -47,16 +47,18 @@ export default async function EventPage({ params, searchParams }: Props) {
   return (
     <main className="mx-auto w-full max-w-2xl space-y-6 px-4 py-6 md:py-10">
       <EventHeader event={event} />
+      <div className="divider-forest" aria-hidden />
 
       {event.description && (
-        <p className="whitespace-pre-line leading-relaxed text-fg">
-          {event.description}
-        </p>
+        <p className="whitespace-pre-line text-body">{event.description}</p>
       )}
 
       <section aria-labelledby="inscricao" className="space-y-4">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 id="inscricao" className="text-2xl font-bold">
+          <h2
+            id="inscricao"
+            className="text-[1.75rem] font-normal leading-tight text-strong"
+          >
             Inscrição gratuita
           </h2>
           {open && !soldOut && event.available <= 30 && (

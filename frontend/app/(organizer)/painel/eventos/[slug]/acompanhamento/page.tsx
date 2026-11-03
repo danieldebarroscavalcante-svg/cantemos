@@ -222,7 +222,7 @@ export default function FollowUpPage({ params }: { params: { slug: string } }) {
         <Link href="/painel" className="text-sm font-semibold text-primary">
           ← Painel
         </Link>
-        <h1 className="mt-2 text-2xl font-bold">
+        <h1 className="mt-2 text-3xl font-normal leading-tight text-strong">
           Acompanhamento · CANTEMOS 2026
         </h1>
         <p className="text-sm text-muted">
@@ -248,7 +248,7 @@ export default function FollowUpPage({ params }: { params: { slug: string } }) {
       )}
 
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold">Números</h2>
+        <h2 className="text-title font-semibold text-strong">Números</h2>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           <Tile
             label="Pessoas inscritas"
@@ -287,7 +287,9 @@ export default function FollowUpPage({ params }: { params: { slug: string } }) {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold">Lembretes por e-mail</h2>
+        <h2 className="text-title font-semibold text-strong">
+          Lembretes por e-mail
+        </h2>
         <p className="text-sm text-muted">
           Vão para as {recipients ?? "…"} inscrições ativas, com os QR Codes. O
           envio acontece aos poucos (cerca de 1 por segundo) para respeitar o
@@ -297,7 +299,7 @@ export default function FollowUpPage({ params }: { params: { slug: string } }) {
           {REMINDERS.map((r) => (
             <Card key={r.kind} className="flex flex-col gap-3">
               <div>
-                <p className="text-sm font-semibold text-accent">{r.when}</p>
+                <p className="eyebrow">{r.when}</p>
                 <h3 className="text-lg font-bold">{r.title}</h3>
                 <p className="text-sm text-muted">{r.text}</p>
               </div>
@@ -349,7 +351,7 @@ export default function FollowUpPage({ params }: { params: { slug: string } }) {
 
       <section className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-lg font-semibold">
+          <h2 className="text-title font-semibold text-strong">
             Lista de espera ({waiting.length})
           </h2>
           {canEdit && (

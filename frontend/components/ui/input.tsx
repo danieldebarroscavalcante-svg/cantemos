@@ -13,11 +13,15 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 ) {
   const generatedId = useId();
   const inputId = id ?? generatedId;
-  const describedBy = error ? `${inputId}-error` : hint ? `${inputId}-hint` : undefined;
+  const describedBy = error
+    ? `${inputId}-error`
+    : hint
+      ? `${inputId}-hint`
+      : undefined;
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={inputId} className="text-sm font-medium">
+      <label htmlFor={inputId} className="text-sm font-medium text-soft">
         {label}
       </label>
       <input
@@ -26,8 +30,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy}
         className={cn(
-          "min-h-touch rounded-xl border bg-surface px-4 text-base text-fg placeholder:text-muted",
-          "focus:outline-none focus:ring-2 focus:ring-primary/60",
+          "min-h-touch rounded-xl border bg-line/[0.03] px-4 text-base text-fg placeholder:text-subtle",
+          "focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/30",
           error ? "border-danger" : "border-border",
           className,
         )}

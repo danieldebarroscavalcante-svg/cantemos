@@ -17,23 +17,53 @@ import { useMe } from "@/lib/use-me";
 
 const toInput = (value: string | null) => (value ? value.slice(0, 16) : "");
 
-const STATUS_OPTIONS: Array<{ value: EventSettings["status"]; label: string; hint: string }> = [
+const STATUS_OPTIONS: Array<{
+  value: EventSettings["status"];
+  label: string;
+  hint: string;
+}> = [
   { value: "draft", label: "Rascunho", hint: "Página fora do ar." },
-  { value: "published", label: "Página no ar", hint: "Inscrições ainda fechadas." },
-  { value: "open", label: "Inscrições abertas", hint: "Qualquer pessoa pode se inscrever." },
-  { value: "closed", label: "Inscrições encerradas", hint: "Página no ar, sem novas inscrições." },
+  {
+    value: "published",
+    label: "Página no ar",
+    hint: "Inscrições ainda fechadas.",
+  },
+  {
+    value: "open",
+    label: "Inscrições abertas",
+    hint: "Qualquer pessoa pode se inscrever.",
+  },
+  {
+    value: "closed",
+    label: "Inscrições encerradas",
+    hint: "Página no ar, sem novas inscrições.",
+  },
 ];
 
-function Row({ label, value, strong }: { label: string; value: number; strong?: boolean }) {
+function Row({
+  label,
+  value,
+  strong,
+}: {
+  label: string;
+  value: number;
+  strong?: boolean;
+}) {
   return (
-    <div className={`flex justify-between gap-4 ${strong ? "font-semibold" : ""}`}>
+    <div
+      className={`flex justify-between gap-4 ${strong ? "font-semibold" : ""}`}
+    >
       <dt className={strong ? "" : "text-muted"}>{label}</dt>
       <dd className="tabular-nums">{value}</dd>
     </div>
   );
 }
 
-export default function EventSettingsPage({ params }: { params: { slug: string } }) {
+export default function EventSettingsPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
   const me = useMe();
   const [saved, setSaved] = useState<EventSettings | null>(null);
   const [form, setForm] = useState<EventSettingsInput | null>(null);
@@ -41,7 +71,9 @@ export default function EventSettingsPage({ params }: { params: { slug: string }
   const [notice, setNotice] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
-  const canEdit = me?.memberships.some((m) => m.role === "owner" || m.role === "admin") ?? false;
+  const canEdit =
+    me?.memberships.some((m) => m.role === "owner" || m.role === "admin") ??
+    false;
 
   useEffect(() => {
     if (!me) return;
@@ -55,29 +87,41 @@ export default function EventSettingsPage({ params }: { params: { slug: string }
           overbooking_percent: data.overbooking_percent,
           max_tickets_per_order: data.max_tickets_per_order,
           priority_quota: data.priority_quota,
-          reserved_quotas: data.reserved_quotas.map(({ id, name, quantity }) => ({
-            id,
-            name,
-            quantity,
-          })),
+          reserved_quotas: data.reserved_quotas.map(
+            ({ id, name, quantity }) => ({
+              id,
+              name,
+              quantity,
+            }),
+          ),
           status: data.status,
           venue_name: data.venue_name ?? "",
           venue_address: data.venue_address ?? "",
           description: data.description ?? "",
         });
       })
-      .catch((err) => setError(err instanceof ApiError ? err.message : "Falha ao carregar."));
+      .catch((err) =>
+        setError(err instanceof ApiError ? err.message : "Falha ao carregar."),
+      );
   }, [me, params.slug]);
 
   // Prévia calculada no navegador (o servidor recalcula e valida ao salvar).
   const preview = useMemo(() => {
     if (!form) return null;
-    const limit = form.capacity + Math.floor((form.capacity * form.overbooking_percent) / 100);
-    const reserved = form.reserved_quotas.reduce((sum, q) => sum + (q.quantity || 0), 0);
+    const limit =
+      form.capacity +
+      Math.floor((form.capacity * form.overbooking_percent) / 100);
+    const reserved = form.reserved_quotas.reduce(
+      (sum, q) => sum + (q.quantity || 0),
+      0,
+    );
     return { limit, reserved, general: limit - form.priority_quota - reserved };
   }, [form]);
 
-  function update<K extends keyof EventSettingsInput>(key: K, value: EventSettingsInput[K]) {
+  function update<K extends keyof EventSettingsInput>(
+    key: K,
+    value: EventSettingsInput[K],
+  ) {
     setForm((current) => (current ? { ...current, [key]: value } : current));
     setNotice(null);
   }
@@ -86,7 +130,9 @@ export default function EventSettingsPage({ params }: { params: { slug: string }
     if (!form) return;
     update(
       "reserved_quotas",
-      form.reserved_quotas.map((q, i) => (i === index ? { ...q, ...changes } : q)),
+      form.reserved_quotas.map((q, i) =>
+        i === index ? { ...q, ...changes } : q,
+      ),
     );
   }
 
@@ -96,26 +142,36 @@ export default function EventSettingsPage({ params }: { params: { slug: string }
     setSaving(true);
     setError(null);
     try {
-      const data = await api<EventSettings>(`/org/events/${params.slug}/settings`, {
-        method: "PUT",
-        body: JSON.stringify({ ...form, doors_open_at: form.doors_open_at || null }),
-      });
+      const data = await api<EventSettings>(
+        `/org/events/${params.slug}/settings`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            ...form,
+            doors_open_at: form.doors_open_at || null,
+          }),
+        },
+      );
       setSaved(data);
       setForm((current) =>
         current
           ? {
               ...current,
-              reserved_quotas: data.reserved_quotas.map(({ id, name, quantity }) => ({
-                id,
-                name,
-                quantity,
-              })),
+              reserved_quotas: data.reserved_quotas.map(
+                ({ id, name, quantity }) => ({
+                  id,
+                  name,
+                  quantity,
+                }),
+              ),
             }
           : current,
       );
       setNotice("Configurações salvas.");
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Sem conexão. Tente novamente.");
+      setError(
+        err instanceof ApiError ? err.message : "Sem conexão. Tente novamente.",
+      );
     } finally {
       setSaving(false);
     }
@@ -123,30 +179,38 @@ export default function EventSettingsPage({ params }: { params: { slug: string }
 
   if (!form || !saved || !preview) {
     return (
-      <main className="grid min-h-dvh place-items-center px-4 text-center text-muted" aria-busy>
+      <main
+        className="grid min-h-dvh place-items-center px-4 text-center text-muted"
+        aria-busy
+      >
         {error ?? "Carregando…"}
       </main>
     );
   }
 
-  const issuedFor = (id?: string) => saved.reserved_quotas.find((q) => q.id === id)?.issued ?? 0;
+  const issuedFor = (id?: string) =>
+    saved.reserved_quotas.find((q) => q.id === id)?.issued ?? 0;
 
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-6 md:py-10">
       <Link href="/painel" className="text-sm font-semibold text-primary">
         ← Painel
       </Link>
-      <h1 className="mb-1 mt-2 text-2xl font-bold">Configurações · {saved.title}</h1>
+      <h1 className="mb-1 mt-2 text-3xl font-normal leading-tight text-strong">
+        Configurações · {saved.title}
+      </h1>
       <p className="mb-6 text-muted">
-        Todos os limites podem ser aumentados ou reduzidos a qualquer momento — só não podem
-        ficar abaixo do que já foi emitido.
+        Todos os limites podem ser aumentados ou reduzidos a qualquer momento —
+        só não podem ficar abaixo do que já foi emitido.
       </p>
 
       <form onSubmit={onSubmit} className="grid gap-6 lg:grid-cols-[1fr_320px]">
         <fieldset disabled={!canEdit || saving} className="space-y-6">
           <Card className="space-y-4">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h2 className="text-lg font-semibold">Publicação</h2>
+              <h2 className="text-title font-semibold text-strong">
+                Publicação
+              </h2>
               {form.status !== "draft" && (
                 <a
                   href={`/e/${saved.slug}`}
@@ -173,11 +237,13 @@ export default function EventSettingsPage({ params }: { params: { slug: string }
                     value={option.value}
                     checked={form.status === option.value}
                     onChange={() => update("status", option.value)}
-                    className="mt-1 size-4 accent-[rgb(var(--color-primary))]"
+                    className="mt-1 size-4 accent-[rgb(var(--rgb-brand))]"
                   />
                   <span>
                     <span className="block font-semibold">{option.label}</span>
-                    <span className="block text-sm text-muted">{option.hint}</span>
+                    <span className="block text-sm text-muted">
+                      {option.hint}
+                    </span>
                   </span>
                 </label>
               ))}
@@ -185,7 +251,9 @@ export default function EventSettingsPage({ params }: { params: { slug: string }
           </Card>
 
           <Card className="space-y-4">
-            <h2 className="text-lg font-semibold">Local e descrição</h2>
+            <h2 className="text-title font-semibold text-strong">
+              Local e descrição
+            </h2>
             <div className="grid gap-4 sm:grid-cols-2">
               <Input
                 label="Nome do local"
@@ -218,7 +286,9 @@ export default function EventSettingsPage({ params }: { params: { slug: string }
           </Card>
 
           <Card className="space-y-4">
-            <h2 className="text-lg font-semibold">Data e horário</h2>
+            <h2 className="text-title font-semibold text-strong">
+              Data e horário
+            </h2>
             <div className="grid gap-4 sm:grid-cols-2">
               <Input
                 label="Início"
@@ -237,7 +307,9 @@ export default function EventSettingsPage({ params }: { params: { slug: string }
           </Card>
 
           <Card className="space-y-4">
-            <h2 className="text-lg font-semibold">Lotação e inscrições</h2>
+            <h2 className="text-title font-semibold text-strong">
+              Lotação e inscrições
+            </h2>
             <div className="grid gap-4 sm:grid-cols-2">
               <NumberField
                 label="Lugares no local"
@@ -273,14 +345,16 @@ export default function EventSettingsPage({ params }: { params: { slug: string }
 
           <Card className="space-y-4">
             <div>
-              <h2 className="text-lg font-semibold">Lugares reservados</h2>
+              <h2 className="text-title font-semibold text-strong">
+                Lugares reservados
+              </h2>
               <p className="text-sm text-muted">
-                Cotas fora da inscrição pública — ex.: família do coral, equipe, convidados. A
-                secretaria emite esses ingressos.
+                Cotas fora da inscrição pública — ex.: família do coral, equipe,
+                convidados. A secretaria emite esses ingressos.
               </p>
             </div>
             {form.reserved_quotas.length === 0 && (
-              <p className="rounded-xl bg-bg px-4 py-3 text-sm text-muted">
+              <p className="rounded-xl bg-surface-1 px-4 py-3 text-sm text-muted">
                 Nenhuma cota reservada.
               </p>
             )}
@@ -296,7 +370,9 @@ export default function EventSettingsPage({ params }: { params: { slug: string }
                       label="Nome da cota"
                       value={quota.name}
                       placeholder="Ex.: Família do coral"
-                      onChange={(e) => updateQuota(index, { name: e.target.value })}
+                      onChange={(e) =>
+                        updateQuota(index, { name: e.target.value })
+                      }
                       required
                       minLength={2}
                     />
@@ -311,7 +387,9 @@ export default function EventSettingsPage({ params }: { params: { slug: string }
                       type="button"
                       variant="ghost-danger"
                       disabled={issued > 0}
-                      title={issued > 0 ? "Cota com ingressos emitidos" : undefined}
+                      title={
+                        issued > 0 ? "Cota com ingressos emitidos" : undefined
+                      }
                       onClick={() =>
                         update(
                           "reserved_quotas",
@@ -329,7 +407,10 @@ export default function EventSettingsPage({ params }: { params: { slug: string }
               type="button"
               variant="secondary"
               onClick={() =>
-                update("reserved_quotas", [...form.reserved_quotas, { name: "", quantity: 0 }])
+                update("reserved_quotas", [
+                  ...form.reserved_quotas,
+                  { name: "", quantity: 0 },
+                ])
               }
             >
               + Adicionar cota reservada
@@ -339,14 +420,18 @@ export default function EventSettingsPage({ params }: { params: { slug: string }
 
         <aside className="lg:sticky lg:top-6 lg:self-start">
           <Card className="space-y-4">
-            <h2 className="text-lg font-semibold">Resumo</h2>
+            <h2 className="text-title font-semibold text-strong">Resumo</h2>
             <dl className="space-y-2">
               <Row label="Lugares no local" value={form.capacity} />
               <Row
                 label={`Margem (${form.overbooking_percent}%)`}
                 value={preview.limit - form.capacity}
               />
-              <Row label="Total de inscrições aceitas" value={preview.limit} strong />
+              <Row
+                label="Total de inscrições aceitas"
+                value={preview.limit}
+                strong
+              />
               <hr className="border-border" />
               <Row label="Prioridade" value={form.priority_quota} />
               <Row label="Reservados" value={preview.reserved} />
@@ -361,26 +446,40 @@ export default function EventSettingsPage({ params }: { params: { slug: string }
             )}
             {preview.limit > form.capacity && (
               <p className="rounded-xl bg-warning/15 px-4 py-3 text-sm">
-                Se todos comparecerem, {preview.limit - form.capacity} pessoas ficarão sem lugar
-                sentado. Tenha um plano para elas (cadeiras extras, anexo, telão).
+                Se todos comparecerem, {preview.limit - form.capacity} pessoas
+                ficarão sem lugar sentado. Tenha um plano para elas (cadeiras
+                extras, anexo, telão).
               </p>
             )}
             {error && (
-              <p role="alert" className="rounded-xl bg-danger/10 px-4 py-3 text-sm text-danger">
+              <p
+                role="alert"
+                className="rounded-xl bg-danger/10 px-4 py-3 text-sm text-danger"
+              >
                 {error}
               </p>
             )}
             {notice && (
-              <p role="status" className="rounded-xl bg-success/10 px-4 py-3 text-sm text-success">
+              <p
+                role="status"
+                className="rounded-xl bg-success/10 px-4 py-3 text-sm text-success"
+              >
                 {notice}
               </p>
             )}
             {canEdit ? (
-              <Button type="submit" block loading={saving} disabled={preview.general < 0}>
+              <Button
+                type="submit"
+                block
+                loading={saving}
+                disabled={preview.general < 0}
+              >
                 Salvar configurações
               </Button>
             ) : (
-              <p className="text-sm text-muted">Somente administradores podem alterar.</p>
+              <p className="text-sm text-muted">
+                Somente administradores podem alterar.
+              </p>
             )}
           </Card>
         </aside>

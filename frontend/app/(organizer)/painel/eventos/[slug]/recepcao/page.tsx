@@ -94,7 +94,9 @@ export default function ReceptionPage({
         <Link href="/painel" className="text-sm font-semibold text-primary">
           ← Painel
         </Link>
-        <h1 className="mt-2 text-2xl font-bold">Recepção e credenciamento</h1>
+        <h1 className="mt-2 text-3xl font-normal leading-tight text-strong">
+          Recepção e credenciamento
+        </h1>
         <p className="text-muted">
           Os voluntários entram com o código abaixo — sem criar conta. Eles veem
           só nome, faixa etária e prioridade, nunca e-mail ou telefone.
@@ -146,7 +148,7 @@ export default function ReceptionPage({
           <p className="break-all text-sm text-muted">{url}</p>
           <Link
             href={info.checkin_path}
-            className="inline-flex min-h-touch w-full items-center justify-center rounded-xl bg-primary px-5 font-semibold text-primary-fg"
+            className="inline-flex min-h-touch w-full items-center justify-center rounded-xl bg-brand px-5 font-bold uppercase tracking-wide text-primary-fg shadow-sm transition hover:-translate-y-px hover:shadow-cta"
           >
             Abrir a recepção neste aparelho
           </Link>
@@ -154,7 +156,9 @@ export default function ReceptionPage({
       </div>
 
       <Card className="space-y-3">
-        <h2 className="text-lg font-semibold">Plano B (sem internet)</h2>
+        <h2 className="text-title font-semibold text-strong">
+          Plano B (sem internet)
+        </h2>
         <p className="text-muted">
           Imprima a lista de presença na véspera e tenha uma cópia na porta.
           Exporte a planilha para conferências e para a secretaria.
@@ -162,7 +166,7 @@ export default function ReceptionPage({
         <div className="grid gap-2 sm:grid-cols-2">
           <Link
             href={`/painel/eventos/${params.slug}/lista`}
-            className="inline-flex min-h-touch items-center justify-center rounded-xl border border-border px-5 font-semibold hover:bg-border/40"
+            className="inline-flex min-h-touch items-center justify-center rounded-xl border border-border bg-line/[0.03] px-5 text-sm font-semibold hover:bg-line/[0.07]"
           >
             Lista de presença (imprimir)
           </Link>
