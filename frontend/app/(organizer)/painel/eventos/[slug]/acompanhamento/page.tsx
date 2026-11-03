@@ -255,13 +255,13 @@ export default function FollowUpPage({ params }: { params: { slug: string } }) {
             value={stats.registered}
             hint={`de ${stats.registration_limit} aceitas · ${stats.capacity} lugares`}
           />
-          <Tile label="Inscrições (famílias)" value={stats.orders} />
-          <Tile label="Presentes" value={stats.present} />
           <Tile
-            label="Prioritários"
-            value={stats.priority}
-            hint={`${stats.cancelled} cancelados`}
+            label="Inscrições (famílias)"
+            value={stats.orders}
+            hint={`${stats.cancelled} ${stats.cancelled === 1 ? "pessoa cancelou" : "pessoas cancelaram"}`}
           />
+          <Tile label="Presentes" value={stats.present} />
+          <Tile label="Atendimento prioritário" value={stats.priority} />
         </div>
         {stats.emails_not_sent > 0 && (
           <p
@@ -277,7 +277,10 @@ export default function FollowUpPage({ params }: { params: { slug: string } }) {
           </p>
         )}
         <div className="grid gap-3 md:grid-cols-3">
-          <CountTable title="Inscrições por dia" rows={stats.by_day} />
+          <CountTable
+            title="Pessoas inscritas por dia (com canceladas)"
+            rows={stats.by_day}
+          />
           <CountTable title="Origem (links ?origem=)" rows={stats.by_source} />
           <CountTable title="Faixa etária" rows={stats.by_age} />
         </div>
