@@ -4,7 +4,7 @@ import logging
 import secrets
 
 from fastapi import HTTPException, status
-from sqlalchemy import select, update
+from sqlalchemy import func, select, update
 from sqlalchemy.orm import Session
 
 from app.core.security import sign_order_token, sign_qr, verify_order_token
@@ -22,7 +22,15 @@ from app.modules.tickets.models import (
     TicketStatus,
     TicketType,
 )
-from app.modules.tickets.schemas import OrderIn, OrderOut, PublicEvent, TicketOut
+from app.modules.tickets.schemas import (
+    OrderIn,
+    OrderOut,
+    PublicEvent,
+    TicketOut,
+    WaitlistInvite,
+)
+from app.modules.waitlist import service as waitlist
+from app.modules.waitlist.models import WaitlistEntry, WaitlistStatus
 
 logger = logging.getLogger("eventmer.tickets")
 
@@ -53,13 +61,22 @@ def _public_types(db: Session, session: EventSession) -> dict[TicketKind, Ticket
     return {t.kind: t for t in types}
 
 
-def public_event_out(db: Session, event: Event) -> PublicEvent:
+def public_event_out(
+    db: Session, event: Event, invited: WaitlistEntry | None = None
+) -> PublicEvent:
     session = main_session(db, event)
     types = _public_types(db, session)
 
     def remaining(kind: TicketKind) -> int:
         t = types.get(kind)
         return max(0, t.quantity - t.reserved_count) if t else 0
+
+    available = waitlist.available_for_public(db, event, invited.id if invited else None)
+    waiting = db.scalar(
+        select(func.count()).where(
+            WaitlistEntry.event_id == event.id, WaitlistEntry.status == WaitlistStatus.WAITING
+        )
+    )
 
     return PublicEvent(
         slug=event.slug,
@@ -72,8 +89,16 @@ def public_event_out(db: Session, event: Event) -> PublicEvent:
         starts_at=utc_to_local(session.starts_at),
         doors_open_at=utc_to_local(session.doors_open_at) if session.doors_open_at else None,
         max_tickets_per_order=event.max_tickets_per_order,
-        available=remaining(TicketKind.GENERAL) + remaining(TicketKind.PRIORITY),
-        priority_available=remaining(TicketKind.PRIORITY),
+        available=available,
+        priority_available=min(available, remaining(TicketKind.PRIORITY)),
+        waitlist_waiting=int(waiting or 0),
+        invite=WaitlistInvite(
+            name=invited.name,
+            quantity=invited.quantity,
+            hold_until=utc_to_local(invited.hold_until),
+        )
+        if invited
+        else None,
     )
 
 
@@ -208,6 +233,17 @@ def create_order(db: Session, slug: str, data: OrderIn) -> Order:
     if general is None:
         raise _error(status.HTTP_409_CONFLICT, "Evento sem ingressos configurados.")
 
+    # Vagas guardadas para quem foi chamado da lista de espera não ficam disponíveis ao público.
+    invited = waitlist.entry_from_token(db, event, data.waitlist_token)
+    available = waitlist.available_for_public(db, event, invited.id if invited else None)
+    if len(data.attendees) > available:
+        if available == 0:
+            raise _error(status.HTTP_409_CONFLICT, "Inscrições esgotadas.")
+        raise _error(
+            status.HTTP_409_CONFLICT,
+            f"Restam apenas {available} vaga(s). Reduza o número de pessoas e tente de novo.",
+        )
+
     # Prioridade usa a cota própria; se ela não comportar o grupo, essas pessoas entram na
     # cota geral (o atendimento prioritário continua marcado no ingresso).
     wants_priority = [a for a in data.attendees if a.priority]
@@ -260,6 +296,7 @@ def create_order(db: Session, slug: str, data: OrderIn) -> Order:
                 or ("Atendimento prioritário" if attendee.priority else None),
             )
         )
+    waitlist.mark_registered(db, event, email, invited)
     db.commit()
     logger.info("Inscrição %s criada (%d pessoas)", order.code, len(data.attendees))
     return order

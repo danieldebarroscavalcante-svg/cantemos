@@ -6,6 +6,12 @@ from app.modules.events.models import EventStatus
 from app.modules.tickets.models import AgeGroup, OrderStatus, TicketStatus
 
 
+class WaitlistInvite(BaseModel):
+    name: str
+    quantity: int
+    hold_until: datetime  # horário local
+
+
 class PublicEvent(BaseModel):
     slug: str
     title: str
@@ -17,8 +23,10 @@ class PublicEvent(BaseModel):
     starts_at: datetime  # horário local do evento
     doors_open_at: datetime | None
     max_tickets_per_order: int
-    available: int  # vagas na inscrição pública (gerais + prioridade)
+    available: int  # vagas na inscrição pública (gerais + prioridade), já sem as guardadas
     priority_available: int
+    waitlist_waiting: int = 0  # pessoas/grupos aguardando na lista de espera
+    invite: WaitlistInvite | None = None  # quando acessado pelo link da lista de espera
 
 
 class AttendeeIn(BaseModel):
@@ -44,6 +52,7 @@ class OrderIn(BaseModel):
     consent: bool
     source: str | None = Field(default=None, max_length=80)
     website: str | None = Field(default=None, description="Honeypot: deve ficar vazio")
+    waitlist_token: str | None = Field(default=None, max_length=120)
 
 
 class TicketOut(BaseModel):

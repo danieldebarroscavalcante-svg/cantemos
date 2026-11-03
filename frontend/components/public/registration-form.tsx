@@ -78,7 +78,13 @@ function AgePicker({
   );
 }
 
-export function RegistrationForm({ event }: { event: PublicEvent }) {
+export function RegistrationForm({
+  event,
+  waitlistToken,
+}: {
+  event: PublicEvent;
+  waitlistToken?: string;
+}) {
   const router = useRouter();
   const [buyer, setBuyer] = useState({ name: "", email: "", phone: "" });
   const [attendees, setAttendees] = useState<Attendee[]>(() => [blank(true)]);
@@ -130,6 +136,7 @@ export function RegistrationForm({ event }: { event: PublicEvent }) {
           consent,
           source,
           website,
+          waitlist_token: waitlistToken ?? null,
           attendees: attendees.map((a) => ({
             name: a.self ? buyer.name : a.name,
             age_group: a.age_group,

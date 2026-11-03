@@ -39,7 +39,13 @@ def ticket_link(token: str) -> str:
     return f"{get_settings().frontend_url.rstrip('/')}/ingresso/{token}"
 
 
-def build_ticket_email(order: OrderOut) -> OutgoingEmail:
+def build_ticket_email(
+    order: OrderOut,
+    *,
+    heading: str = "INGRESSO CONFIRMADO",
+    intro: str | None = None,
+    subject: str | None = None,
+) -> OutgoingEmail:
     event = order.event
     link = ticket_link(order.token)
     when = format_when(event.starts_at)
@@ -81,7 +87,7 @@ def build_ticket_email(order: OrderOut) -> OutgoingEmail:
     html = f"""<!doctype html>
 <html lang="pt-BR"><body style="margin:0;background:#fafaf9;font-family:Arial,Helvetica,sans-serif;color:#1c1917">
 <div style="max-width:560px;margin:0 auto;padding:24px 16px">
-  <p style="margin:0;color:#4338ca;font-size:12px;font-weight:700;letter-spacing:2px">INGRESSO CONFIRMADO</p>
+  <p style="margin:0;color:#4338ca;font-size:12px;font-weight:700;letter-spacing:2px">{escape(heading)}</p>
   <h1 style="margin:8px 0 4px;font-size:26px">{escape(event.title)}</h1>
   <p style="margin:0;color:#6b7280">{escape(event.subtitle or "")}</p>
   <div style="margin:20px 0;padding:16px;border-radius:16px;background:#fff;border:1px solid #e7e5e4">
@@ -89,8 +95,8 @@ def build_ticket_email(order: OrderOut) -> OutgoingEmail:
     {f'<p style="margin:0 0 6px"><strong>Onde:</strong> {escape(place)}</p>' if place else ""}
     <p style="margin:0"><strong>Inscrição:</strong> {order.code}</p>
   </div>
-  <p>Olá, {first_name}! Sua inscrição está confirmada. Na entrada, mostre o QR Code de cada
-     pessoa (pode ser na tela do celular).</p>
+  <p>Olá, {first_name}! {escape(intro) if intro else "Sua inscrição está confirmada."} Na
+     entrada, mostre o QR Code de cada pessoa (pode ser na tela do celular).</p>
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0">{rows}</table>
   <p style="text-align:center;margin:24px 0">
     <a href="{link}" style="display:inline-block;background:#4338ca;color:#fff;text-decoration:none;
@@ -104,7 +110,9 @@ def build_ticket_email(order: OrderOut) -> OutgoingEmail:
 </div></body></html>"""
 
     text = (
-        f"Ingresso confirmado — {event.title}\n\n"
+        f"{heading.capitalize()} — {event.title}\n\n"
+        + (f"{intro}\n\n" if intro else "")
+        + f"Ingresso(s) de {order.buyer_name}\n\n"
         f"Quando: {when.capitalize()}{doors}\n"
         + (f"Onde: {place}\n" if place else "")
         + f"Inscrição: {order.code}\n\nPessoas:\n"
@@ -114,7 +122,7 @@ def build_ticket_email(order: OrderOut) -> OutgoingEmail:
     )
     return OutgoingEmail(
         to=order.buyer_email,
-        subject=f"Seu ingresso · {event.title} · {order.code}",
+        subject=subject or f"Seu ingresso · {event.title} · {order.code}",
         html=html,
         text=text,
         attachments=attachments,

@@ -40,19 +40,30 @@ export default function PainelPage() {
   const router = useRouter();
   const me = useMe();
   const [events, setEvents] = useState<EventSummary[] | null>(null);
-  const [emailStatus, setEmailStatus] = useState<{ ok: boolean; text: string } | null>(null);
+  const [emailStatus, setEmailStatus] = useState<{
+    ok: boolean;
+    text: string;
+  } | null>(null);
   const [sendingEmail, setSendingEmail] = useState(false);
 
   async function onTestEmail() {
     setSendingEmail(true);
     setEmailStatus(null);
     try {
-      const { sent_to } = await api<{ sent_to: string }>("/org/test-email", { method: "POST" });
-      setEmailStatus({ ok: true, text: `E-mail enviado para ${sent_to}. Confira a caixa de entrada.` });
+      const { sent_to } = await api<{ sent_to: string }>("/org/test-email", {
+        method: "POST",
+      });
+      setEmailStatus({
+        ok: true,
+        text: `E-mail enviado para ${sent_to}. Confira a caixa de entrada.`,
+      });
     } catch (err) {
       setEmailStatus({
         ok: false,
-        text: err instanceof ApiError ? err.message : "Sem conexão. Tente novamente.",
+        text:
+          err instanceof ApiError
+            ? err.message
+            : "Sem conexão. Tente novamente.",
       });
     } finally {
       setSendingEmail(false);
@@ -60,7 +71,10 @@ export default function PainelPage() {
   }
 
   useEffect(() => {
-    if (me) api<EventSummary[]>("/org/events").then(setEvents).catch(() => setEvents([]));
+    if (me)
+      api<EventSummary[]>("/org/events")
+        .then(setEvents)
+        .catch(() => setEvents([]));
   }, [me]);
 
   async function onLogout() {
@@ -76,13 +90,17 @@ export default function PainelPage() {
     );
   }
 
-  const roles = me.memberships.map((m) => `${roleLabel[m.role] ?? m.role} · ${m.organization_name}`);
+  const roles = me.memberships.map(
+    (m) => `${roleLabel[m.role] ?? m.role} · ${m.organization_name}`,
+  );
 
   return (
     <main className="mx-auto w-full max-w-5xl space-y-6 px-4 py-6 md:py-10">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-widest text-primary">Painel</p>
+          <p className="text-sm font-semibold uppercase tracking-widest text-primary">
+            Painel
+          </p>
           <h1 className="text-2xl font-bold">Olá, {me.name.split(" ")[0]}</h1>
           <p className="text-sm text-muted">{roles.join(" · ")}</p>
         </div>
@@ -94,27 +112,37 @@ export default function PainelPage() {
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">Eventos</h2>
         {events === null && <p className="text-muted">Carregando eventos…</p>}
-        {events?.length === 0 && <p className="text-muted">Nenhum evento disponível para você.</p>}
+        {events?.length === 0 && (
+          <p className="text-muted">Nenhum evento disponível para você.</p>
+        )}
         <div className="grid gap-4 md:grid-cols-2">
           {events?.map((event) => (
             <Card key={event.slug} className="flex flex-col gap-4">
               <div>
-                <p className="text-sm font-semibold text-accent">{statusLabel[event.status]}</p>
+                <p className="text-sm font-semibold text-accent">
+                  {statusLabel[event.status]}
+                </p>
                 <p className="text-xl font-bold">{event.title}</p>
                 <p className="text-muted">{formatDate(event.starts_at)}</p>
               </div>
               <dl className="grid grid-cols-3 gap-2 text-center">
                 <div className="rounded-xl bg-bg p-3">
                   <dt className="text-xs text-muted">Lugares</dt>
-                  <dd className="text-xl font-bold tabular-nums">{event.capacity}</dd>
+                  <dd className="text-xl font-bold tabular-nums">
+                    {event.capacity}
+                  </dd>
                 </div>
                 <div className="rounded-xl bg-bg p-3">
                   <dt className="text-xs text-muted">Aceita até</dt>
-                  <dd className="text-xl font-bold tabular-nums">{event.registration_limit}</dd>
+                  <dd className="text-xl font-bold tabular-nums">
+                    {event.registration_limit}
+                  </dd>
                 </div>
                 <div className="rounded-xl bg-bg p-3">
                   <dt className="text-xs text-muted">Inscritos</dt>
-                  <dd className="text-xl font-bold tabular-nums">{event.registered}</dd>
+                  <dd className="text-xl font-bold tabular-nums">
+                    {event.registered}
+                  </dd>
                 </div>
               </dl>
               <div className="grid gap-2 sm:grid-cols-2">
@@ -123,6 +151,12 @@ export default function PainelPage() {
                   className="inline-flex min-h-touch items-center justify-center rounded-xl border border-border px-5 font-semibold hover:bg-border/40"
                 >
                   Configurações
+                </Link>
+                <Link
+                  href={`/painel/eventos/${event.slug}/acompanhamento`}
+                  className="inline-flex min-h-touch items-center justify-center rounded-xl border border-border px-5 font-semibold hover:bg-border/40"
+                >
+                  Números e lembretes
                 </Link>
                 <Link
                   href={`/painel/eventos/${event.slug}/recepcao`}
@@ -150,9 +184,14 @@ export default function PainelPage() {
           <h2 className="text-lg font-semibold">E-mail</h2>
           <Card className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-muted">
-              Confirme que os ingressos vão chegar: envie um e-mail de teste para {me.email}.
+              Confirme que os ingressos vão chegar: envie um e-mail de teste
+              para {me.email}.
             </p>
-            <Button variant="secondary" loading={sendingEmail} onClick={onTestEmail}>
+            <Button
+              variant="secondary"
+              loading={sendingEmail}
+              onClick={onTestEmail}
+            >
               Enviar e-mail de teste
             </Button>
           </Card>
@@ -160,7 +199,9 @@ export default function PainelPage() {
             <p
               role={emailStatus.ok ? "status" : "alert"}
               className={`rounded-xl px-4 py-3 text-sm ${
-                emailStatus.ok ? "bg-success/10 text-success" : "bg-danger/10 text-danger"
+                emailStatus.ok
+                  ? "bg-success/10 text-success"
+                  : "bg-danger/10 text-danger"
               }`}
             >
               {emailStatus.text}

@@ -55,4 +55,10 @@ def update_event_settings(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    return service.update_settings(db, _event_for(db, user, slug, EDIT_ROLES), payload)
+    event = _event_for(db, user, slug, EDIT_ROLES)
+    result = service.update_settings(db, event, payload)
+    # Lotação aumentada ou inscrições reabertas: chama a lista de espera.
+    from app.modules.waitlist.service import notify_next
+
+    notify_next(db, event)
+    return result

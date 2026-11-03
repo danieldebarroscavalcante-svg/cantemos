@@ -1,16 +1,19 @@
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy.orm import Session
 
 from app.core.ratelimit import RateLimiter, client_ip
 from app.db.base import utcnow
 from app.db.session import get_db
+from app.modules.events.models import Event
 from app.modules.notifications.email import EmailError, send_email
 from app.modules.tickets import service
 from app.modules.tickets.emails import build_ticket_email
 from app.modules.tickets.models import Order
 from app.modules.tickets.schemas import CancelIn, OrderIn, OrderOut, PublicEvent, ResendIn
+from app.modules.waitlist import service as waitlist
+from app.modules.waitlist.schemas import WaitlistIn, WaitlistJoinOut
 
 logger = logging.getLogger("eventmer.tickets")
 router = APIRouter(prefix="/public", tags=["público"])
@@ -32,9 +35,30 @@ def _send_ticket_email(db: Session, order: Order) -> None:
     db.commit()
 
 
+waitlist_limiter = RateLimiter(max_calls=20, per_seconds=600)
+
+
 @router.get("/events/{slug}", response_model=PublicEvent)
-def get_event(slug: str, db: Session = Depends(get_db)):
-    return service.public_event_out(db, service.get_public_event(db, slug))
+def get_event(
+    slug: str,
+    lista: str | None = Query(default=None, max_length=120),
+    db: Session = Depends(get_db),
+):
+    event = service.get_public_event(db, slug)
+    # Sem agendador: vagas guardadas vencidas são repassadas quando alguém abre a página.
+    if waitlist.expire_holds(db, event):
+        waitlist.notify_next(db, event)
+    invited = waitlist.entry_from_token(db, event, lista)
+    return service.public_event_out(db, event, invited)
+
+
+@router.post("/events/{slug}/waitlist", response_model=WaitlistJoinOut, status_code=201)
+def join_waitlist(slug: str, payload: WaitlistIn, request: Request, db: Session = Depends(get_db)):
+    waitlist_limiter.hit(client_ip(request))
+    if payload.website:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Não foi possível concluir.")
+    entry, position, already = waitlist.join(db, service.get_public_event(db, slug), payload)
+    return WaitlistJoinOut(position=position, quantity=entry.quantity, already=already)
 
 
 @router.post("/events/{slug}/orders", response_model=OrderOut, status_code=201)
@@ -67,4 +91,5 @@ def get_order(token: str, db: Session = Depends(get_db)):
 @router.post("/orders/{token}/cancel", response_model=OrderOut)
 def cancel_order(token: str, payload: CancelIn, db: Session = Depends(get_db)):
     order = service.cancel(db, service.order_from_token(db, token), payload.ticket_ids)
+    waitlist.notify_next(db, db.get(Event, order.event_id))  # vaga liberada → próximo da fila
     return service.order_out(db, order)

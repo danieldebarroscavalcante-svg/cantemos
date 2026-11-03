@@ -15,13 +15,18 @@ export function ResendForm({ slug }: { slug: string }) {
     const email = String(new FormData(event.currentTarget).get("email"));
     setLoading(true);
     try {
-      const res = await api<{ detail: string }>(`/public/events/${slug}/resend`, {
-        method: "POST",
-        body: JSON.stringify({ email }),
-      });
+      const res = await api<{ detail: string }>(
+        `/public/events/${slug}/resend`,
+        {
+          method: "POST",
+          body: JSON.stringify({ email }),
+        },
+      );
       setMessage(res.detail);
     } catch (err) {
-      setMessage(err instanceof ApiError ? err.message : "Sem conexão. Tente novamente.");
+      setMessage(
+        err instanceof ApiError ? err.message : "Sem conexão. Tente novamente.",
+      );
     } finally {
       setLoading(false);
     }
@@ -39,7 +44,10 @@ export function ResendForm({ slug }: { slug: string }) {
     );
   }
   return (
-    <form onSubmit={onSubmit} className="space-y-3 rounded-2xl border border-border bg-surface p-4">
+    <form
+      onSubmit={onSubmit}
+      className="space-y-3 rounded-2xl border border-border bg-surface p-4"
+    >
       <Input
         label="E-mail usado na inscrição"
         name="email"

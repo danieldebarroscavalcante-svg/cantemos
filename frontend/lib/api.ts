@@ -189,6 +189,8 @@ export type PublicEvent = {
   max_tickets_per_order: number;
   available: number;
   priority_available: number;
+  waitlist_waiting: number;
+  invite: { name: string; quantity: number; hold_until: string } | null;
 };
 
 export type AgeGroup = "adulto" | "crianca" | "idoso";

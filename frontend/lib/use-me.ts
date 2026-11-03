@@ -17,7 +17,8 @@ export function useMe(): Me | null {
         if (active) setMe(user);
       } catch {
         // Página recarregada: o access token (em memória) sumiu; tenta o cookie de refresh.
-        if ((await refreshSession()) && active) setMe(await api<Me>("/auth/me"));
+        if ((await refreshSession()) && active)
+          setMe(await api<Me>("/auth/me"));
         else router.replace("/login");
       }
     })();

@@ -109,3 +109,17 @@ def verify_order_token(token: str) -> str | None:
     if not public_id:
         return None
     return public_id if hmac.compare_digest(sign_order_token(public_id), token) else None
+
+
+def sign_waitlist_token(entry_public_id: str) -> str:
+    """Link pessoal de quem foi chamado da lista de espera."""
+    secret = get_settings().qr_secret.encode()
+    signature = hmac.new(secret, f"wait:{entry_public_id}".encode(), hashlib.sha256)
+    return f"{entry_public_id}.{signature.hexdigest()[:24]}"
+
+
+def verify_waitlist_token(token: str) -> str | None:
+    public_id, _, _ = token.partition(".")
+    if not public_id:
+        return None
+    return public_id if hmac.compare_digest(sign_waitlist_token(public_id), token) else None

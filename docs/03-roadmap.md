@@ -33,12 +33,12 @@ flowchart LR
 | **Sáb 07/11** | Teste interno com a equipe (inscrições reais pelo celular, e-mails chegando, lotação travando em 120) | — |
 | **Dom 08/11** | **Go / No-go** para abrir as inscrições | — |
 | **Seg 09/11** | **Abertura das inscrições** — divulgação nos cultos e grupos | — |
-| **Seg 09 – Qua 11/11** | "Meus ingressos" via link mágico, cancelamento pelo participante (libera vaga), lista de espera simples | PART-01, PART-03, AUTH-03 (só link mágico), TKT-09 (manual) |
+| **Seg 09 – Qua 11/11** | ✅ *Adiantado para 03/11:* lista de espera automática (vaga guardada por 24 h para o próximo da fila), lembretes por e-mail com botão no painel, números para a coordenação | TKT-09, COM-02, RPT-01, RPT-03, RPT-04 |
 | **Qui 12 – Sáb 14/11** | ✅ *Adiantado para 03/11:* tela de check-in (câmera + busca por nome + prioridade + contador), vários operadores sem entrada duplicada, desfazer, acesso de voluntários por código | CHK-01–08, AUTH-06 |
 | **Dom 15/11** | ✅ *Adiantado para 03/11:* exportação CSV e lista de presença para imprimir. Pendente: lista de espera e painel de números ao vivo para a coordenação | RPT-01, RPT-02, CHK-11, ADM-02 |
 | **Seg 16/11** | **Code freeze** — a partir daqui só correção de bug crítico. E-mail "não poderá ir? cancele e libere sua vaga" | — |
-| **Ter 17/11** | **Ensaio geral** com os voluntários de recepção: ingressos de teste, celulares e tablets reais, Wi-Fi do templo e 4G | — |
-| **Qua 18/11** | Lembrete por e-mail aos inscritos, backup do banco testado, **lista de presença impressa** (plano B), limpeza dos dados de teste | COM-02 (envio único) |
+| ~~Ter 17/11~~ | ~~Ensaio geral~~ — **dispensado pela coordenação** (03/11). Recomendado: cada voluntário abrir a recepção no próprio celular antes do evento e permitir a câmera | — |
+| **Seg 16/11** e **Qua 18/11** | Coordenação aperta os botões dos lembretes no painel (*Números e lembretes*). Em 18/11: exportar a planilha (backup), imprimir a **lista de presença** (plano B), cancelar inscrições de teste | COM-02 |
 | **Qui 19/11** | **CANTEMOS** — equipe técnica de plantão na portaria | — |
 | **Sex 20/11** | Retrospectiva: comparecimento, tempo de entrada, problemas, pedidos da equipe | — |
 
