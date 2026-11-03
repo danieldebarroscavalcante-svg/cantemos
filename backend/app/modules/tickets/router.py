@@ -7,9 +7,9 @@ from app.core.ratelimit import RateLimiter, client_ip
 from app.db.base import utcnow
 from app.db.session import get_db
 from app.modules.events.models import Event
+from app.modules.messages.service import ticket_email
 from app.modules.notifications.email import EmailError, send_email
 from app.modules.tickets import service
-from app.modules.tickets.emails import build_ticket_email
 from app.modules.tickets.models import Order
 from app.modules.tickets.schemas import CancelIn, OrderIn, OrderOut, PublicEvent, ResendIn
 from app.modules.waitlist import service as waitlist
@@ -27,8 +27,7 @@ def _send_ticket_email(db: Session, order: Order) -> None:
     """Envia o ingresso. Uma falha no e-mail não desfaz a inscrição: o ingresso
     também aparece na tela de confirmação e pode ser reenviado."""
     try:
-        logo = service.email_logo(db, db.get(Event, order.event_id))
-        send_email(build_ticket_email(service.order_out(db, order), logo=logo))
+        send_email(ticket_email(db, service.order_out(db, order)))
     except EmailError:
         logger.exception("Falha ao enviar o ingresso da inscrição %s", order.code)
         return

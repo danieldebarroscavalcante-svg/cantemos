@@ -66,8 +66,15 @@ A coordenação trocou o verde-menta por **laranja** em botões e destaques. Tud
 - O divisor da página do evento usa `--stripe-bronze`, que combina com o laranja.
 - Superfícies, textos e bordas continuam os da referência.
 
-## 8. Logos (enviados pelo painel)
-- **Logo do evento:** painel → evento → *Configurações* → "Logo do evento". Aparece no lugar do título na página do evento, na página inicial, nos ingressos, na recepção e no topo do e-mail.
+## 8. Logos e banner (enviados pelo painel)
+- **Banner, nome, tema e logo do evento:** painel → evento → *Identidade visual*. O banner (1500 × 500 px, até 2 MB) fica no topo da página do evento e no cartão da página inicial.
+- **Logo do evento:** painel → evento → *Identidade visual* → "Logo do evento". Aparece no lugar do título na página do evento, na página inicial, nos ingressos, na recepção e no topo do e-mail.
 - **Logo e nome da igreja:** painel → *Igreja*. Aparecem no rodapé "Realização" das páginas públicas, no e-mail e nas páginas de Privacidade/Termos.
 - **Formatos:** PNG, JPG, WEBP ou SVG, até 1 MB, de preferência com fundo transparente e cores pensadas para fundo escuro. O e-mail só exibe PNG/JPG (SVG fica de fora do e-mail).
 - As imagens ficam no banco de dados (tabela `assets`), porque a hospedagem gratuita apaga arquivos do disco a cada atualização.
+
+## 9. Ajustes da coordenação (03/11/2026)
+- **Cinzas neutros:** textos de apoio, superfícies e bordas deixaram de ter o tom esverdeado da referência. `--text-muted` = `#A3A3A3` (cinza médio), `--text-secondary` = `#D4D4D4`, `--text-subtle` = `#8A8A8A`, `--text-primary` = `#F5F5F5`, superfícies `#050505` / `#0B0B0B` / `#111111`, bordas em `rgba(229,229,229,…)`.
+- **Sem fundos amarelados:** avisos e selos informativos usam cinza escuro (`bg-line/[0.08]`). O amarelo forte fica só nos alertas funcionais da recepção ("já entrou" e barra de lotação quase cheia).
+- **Botões sempre em uma linha** (`whitespace-nowrap`); quando falta espaço, os botões é que vão para a linha de baixo. Primário com 14px, maiúsculo e peso 700.
+- **E-mails** seguem um layout de cartão: faixa laranja no topo, cabeçalho com logo e divisória, título, texto, cartão com os dados do evento, bloco em cinza escuro, botão e rodapé em faixa (`backend/app/modules/notifications/layout.py`). Os textos são editáveis no painel → *Mensagens de e-mail*, com prévia em tempo real e campos automáticos (`{nome}`, `{evento}`, `{data}`…).

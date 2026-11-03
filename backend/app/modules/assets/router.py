@@ -92,6 +92,92 @@ def delete_event_logo(
     return LogoOut(logo_url=None)
 
 
+# ------------------------------------------------------------------ identidade do evento
+
+
+class IdentityIn(BaseModel):
+    title: str = Field(min_length=2, max_length=150)
+    subtitle: str | None = Field(default=None, max_length=255)
+
+
+class IdentityOut(BaseModel):
+    title: str
+    subtitle: str | None
+    logo_url: str | None
+    banner_url: str | None
+
+
+def _identity(db: Session, event) -> IdentityOut:
+    ids = {event.logo_asset_id, event.banner_asset_id} - {None}
+    found = (
+        {
+            asset_id: public_id
+            for asset_id, public_id in db.execute(
+                select(Asset.id, Asset.public_id).where(Asset.id.in_(ids))
+            )
+        }
+        if ids
+        else {}
+    )
+    return IdentityOut(
+        title=event.title,
+        subtitle=event.subtitle,
+        logo_url=service.url(found.get(event.logo_asset_id)),
+        banner_url=service.url(found.get(event.banner_asset_id)),
+    )
+
+
+@org_router.get("/events/{slug}/identity", response_model=IdentityOut)
+def get_identity(slug: str, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from app.modules.events.router import VIEW_ROLES
+
+    return _identity(db, _event_for(db, user, slug, VIEW_ROLES))
+
+
+@org_router.put("/events/{slug}/identity", response_model=IdentityOut)
+def update_identity(
+    slug: str,
+    payload: IdentityIn,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    event = _event_for(db, user, slug, EDIT_ROLES)
+    event.title = " ".join(payload.title.split())
+    event.subtitle = " ".join((payload.subtitle or "").split()) or None
+    db.commit()
+    return _identity(db, event)
+
+
+@org_router.post("/events/{slug}/banner", response_model=IdentityOut)
+async def upload_banner(
+    slug: str,
+    file: UploadFile = File(...),
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    event = _event_for(db, user, slug, EDIT_ROLES)
+    data, content_type = await service.read_upload(file, service.BANNER_MAX_BYTES)
+    old = event.banner_asset_id
+    asset = service.save(db, event.organization_id, data, content_type, file.filename)
+    event.banner_asset_id = asset.id
+    if old:
+        db.delete(db.get(Asset, old))
+    db.commit()
+    return _identity(db, event)
+
+
+@org_router.delete("/events/{slug}/banner", response_model=IdentityOut)
+def delete_banner(slug: str, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    event = _event_for(db, user, slug, EDIT_ROLES)
+    if event.banner_asset_id:
+        asset = db.get(Asset, event.banner_asset_id)
+        event.banner_asset_id = None
+        db.flush()
+        db.delete(asset)
+        db.commit()
+    return _identity(db, event)
+
+
 # ------------------------------------------------------------------ igreja / organização
 
 

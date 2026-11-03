@@ -9,18 +9,18 @@
  */
 :root {
   --rgb-bg: 0 0 0; /* --bg-base */
-  --rgb-surface-1: 2 9 7; /* --bg-surface-1 */
-  --rgb-surface: 11 13 14; /* --bg-surface-2 (cards) */
-  --rgb-surface-3: 8 17 15; /* --bg-surface-3 (hover/elevado) */
+  --rgb-surface-1: 5 5 5; /* --bg-surface-1 */
+  --rgb-surface: 11 11 11; /* --bg-surface-2 (cards) */
+  --rgb-surface-3: 17 17 17; /* --bg-surface-3 (hover/elevado) */
   --rgb-strong: 255 255 255; /* --text-strong */
-  --rgb-fg: 243 248 246; /* --text-primary */
-  --rgb-soft: 219 230 220; /* --text-secondary */
-  --rgb-muted: 158 180 169; /* --text-muted */
-  --rgb-subtle: 160 170 164; /* --text-subtle */
+  --rgb-fg: 245 245 245; /* --text-primary */
+  --rgb-soft: 212 212 212; /* --text-secondary */
+  --rgb-muted: 163 163 163; /* --text-muted */
+  --rgb-subtle: 138 138 138; /* --text-subtle */
   --rgb-brand: 255 138 61; /* --brand */
   --rgb-brand-light: 255 179 122; /* --brand-light */
   --rgb-on-brand: 26 11 2; /* --on-brand */
-  --rgb-line: 217 229 224; /* base de --border-* */
+  --rgb-line: 229 229 229; /* base de --border-* */
   --rgb-lavender: 189 167 255; /* --accent-lavender */
   --rgb-lime: 169 228 134; /* --accent-lime */
   --rgb-peach: 237 187 149; /* --accent-peach */
@@ -71,6 +71,7 @@
     --rgb-soft: 0 0 0;
     --rgb-muted: 60 60 60;
     --rgb-subtle: 60 60 60;
+    --rgb-line: 0 0 0;
     --border-default: rgba(0, 0, 0, 0.25);
     --border-subtle: rgba(0, 0, 0, 0.15);
   }

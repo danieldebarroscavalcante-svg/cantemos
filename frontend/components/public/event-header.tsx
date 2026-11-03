@@ -14,6 +14,13 @@ export function EventHeader({
     .join(" · ");
   return (
     <header className="space-y-4">
+      {event.banner_url && !compact && (
+        <img
+          src={event.banner_url}
+          alt=""
+          className="aspect-[3/1] w-full rounded-2xl border border-border-subtle object-cover shadow-card"
+        />
+      )}
       <div>
         <p className="eyebrow">EVENTMER</p>
         {event.logo_url ? (

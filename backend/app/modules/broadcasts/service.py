@@ -7,15 +7,14 @@ from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session, sessionmaker
 
-from app.core.timezone import utc_to_local
 from app.db.base import utcnow
 from app.modules.broadcasts.models import Broadcast, BroadcastKind, BroadcastStatus
 from app.modules.events.models import Event
-from app.modules.events.service import main_session
+from app.modules.messages.models import MessageKind
+from app.modules.messages.service import ticket_email
 from app.modules.notifications import email as email_module
-from app.modules.tickets.emails import build_ticket_email, format_when
 from app.modules.tickets.models import Order, OrderStatus, Ticket, TicketStatus
-from app.modules.tickets.service import email_logo, order_out
+from app.modules.tickets.service import order_out
 
 logger = logging.getLogger("eventmer.broadcasts")
 PAUSE_SECONDS = 0.5  # gentil com o limite do Gmail
@@ -35,24 +34,6 @@ def recipients(db: Session, event: Event) -> list[int]:
             .group_by(Order.id)
             .order_by(Order.id)
         )
-    )
-
-
-def _texts(kind: BroadcastKind, event: Event, starts_local) -> tuple[str, str, str]:
-    when = format_when(starts_local)
-    if kind == BroadcastKind.CONFIRM:
-        return (
-            "FALTAM POUCOS DIAS",
-            f"O {event.title} será {when}. Seus ingressos estão abaixo. Se não puder ir, "
-            "cancele pelo botão “Ver meus ingressos” para liberar a vaga para outra família "
-            "— há pessoas esperando.",
-            f"Faltam poucos dias · {event.title} · confirme sua presença",
-        )
-    return (
-        "É AMANHÃ",
-        f"O {event.title} é amanhã, {when}. Chegue cedo: a entrada é por ordem de chegada e "
-        "os lugares são limitados.",
-        f"É amanhã! · {event.title}",
     )
 
 
@@ -82,19 +63,14 @@ def run(broadcast_id: int, session_factory: sessionmaker) -> None:
     with session_factory() as db:
         broadcast = db.get(Broadcast, broadcast_id)
         event = db.get(Event, broadcast.event_id)
-        heading, intro, subject = _texts(
-            broadcast.kind, event, utc_to_local(main_session(db, event).starts_at)
+        kind = (
+            MessageKind.REMINDER_CONFIRM
+            if broadcast.kind == BroadcastKind.CONFIRM
+            else MessageKind.REMINDER_TOMORROW
         )
-        logo = email_logo(db, event)
         for order_id in recipients(db, event):
             try:
-                message = build_ticket_email(
-                    order_out(db, db.get(Order, order_id)),
-                    heading=heading,
-                    intro=intro,
-                    subject=subject,
-                    logo=logo,
-                )
+                message = ticket_email(db, order_out(db, db.get(Order, order_id)), kind)
                 email_module.send_email(message)
                 broadcast.sent += 1
             except Exception:  # um e-mail com problema não interrompe os demais

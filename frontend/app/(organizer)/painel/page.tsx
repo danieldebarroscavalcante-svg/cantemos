@@ -15,6 +15,10 @@ const roleLabel: Record<string, string> = {
   checkin: "Recepção",
 };
 
+// Botão-link: sempre em uma linha só.
+const linkButton =
+  "inline-flex min-h-touch items-center justify-center whitespace-nowrap rounded-xl px-5 text-sm";
+
 const statusLabel: Record<EventSummary["status"], string> = {
   draft: "Rascunho",
   published: "Publicado",
@@ -107,7 +111,7 @@ export default function PainelPage() {
         <div className="flex gap-2">
           <Link
             href="/painel/igreja"
-            className="inline-flex min-h-touch items-center justify-center rounded-xl border border-border bg-line/[0.03] px-5 text-sm font-semibold hover:bg-line/[0.07]"
+            className="inline-flex min-h-touch shrink-0 whitespace-nowrap items-center justify-center rounded-xl border border-border bg-line/[0.03] px-5 text-sm font-semibold hover:bg-line/[0.07]"
           >
             Igreja
           </Link>
@@ -123,7 +127,7 @@ export default function PainelPage() {
         {events?.length === 0 && (
           <p className="text-muted">Nenhum evento disponível para você.</p>
         )}
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4">
           {events?.map((event) => (
             <Card key={event.slug} className="flex flex-col gap-4">
               <div>
@@ -151,30 +155,32 @@ export default function PainelPage() {
                   </dd>
                 </div>
               </dl>
-              <div className="grid gap-2 sm:grid-cols-2">
-                <Link
-                  href={`/painel/eventos/${event.slug}/configuracoes`}
-                  className="inline-flex min-h-touch items-center justify-center rounded-xl border border-border bg-line/[0.03] px-5 text-sm font-semibold hover:bg-line/[0.07]"
-                >
-                  Configurações
-                </Link>
-                <Link
-                  href={`/painel/eventos/${event.slug}/acompanhamento`}
-                  className="inline-flex min-h-touch items-center justify-center rounded-xl border border-border bg-line/[0.03] px-5 text-sm font-semibold hover:bg-line/[0.07]"
-                >
-                  Números e lembretes
-                </Link>
+              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 <Link
                   href={`/painel/eventos/${event.slug}/recepcao`}
-                  className="inline-flex min-h-touch items-center justify-center rounded-xl bg-brand px-5 font-bold uppercase tracking-wide text-primary-fg shadow-sm transition hover:-translate-y-px hover:shadow-cta"
+                  className={`${linkButton} bg-brand font-bold uppercase tracking-wide text-primary-fg shadow-sm transition hover:-translate-y-px hover:shadow-cta`}
                 >
                   Recepção / check-in
                 </Link>
+                {[
+                  ["identidade", "Identidade visual"],
+                  ["mensagens", "Mensagens de e-mail"],
+                  ["configuracoes", "Configurações"],
+                  ["acompanhamento", "Números e lembretes"],
+                ].map(([path, label]) => (
+                  <Link
+                    key={path}
+                    href={`/painel/eventos/${event.slug}/${path}`}
+                    className={`${linkButton} border border-border bg-line/[0.03] font-semibold hover:bg-line/[0.07]`}
+                  >
+                    {label}
+                  </Link>
+                ))}
                 {event.status !== "draft" && (
                   <a
                     href={`/e/${event.slug}`}
                     target="_blank"
-                    className="inline-flex min-h-touch items-center justify-center rounded-xl border border-border bg-line/[0.03] px-5 text-sm font-semibold hover:bg-line/[0.07]"
+                    className={`${linkButton} border border-border bg-line/[0.03] font-semibold hover:bg-line/[0.07]`}
                   >
                     Página pública ↗
                   </a>

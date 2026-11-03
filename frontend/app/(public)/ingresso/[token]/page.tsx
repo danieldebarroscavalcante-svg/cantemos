@@ -58,7 +58,7 @@ function TicketCard({
       <p className="text-xl font-bold">{ticket.attendee_name}</p>
       <p className="text-muted">{AGE_LABEL[ticket.age_group]}</p>
       {ticket.priority && (
-        <p className="mx-auto w-fit rounded-full bg-warning/20 px-3 py-1 text-sm font-semibold">
+        <p className="mx-auto w-fit rounded-full bg-line/[0.08] px-3 py-1 text-sm font-semibold">
           Atendimento prioritário
           {ticket.accessibility_need &&
           ticket.accessibility_need !== "Atendimento prioritário"

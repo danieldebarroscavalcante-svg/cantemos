@@ -63,7 +63,7 @@ export default async function EventPage({ params, searchParams }: Props) {
             Inscrição gratuita
           </h2>
           {open && !soldOut && event.available <= 30 && (
-            <p className="rounded-full bg-warning/15 px-3 py-1 text-sm font-semibold">
+            <p className="rounded-full bg-line/[0.08] px-3 py-1 text-sm font-semibold">
               Últimas {event.available} vagas
             </p>
           )}

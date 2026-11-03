@@ -24,12 +24,16 @@ def detect_type(data: bytes) -> str | None:
     return None
 
 
-async def read_upload(file: UploadFile) -> tuple[bytes, str]:
-    data = await file.read(MAX_BYTES + 1)
-    if len(data) > MAX_BYTES:
+BANNER_MAX_BYTES = 2 * 1024 * 1024  # 2 MB
+
+
+async def read_upload(file: UploadFile, max_bytes: int = MAX_BYTES) -> tuple[bytes, str]:
+    data = await file.read(max_bytes + 1)
+    if len(data) > max_bytes:
         raise HTTPException(
             status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-            "Arquivo maior que 1 MB. Reduza o tamanho da imagem e tente de novo.",
+            f"Arquivo maior que {max_bytes // (1024 * 1024)} MB. Reduza o tamanho da imagem e "
+            "tente de novo.",
         )
     if not data:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, "Arquivo vazio.")

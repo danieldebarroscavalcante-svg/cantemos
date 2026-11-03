@@ -35,7 +35,15 @@ export default async function HomePage() {
         </p>
       </header>
 
-      <Card className="space-y-3 border-primary/35">
+      <Card className="space-y-3 overflow-hidden border-primary/35">
+        {event?.banner_url && (
+          // eslint-disable-next-line @next/next/no-img-element -- banner vem da API (em cache)
+          <img
+            src={event.banner_url}
+            alt=""
+            className="-mx-5 -mt-5 mb-2 aspect-[3/1] w-[calc(100%+2.5rem)] max-w-none object-cover sm:-mx-6 sm:-mt-6 sm:w-[calc(100%+3rem)]"
+          />
+        )}
         <p className="eyebrow">Próximo evento</p>
         {event?.logo_url ? (
           <h2>
@@ -59,7 +67,7 @@ export default async function HomePage() {
         {event ? (
           <Link
             href={`/e/${event.slug}`}
-            className="inline-flex min-h-touch w-full items-center justify-center rounded-xl bg-brand px-5 font-bold uppercase tracking-wide text-primary-fg shadow-sm transition hover:-translate-y-px hover:shadow-cta sm:w-auto"
+            className="inline-flex min-h-touch shrink-0 whitespace-nowrap w-full items-center justify-center rounded-xl bg-brand px-5 font-bold uppercase tracking-wide text-primary-fg shadow-sm transition hover:-translate-y-px hover:shadow-cta sm:w-auto"
           >
             {open ? "Fazer minha inscrição" : "Ver detalhes do evento"}
           </Link>

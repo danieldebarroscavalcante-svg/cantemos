@@ -38,6 +38,9 @@ class Event(IdMixin, PublicIdMixin, TimestampMixin, Base):
     logo_asset_id: Mapped[int | None] = mapped_column(
         BigIntPK, ForeignKey("assets.id", ondelete="SET NULL")
     )
+    banner_asset_id: Mapped[int | None] = mapped_column(
+        BigIntPK, ForeignKey("assets.id", ondelete="SET NULL", name="fk_events_banner_asset")
+    )
 
     sessions: Mapped[list["EventSession"]] = relationship(
         back_populates="event", order_by="EventSession.starts_at"

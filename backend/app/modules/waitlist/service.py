@@ -15,6 +15,7 @@ from app.db.base import utcnow
 from app.modules.auth.service import normalize_email
 from app.modules.events.models import Event, EventStatus
 from app.modules.events.service import main_session
+from app.modules.messages.models import MessageKind
 from app.modules.notifications.email import EmailError, OutgoingEmail, send_email
 from app.modules.tickets.models import TicketKind, TicketType
 from app.modules.waitlist.models import WaitlistEntry, WaitlistStatus
@@ -126,58 +127,34 @@ def _send(message: OutgoingEmail) -> None:
         logger.exception("Falha ao enviar e-mail da lista de espera para %s", message.to)
 
 
-def _joined_email(event: Event, entry: WaitlistEntry, position: int) -> OutgoingEmail:
-    first = entry.name.split()[0]
-    text = (
-        f"Olá, {first}! Você está na lista de espera do {event.title} "
-        f"(posição {position}, {entry.quantity} pessoa(s)).\n\n"
-        "Se abrir vaga, enviaremos um e-mail com um link para você se inscrever. "
-        f"A vaga fica guardada por {HOLD_HOURS} horas a partir do aviso.\n"
-    )
-    html = (
-        '<div style="background:#000000;color:#F3F8F6;font-family:Arial,Helvetica,sans-serif;'
-        'max-width:520px;margin:0 auto;padding:28px 16px;line-height:1.85">'
-        '<p style="margin:0;color:#FF8A3D;font-weight:700;letter-spacing:1.5px;font-size:11px;'
-        'text-transform:uppercase">Lista de espera</p>'
-        f'<h1 style="margin:10px 0 14px;font-size:28px;font-weight:400;color:#FFFFFF">{event.title}</h1>'
-        f'<p style="color:#9EB4A9">Olá, {first}! Você está na posição '
-        f'<strong style="color:#F3F8F6">{position}</strong> ({entry.quantity} pessoa(s)).</p>'
-        '<p style="color:#9EB4A9">Se abrir vaga, enviaremos um e-mail com um link para você se '
-        f"inscrever. A vaga fica guardada por {HOLD_HOURS} horas a partir do aviso.</p></div>"
-    )
-    return OutgoingEmail(
-        to=entry.email, subject=f"Lista de espera · {event.title}", html=html, text=text
-    )
+def _joined_email(db: Session, event: Event, entry: WaitlistEntry, position: int) -> OutgoingEmail:
+    return _waitlist_email(db, event, entry, MessageKind.WAITLIST_JOINED, position=position)
 
 
-def _invite_email(event: Event, entry: WaitlistEntry) -> OutgoingEmail:
-    first = entry.name.split()[0]
-    link = _event_link(event, entry)
+def _invite_email(db: Session, event: Event, entry: WaitlistEntry) -> OutgoingEmail:
     until = utc_to_local(entry.hold_until)
-    deadline = f"{until:%d/%m} às {until:%H:%M}"
-    text = (
-        f"Olá, {first}! Abriu vaga no {event.title}.\n\n"
-        f"Guardamos {entry.quantity} lugar(es) para você até {deadline}. "
-        f"Faça a inscrição por este link: {link}\n\n"
-        "Depois desse prazo, a vaga passa para a próxima pessoa da lista.\n"
+    return _waitlist_email(
+        db, event, entry, MessageKind.WAITLIST_INVITE,
+        deadline=f"{until:%d/%m} às {until:%H:%M}", link=_event_link(event, entry),
+    )  # fmt: skip
+
+
+def _waitlist_email(db, event, entry, kind, *, position=None, deadline=None, link=None):
+    from app.modules.messages import service as messages
+    from app.modules.tickets.service import email_logo, public_event_out
+
+    subject, parts, attachments = messages.waitlist_parts(
+        messages.get_texts(db, event, kind),
+        kind,
+        public_event_out(db, event),
+        name=entry.name,
+        quantity=entry.quantity,
+        position=position,
+        deadline=deadline,
+        link=link or _event_link(event),
+        logo=email_logo(db, event),
     )
-    # Cores do tema (espelho de frontend/styles/tokens.css).
-    html = f"""<div style="background:#000000;color:#F3F8F6;font-family:'Sora',Arial,Helvetica,sans-serif;max-width:520px;margin:0 auto;padding:28px 16px">
-<p style="margin:0;color:#FF8A3D;font-weight:700;letter-spacing:1.5px;font-size:11px;text-transform:uppercase">Abriu vaga</p>
-<h1 style="margin:10px 0 14px;font-size:30px;font-weight:400;color:#FFFFFF">{event.title}</h1>
-<p style="line-height:1.85;color:#9EB4A9">Olá, {first}! Guardamos <strong style="color:#F3F8F6">{entry.quantity} lugar(es)</strong>
-para você até <strong style="color:#F3F8F6">{deadline}</strong>.</p>
-<p style="text-align:center;margin:28px 0"><a href="{link}" style="display:inline-block;background:#FF8A3D;
-background-image:linear-gradient(115deg,#FFB37A,#FF8A3D 48%,#F26B1D);color:#1A0B02;text-decoration:none;
-padding:16px 26px;border-radius:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px">Fazer minha inscrição</a></p>
-<p style="color:#9EB4A9;font-size:14px;line-height:1.85">Depois desse prazo, a vaga passa para a próxima pessoa
-da lista.</p></div>"""
-    return OutgoingEmail(
-        to=entry.email,
-        subject=f"Abriu vaga! · {event.title} · inscreva-se até {deadline}",
-        html=html,
-        text=text,
-    )
+    return messages.to_email(entry.email, subject, parts, attachments)
 
 
 # ---------------------------------------------------------------- operações
@@ -223,7 +200,7 @@ def join(db: Session, event: Event, data: WaitlistIn) -> tuple[WaitlistEntry, in
     db.add(entry)
     db.commit()
     position = position_of(db, entry)
-    _send(_joined_email(event, entry, position))
+    _send(_joined_email(db, event, entry, position))
     return entry, position, False
 
 
@@ -254,7 +231,7 @@ def notify_next(db: Session, event: Event) -> tuple[int, int]:
         invited.append(entry)
     db.commit()
     for entry in invited:
-        _send(_invite_email(event, entry))
+        _send(_invite_email(db, event, entry))
     if invited:
         logger.info("Lista de espera: %d pessoa(s)/grupo(s) avisados", len(invited))
     return len(invited), free

@@ -1,5 +1,5 @@
 /* =========================================================
-   Design tokens — tema escuro (base "neon mint", cor de ação LARANJA)
+   Design tokens — tema escuro neutro (base "neon mint"), cor de ação LARANJA
    Extraído por inspeção de estilos computados (cores, tipo,
    raios, sombras, gradientes). Sem logos, imagens ou textos.
    ========================================================= */
@@ -10,11 +10,11 @@
 :root {
   /* ---------- Superfícies ---------- */
   --bg-base:        #000000;           /* fundo da página */
-  --bg-surface-1:   #020907;           /* seções / blocos */
-  --bg-surface-2:   #0B0D0E;           /* cards */
-  --bg-surface-3:   #08110F;           /* cards elevados / hover */
-  --bg-surface-4:   #06120F;
-  --bg-overlay:     rgba(6, 14, 12, 0.90);   /* header fixo, modais */
+  --bg-surface-1:   #050505;           /* seções / blocos */
+  --bg-surface-2:   #0B0B0B;           /* cards */
+  --bg-surface-3:   #111111;           /* cards elevados / hover */
+  --bg-surface-4:   #0E0E0E;
+  --bg-overlay:     rgba(10, 10, 10, 0.90);   /* header fixo, modais */
   --bg-glass:       rgba(255, 255, 255, 0.03);
 
   /* brilho radial do topo da página */
@@ -29,11 +29,11 @@
 
   /* ---------- Texto ---------- */
   --text-strong:    #FFFFFF;           /* títulos de destaque */
-  --text-primary:   #F3F8F6;           /* texto principal */
-  --text-secondary: #DBE6DC;           /* texto de apoio */
-  --text-soft:      #EDF4F1;
-  --text-muted:     #9EB4A9;           /* parágrafos longos */
-  --text-subtle:    #A0AAA4;           /* legendas, metadados */
+  --text-primary:   #F5F5F5;           /* texto principal */
+  --text-secondary: #D4D4D4;           /* texto de apoio */
+  --text-soft:      #EDEDED;
+  --text-muted:     #A3A3A3;           /* parágrafos longos — cinza médio (era esverdeado) */
+  --text-subtle:    #8A8A8A;           /* legendas, metadados */
 
   /* ---------- Acentos (categorias / tags) ----------
      Uso: texto na cor cheia + fundo na mesma cor a 4% */
@@ -46,10 +46,10 @@
   --accent-bg-alpha: 0.04;
 
   /* ---------- Bordas ---------- */
-  --border-subtle:  rgba(217, 229, 224, 0.07);
-  --border-default: rgba(217, 229, 224, 0.12);
+  --border-subtle:  rgba(229, 229, 229, 0.07);
+  --border-default: rgba(229, 229, 229, 0.12);
   --border-brand:   rgba(255, 138, 61, 0.35);
-  --inset-highlight: inset 0 1px 0 rgba(217, 229, 224, 0.07); /* fio de luz no topo dos cards */
+  --inset-highlight: inset 0 1px 0 rgba(229, 229, 229, 0.07); /* fio de luz no topo dos cards */
 
   /* ---------- Tipografia ---------- */
   --font-sans: 'Sora Variable', 'Sora', Arial, sans-serif;

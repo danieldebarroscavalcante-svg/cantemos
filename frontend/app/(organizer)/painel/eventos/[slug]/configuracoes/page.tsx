@@ -5,12 +5,10 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { LogoField } from "@/components/ui/logo-field";
 import { NumberField } from "@/components/ui/number-field";
 import {
   api,
   ApiError,
-  apiUpload,
   type EventSettings,
   type EventSettingsInput,
   type ReservedQuota,
@@ -252,26 +250,16 @@ export default function EventSettingsPage({
             </div>
           </Card>
 
-          <Card>
-            <LogoField
-              label="Logo do evento"
-              hint="Aparece na página do evento, nos ingressos, na recepção e no e-mail. Use PNG com fundo transparente (ou SVG), pensado para fundo escuro, até 1 MB. Para aparecer no e-mail, prefira PNG ou JPG."
-              url={saved.logo_url}
-              disabled={!canEdit}
-              onUpload={async (file) => {
-                const { logo_url } = await apiUpload<{ logo_url: string }>(
-                  `/org/events/${params.slug}/logo`,
-                  file,
-                );
-                setSaved((s) => (s ? { ...s, logo_url } : s));
-              }}
-              onRemove={async () => {
-                await api(`/org/events/${params.slug}/logo`, {
-                  method: "DELETE",
-                });
-                setSaved((s) => (s ? { ...s, logo_url: null } : s));
-              }}
-            />
+          <Card className="flex flex-wrap items-center justify-between gap-3">
+            <p className="text-muted">
+              Nome, tema, banner e logo ficam em Identidade visual.
+            </p>
+            <Link
+              href={`/painel/eventos/${params.slug}/identidade`}
+              className="inline-flex min-h-touch items-center justify-center whitespace-nowrap rounded-xl border border-border bg-line/[0.03] px-5 text-sm font-semibold hover:bg-line/[0.07]"
+            >
+              Identidade visual
+            </Link>
           </Card>
 
           <Card className="space-y-4">
@@ -469,7 +457,7 @@ export default function EventSettingsPage({
               </p>
             )}
             {preview.limit > form.capacity && (
-              <p className="rounded-xl bg-warning/15 px-4 py-3 text-sm">
+              <p className="rounded-xl bg-line/[0.08] px-4 py-3 text-sm">
                 Se todos comparecerem, {preview.limit - form.capacity} pessoas
                 ficarão sem lugar sentado. Tenha um plano para elas (cadeiras
                 extras, anexo, telão).

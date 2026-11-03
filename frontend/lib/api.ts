@@ -88,7 +88,8 @@ export async function apiUpload<T>(path: string, file: File): Promise<T> {
     });
   };
   let response = await doFetch();
-  if (response.status === 401 && (await refreshSession())) response = await doFetch();
+  if (response.status === 401 && (await refreshSession()))
+    response = await doFetch();
   if (!response.ok) throw await parseError(response);
   return response.json() as Promise<T>;
 }
@@ -211,6 +212,7 @@ export type PublicEvent = {
   waitlist_waiting: number;
   invite: { name: string; quantity: number; hold_until: string } | null;
   logo_url: string | null;
+  banner_url: string | null;
   organization_name: string | null;
   organization_logo_url: string | null;
 };

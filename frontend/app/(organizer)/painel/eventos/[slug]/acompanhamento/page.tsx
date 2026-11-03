@@ -266,7 +266,7 @@ export default function FollowUpPage({ params }: { params: { slug: string } }) {
         {stats.emails_not_sent > 0 && (
           <p
             role="alert"
-            className="rounded-xl bg-warning/20 px-4 py-3 text-sm"
+            className="rounded-xl bg-line/[0.08] px-4 py-3 text-sm"
           >
             {stats.emails_not_sent}{" "}
             {stats.emails_not_sent === 1
@@ -310,7 +310,7 @@ export default function FollowUpPage({ params }: { params: { slug: string } }) {
                   disabled={running || !recipients}
                   onClick={() => send(r.kind, r.title)}
                 >
-                  Enviar para {recipients ?? 0} inscrições
+                  Enviar agora
                 </Button>
               )}
             </Card>

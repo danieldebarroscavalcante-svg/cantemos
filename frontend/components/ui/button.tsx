@@ -39,7 +39,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled || loading}
         aria-busy={loading || undefined}
         className={cn(
-          "inline-flex min-h-touch items-center justify-center gap-2 rounded-xl px-5 text-base",
+          // Botões nunca quebram linha: o texto fica sempre em uma linha só.
+          "inline-flex min-h-touch shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-xl px-5 text-sm",
           "transition-[box-shadow,transform,background-color] duration-200",
           "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
           "disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none",

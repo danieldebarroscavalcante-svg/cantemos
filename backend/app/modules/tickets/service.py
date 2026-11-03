@@ -43,12 +43,14 @@ logger = logging.getLogger("eventmer.tickets")
 def branding(db: Session, event: Event) -> dict:
     """Logo do evento e nome/logo da organização (para páginas e e-mails)."""
     org = db.get(Organization, event.organization_id)
-    ids = {event.logo_asset_id, org.logo_asset_id if org else None} - {None}
+    ids = {event.logo_asset_id, event.banner_asset_id, org.logo_asset_id if org else None} - {None}
     assets = {a.id: a for a in db.scalars(select(Asset).where(Asset.id.in_(ids)))} if ids else {}
     event_logo = assets.get(event.logo_asset_id)
     org_logo = assets.get(org.logo_asset_id) if org else None
+    banner = assets.get(event.banner_asset_id)
     return {
         "logo_url": asset_url(event_logo.public_id) if event_logo else None,
+        "banner_url": asset_url(banner.public_id) if banner else None,
         "organization_name": org.name if org else None,
         "organization_logo_url": asset_url(org_logo.public_id) if org_logo else None,
         "event_logo": event_logo,
@@ -128,6 +130,7 @@ def public_event_out(
         priority_available=min(available, remaining(TicketKind.PRIORITY)),
         waitlist_waiting=int(waiting or 0),
         logo_url=brand["logo_url"],
+        banner_url=brand["banner_url"],
         organization_name=brand["organization_name"],
         organization_logo_url=brand["organization_logo_url"],
         invite=WaitlistInvite(

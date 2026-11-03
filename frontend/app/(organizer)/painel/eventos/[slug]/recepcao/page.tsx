@@ -148,7 +148,7 @@ export default function ReceptionPage({
           <p className="break-all text-sm text-muted">{url}</p>
           <Link
             href={info.checkin_path}
-            className="inline-flex min-h-touch w-full items-center justify-center rounded-xl bg-brand px-5 font-bold uppercase tracking-wide text-primary-fg shadow-sm transition hover:-translate-y-px hover:shadow-cta"
+            className="inline-flex min-h-touch shrink-0 whitespace-nowrap w-full items-center justify-center rounded-xl bg-brand px-5 font-bold uppercase tracking-wide text-primary-fg shadow-sm transition hover:-translate-y-px hover:shadow-cta"
           >
             Abrir a recepção neste aparelho
           </Link>
@@ -166,7 +166,7 @@ export default function ReceptionPage({
         <div className="grid gap-2 sm:grid-cols-2">
           <Link
             href={`/painel/eventos/${params.slug}/lista`}
-            className="inline-flex min-h-touch items-center justify-center rounded-xl border border-border bg-line/[0.03] px-5 text-sm font-semibold hover:bg-line/[0.07]"
+            className="inline-flex min-h-touch shrink-0 whitespace-nowrap items-center justify-center rounded-xl border border-border bg-line/[0.03] px-5 text-sm font-semibold hover:bg-line/[0.07]"
           >
             Lista de presença (imprimir)
           </Link>

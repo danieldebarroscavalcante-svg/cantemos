@@ -102,7 +102,7 @@ export default function PrintListPage({
               <td className="py-2 font-medium">
                 {r.attendee_name}
                 {r.priority && (
-                  <span className="ml-2 rounded bg-warning/30 px-1 text-xs font-semibold">
+                  <span className="ml-2 rounded bg-line/[0.08] px-1 text-xs font-semibold">
                     ♿{" "}
                     {r.accessibility_need &&
                     r.accessibility_need !== "Atendimento prioritário"

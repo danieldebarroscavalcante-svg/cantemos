@@ -16,6 +16,8 @@ ignore = ["B008"]  # Depends() em argumentos padrão é o padrão do FastAPI
 [tool.ruff.lint.per-file-ignores]
 "app/modules/tickets/emails.py" = ["E501"]  # HTML de e-mail com estilos inline
 "app/modules/waitlist/service.py" = ["E501"]  # HTML de e-mail com estilos inline
+"app/modules/notifications/layout.py" = ["E501"]  # HTML de e-mail com estilos inline
+"app/modules/messages/service.py" = ["E501"]  # textos padrão das mensagens
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
